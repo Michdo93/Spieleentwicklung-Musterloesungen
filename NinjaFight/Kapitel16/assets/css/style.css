@@ -1,0 +1,33 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0a0e14;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#stage {
+  background: #bfe8ea;
+  border: 2px solid #000;
+  image-rendering: pixelated;
+}
+
+#game {
+  position: relative;
+}
+
+#hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+  pointer-events: none;
+}

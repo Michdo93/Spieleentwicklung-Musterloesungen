@@ -1,0 +1,40 @@
+body {
+  background: #10161c;
+  color: #d7e2ea;
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+#game {
+  position: relative;
+  display: inline-block;
+}
+
+canvas {
+  background: #0b1a24;
+  border: 2px solid #3a4a58;
+  border-radius: 6px;
+  display: block;
+}
+
+#hud {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  font-size: 14px;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+  pointer-events: none;
+}
+
+#hint {
+  max-width: 480px;
+  margin: 12px auto 0;
+  font-size: 14px;
+  color: #93a4b3;
+}

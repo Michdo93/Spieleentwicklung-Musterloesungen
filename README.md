@@ -83,7 +83,11 @@ python3 -m http.server 8000
 - [x] Kapitel 10 - vollstaendig (beide Tracks)
 - [x] Kapitel 11 - vollstaendig (beide Tracks)
 - [x] Kapitel 12 - vollstaendig (beide Tracks)
-- [ ] Kapitel 13-18 - folgen nach demselben Prinzip
+- [x] Kapitel 13 - vollstaendig (beide Tracks)
+- [x] Kapitel 14 - vollstaendig (beide Tracks)
+- [x] Kapitel 15 - vollstaendig (beide Tracks)
+- [x] Kapitel 16 - vollstaendig (beide Tracks)
+- [ ] Kapitel 17-18 - folgen nach demselben Prinzip
 
 ## Zugehoeriges Buch
 

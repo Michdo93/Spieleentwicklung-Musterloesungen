@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Kapitel 16 – HUD &amp; Spielstatus</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game">
+    <canvas id="stage" width="480" height="220"></canvas>
+
+    <div id="hud">
+      <span id="hud-life">❤ 10</span>
+      <span id="hud-points">Punkte: 0</span>
+      <span id="hud-time">0:00</span>
+    </div>
+  </div>
+  <p id="hint">Der Lebensbalken über dem Gegner sitzt exakt über dem sichtbaren Sprite - nicht mitten im Kopf. Das DOM-HUD oben aktualisiert sich jeden Frame neu.</p>
+
+  <script src="script.js"></script>
+</body>
+</html>
