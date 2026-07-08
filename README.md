@@ -72,7 +72,10 @@ python3 -m http.server 8000
 ## Status
 
 - [x] Kapitel 1 - vollstaendig (beide Tracks)
-- [ ] Kapitel 2-18 - folgen nach demselben Prinzip
+- [x] Kapitel 2 - vollstaendig (beide Tracks)
+- [x] Kapitel 3 - vollstaendig (beide Tracks)
+- [x] Kapitel 4 - vollstaendig (beide Tracks)
+- [ ] Kapitel 5-18 - folgen nach demselben Prinzip
 
 ## Zugehoeriges Buch
 

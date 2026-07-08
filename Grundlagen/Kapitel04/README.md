@@ -1,7 +1,29 @@
-# Kapitel 04 - Tastatur- und Maus-Eingabe
+# Kapitel 4 - Tastatur- & Maus-Eingabe
 
-Dieses Kapitel folgt in Kuerze und wird nach demselben Prinzip aufgebaut
-wie Kapitel 1: eine vollstaendig lauffaehige Musterloesung, die auf dem
-vorherigen Kapitel aufbaut.
+Musterloesung zu Kapitel 4 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
 
-Siehe Buch, Kapitel 04, fuer die Schritt-fuer-Schritt-Anleitung.
+## Ausfuehren
+
+```bash
+python3 -m http.server 8000
+```
+
+## Was hier passiert
+
+- Das Key-State-Muster: `keydown`/`keyup` setzen nur Flags in einem
+  `keys`-Objekt, der Game-Loop fragt sie jeden Frame ab - dadurch
+  bewegt sich das Quadrat, solange eine Taste GEHALTEN wird
+- `e.code` statt `e.key` (physische Taste statt layoutabhaengigem
+  Zeichen)
+- Mausklick-Koordinaten per `getBoundingClientRect()` in
+  Canvas-Koordinaten umrechnen, dann ein Rechteck-Trefftest
+
+## Dateien
+
+```
+Kapitel04/
+├── index.html
+├── style.css
+└── script.js
+```
