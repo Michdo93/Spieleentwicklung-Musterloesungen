@@ -71,23 +71,8 @@ python3 -m http.server 8000
 
 ## Status
 
-- [x] Kapitel 1 - vollstaendig (beide Tracks)
-- [x] Kapitel 2 - vollstaendig (beide Tracks)
-- [x] Kapitel 3 - vollstaendig (beide Tracks)
-- [x] Kapitel 4 - vollstaendig (beide Tracks)
-- [x] Kapitel 5 - vollstaendig (beide Tracks)
-- [x] Kapitel 6 - vollstaendig (beide Tracks)
-- [x] Kapitel 7 - vollstaendig (beide Tracks)
-- [x] Kapitel 8 - vollstaendig (beide Tracks)
-- [x] Kapitel 9 - vollstaendig (beide Tracks)
-- [x] Kapitel 10 - vollstaendig (beide Tracks)
-- [x] Kapitel 11 - vollstaendig (beide Tracks)
-- [x] Kapitel 12 - vollstaendig (beide Tracks)
-- [x] Kapitel 13 - vollstaendig (beide Tracks)
-- [x] Kapitel 14 - vollstaendig (beide Tracks)
-- [x] Kapitel 15 - vollstaendig (beide Tracks)
-- [x] Kapitel 16 - vollstaendig (beide Tracks)
-- [ ] Kapitel 17-18 - folgen nach demselben Prinzip
+Alle 18 Kapitel sind vollstaendig, fuer beide Tracks (Grundlagen und
+NinjaFight).
 
 ## Zugehoeriges Buch
 

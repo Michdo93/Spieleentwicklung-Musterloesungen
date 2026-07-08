@@ -1,0 +1,65 @@
+body {
+  background: #10161c;
+  color: #d7e2ea;
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.panel {
+  max-width: 480px;
+  margin: 0 auto 24px;
+  padding: 16px;
+  background: #0b1a24;
+  border: 2px solid #3a4a58;
+  border-radius: 6px;
+  text-align: left;
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+label {
+  display: block;
+  margin: 8px 0;
+  font-size: 14px;
+  color: #93a4b3;
+}
+
+input[type="text"], input[placeholder], #name-input, #points-input {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #3a4a58;
+  background: #10161c;
+  color: #d7e2ea;
+}
+
+button {
+  margin: 6px 4px 0 0;
+  padding: 8px 14px;
+  font-size: 13px;
+  background: #a78bfa;
+  border: none;
+  border-radius: 4px;
+  color: #10161c;
+  cursor: pointer;
+}
+button:hover {
+  background: #c4b5fd;
+}
+
+pre {
+  background: #10161c;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #5fe0c9;
+  min-height: 40px;
+}
+
+#result, #cumulative {
+  font-weight: bold;
+  font-size: 15px;
+}

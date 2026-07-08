@@ -1,0 +1,65 @@
+body {
+  background: #10161c;
+  color: #d7e2ea;
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.bugtoggle {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: 14px;
+  color: #93a4b3;
+}
+
+#stage-wrapper {
+  position: relative;
+  width: 480px;
+  height: 260px;
+  margin: 0 auto;
+  background: #2d5a3d; /* simuliert die "Spielwelt" dahinter */
+  border: 2px solid #3a4a58;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Basisklasse fuer ALLE Bildschirme: standardmaessig unsichtbar, im
+   aktiven Zustand mittig ausgerichtet und mit dunklem Overlay - genau
+   diese gemeinsame Basis war Ursache des echten Bugs. */
+.screen {
+  display: none;
+  position: absolute;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+}
+.screen.active {
+  display: flex;
+}
+
+/* DER FIX: Ein ID-Selektor hat hoehere Spezifitaet als ein
+   Klassen-Selektor und gewinnt daher unabhaengig von der Reihenfolge
+   im Stylesheet - #screen-game bleibt transparent, obwohl es
+   dieselbe .screen-Klasse traegt wie Start- und Pause-Bildschirm. */
+body:not(.show-bug) #screen-game.active {
+  background: transparent;
+  color: inherit;
+}
+
+button {
+  padding: 8px 18px;
+  font-size: 14px;
+  background: #a78bfa;
+  border: none;
+  border-radius: 4px;
+  color: #10161c;
+  cursor: pointer;
+}
+button:hover {
+  background: #c4b5fd;
+}

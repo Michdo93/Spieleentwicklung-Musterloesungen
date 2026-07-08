@@ -1,0 +1,100 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0a0e14;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#stage-wrapper {
+  position: relative;
+}
+
+#stage {
+  background: #bfe8ea;
+  border: 2px solid #000;
+  image-rendering: pixelated;
+}
+
+#game {
+  position: relative;
+}
+
+#hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+  pointer-events: none;
+}
+
+/* Basisklasse fuer ALLE Bildschirme (Start/Pause/Spiel) */
+.screen {
+  display: none;
+}
+.screen.active {
+  display: block;
+}
+
+/* Start- und Pause-Bildschirm liegen ALS OVERLAY ueber dem Spiel und
+   verdunkeln es bewusst. */
+#screen-start.screen,
+#screen-pause.screen,
+#screen-gameover.screen {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(5, 7, 10, 0.85);
+  color: #fff;
+  font-family: sans-serif;
+  text-align: center;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+#screen-start.screen.active,
+#screen-pause.screen.active,
+#screen-gameover.screen.active {
+  display: flex;
+}
+
+#go-name {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #3a4a58;
+  background: #10161c;
+  color: #d7e2ea;
+}
+
+#highscore-list {
+  background: #10161c;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #5fe0c9;
+  min-width: 220px;
+  min-height: 30px;
+}
+
+button {
+  padding: 10px 24px;
+  font-size: 16px;
+  background: #a78bfa;
+  border: none;
+  border-radius: 4px;
+  color: #10161c;
+  cursor: pointer;
+}
+button:hover {
+  background: #c4b5fd;
+}

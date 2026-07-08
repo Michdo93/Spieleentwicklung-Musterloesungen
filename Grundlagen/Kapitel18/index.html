@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Kapitel 18 – Highscores &amp; Levelfortschritt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Kapitel 18 – Highscores &amp; Levelfortschritt</h1>
+
+  <section class="panel">
+    <h2>1. Highscores (localStorage)</h2>
+    <input id="name-input" placeholder="Name" maxlength="16">
+    <input id="points-input" type="number" placeholder="Punkte" value="100">
+    <button id="btn-save">Speichern</button>
+    <pre id="highscore-list"></pre>
+  </section>
+
+  <section class="panel">
+    <h2>2. Sieg oder Niederlage?</h2>
+    <label>HP: <input type="range" id="hp" min="0" max="10" value="5"></label>
+    <label>Zeit übrig (s): <input type="range" id="time" min="0" max="60" value="30"></label>
+    <label>Gegner übrig: <input type="range" id="enemiesLeft" min="0" max="5" value="2"></label>
+    <label>Level: <input type="range" id="levelNum" min="1" max="10" value="1"></label>
+    <p id="result"></p>
+  </section>
+
+  <section class="panel">
+    <h2>3. Kumulative Lebenspunkte: += statt =</h2>
+    <button id="btn-nextlevel">Nächstes Level</button>
+    <button id="btn-reset">Zurücksetzen</button>
+    <p id="cumulative"></p>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

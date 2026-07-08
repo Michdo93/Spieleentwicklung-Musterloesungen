@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Kapitel 17 – Menüs &amp; Spielzustände</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Kapitel 17 – Menüs &amp; Spielzustände</h1>
+
+  <label class="bugtoggle">
+    <input type="checkbox" id="bug-toggle">
+    Bug-Modus aktivieren (zeigt den echten CSS-Fehler)
+  </label>
+
+  <div id="stage-wrapper">
+    <div id="screen-game" class="screen">
+      <p>Hier läuft das eigentliche Spiel (Platzhalter).</p>
+      <button id="btn-pause">Pause (oder ESC)</button>
+    </div>
+
+    <div id="screen-start" class="screen active">
+      <h2>Ninja Fight</h2>
+      <button id="btn-play">Start</button>
+    </div>
+
+    <div id="screen-pause" class="screen">
+      <h2>Pause</h2>
+      <button id="btn-resume">Weiter (oder ESC)</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
