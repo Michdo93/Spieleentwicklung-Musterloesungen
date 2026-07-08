@@ -1,7 +1,28 @@
-# Kapitel 07 - Level-Daten und Tile-Rendering
+# Kapitel 7 - Level-Daten & Tile-Rendering
 
-Dieses Kapitel folgt in Kuerze und wird nach demselben Prinzip aufgebaut
-wie Kapitel 1: eine vollstaendig lauffaehige Musterloesung, die auf dem
-vorherigen Kapitel aufbaut.
+Musterloesung zu Kapitel 7 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
 
-Siehe Buch, Kapitel 07, fuer die Schritt-fuer-Schritt-Anleitung.
+## Ausfuehren
+
+```bash
+python3 -m http.server 8000
+```
+
+## Was hier passiert
+
+- Level als reine Datenliste (`{ type, x, y }`) statt hartkodierter
+  `fillRect()`-Aufrufe
+- `buildLevel()` sortiert die flache Rohdatenliste einmal nach
+  Bedeutung (Plattform oder nicht)
+- Ein Klick auf den Knopf tauscht das komplette Level aus - derselbe
+  Zeichencode stellt zwei unterschiedliche Level dar
+
+## Dateien
+
+```
+Kapitel07/
+├── index.html
+├── style.css
+└── script.js
+```

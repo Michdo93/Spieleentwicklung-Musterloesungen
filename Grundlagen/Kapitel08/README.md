@@ -1,7 +1,30 @@
-# Kapitel 08 - Hindernisse und Gefahren
+# Kapitel 8 - Hindernisse & Gefahren
 
-Dieses Kapitel folgt in Kuerze und wird nach demselben Prinzip aufgebaut
-wie Kapitel 1: eine vollstaendig lauffaehige Musterloesung, die auf dem
-vorherigen Kapitel aufbaut.
+Musterloesung zu Kapitel 8 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
 
-Siehe Buch, Kapitel 08, fuer die Schritt-fuer-Schritt-Anleitung.
+## Ausfuehren
+
+```bash
+python3 -m http.server 8000
+```
+
+## Was hier passiert
+
+- `checkHazards()`: prueft, ob die Figur in einer Gefahrenzone steht
+- Wasser ist bewusst KEINE Gefahr - nur zur Anschauung, dass nicht
+  jedes auffaellige Element automatisch schadet
+- Feuer und Stacheln schaden per Abklingzeit (`invulnTimer`), nicht
+  bei jedem einzelnen Frame - sonst waeren es bei 60fps auch 60
+  Treffer pro Sekunde
+- Reihenfolge: erst pruefen/Schaden zufuegen, dann den Timer
+  runterzaehlen
+
+## Dateien
+
+```
+Kapitel08/
+├── index.html
+├── style.css
+└── script.js
+```
