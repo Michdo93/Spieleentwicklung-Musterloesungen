@@ -1,0 +1,43 @@
+body {
+  background: #10161c;
+  color: #d7e2ea;
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+canvas {
+  background: #0b1a24;
+  border: 2px solid #3a4a58;
+  border-radius: 6px;
+}
+
+#hint {
+  max-width: 480px;
+  margin: 12px auto 0;
+  font-size: 14px;
+  color: #93a4b3;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 18px;
+  font-size: 14px;
+  background: #a78bfa;
+  border: none;
+  border-radius: 4px;
+  color: #10161c;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #c4b5fd;
+}
+
+div {
+  margin-top: 10px;
+}
+
+button {
+  margin: 0 4px;
+}

@@ -1,7 +1,27 @@
-# Kapitel 11 - Fernkampf und Projektile
+# Kapitel 11 - Fernkampf & Projektile
 
-Dieses Kapitel folgt in Kuerze und wird nach demselben Prinzip aufgebaut
-wie Kapitel 1: eine vollstaendig lauffaehige Musterloesung, die auf dem
-vorherigen Kapitel aufbaut.
+Musterloesung zu Kapitel 11 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
 
-Siehe Buch, Kapitel 11, fuer die Schritt-fuer-Schritt-Anleitung.
+## Ausfuehren
+
+```bash
+python3 -m http.server 8000
+```
+
+## Was hier passiert
+
+- Die `Projectile`-Klasse: eigene Position, eigene Geschwindigkeit,
+  eigenes `update()` - unabhaengig vom Werfer
+- Ein Wurf braucht ein echtes OBJEKT, nicht nur eine Animation
+- Ein Projektil kennt seinen Werfer (`owner`) und trifft diesen nicht
+- Projektile ausserhalb des sichtbaren Bereichs werden entfernt
+
+## Dateien
+
+```
+Kapitel11/
+├── index.html
+├── style.css
+└── script.js
+```

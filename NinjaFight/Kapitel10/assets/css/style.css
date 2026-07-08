@@ -1,0 +1,15 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0a0e14;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#stage {
+  background: #bfe8ea;
+  border: 2px solid #000;
+  image-rendering: pixelated;
+}
