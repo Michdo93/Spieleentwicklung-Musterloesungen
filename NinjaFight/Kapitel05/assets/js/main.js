@@ -41,13 +41,12 @@ const TILE_SHEET = {
 const GRAVITY = 1400;     // px/s²
 const JUMP_SPEED = 620;   // px/s (Anfangsgeschwindigkeit nach oben)
 const WALK_SPEED = 160;
-// Sicherheitsabstand zum Buehnenrand fuer die Randbegrenzung. Das
-// sichtbare Sprite ist NICHT symmetrisch um hero.x zentriert (der
-// Spiegel-Fusspunkt aus Kapitel 2 sitzt naeher an der linken als der
-// rechten Kante) - ohne diesen Puffer waere beim Anlaufen an den
-// Buehnenrand je nach Blickrichtung ein grosser Teil der Figur nicht
-// mehr zu sehen.
-const EDGE_MARGIN = 60; // Pixel
+// Sicherheitsabstand zum Buehnenrand, GEMESSEN an den tatsaechlich
+// sichtbaren Pixeln des Sprites (nicht an der vollen, groesstenteils
+// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, fuer die
+// genaue Messung. Ohne diesen Puffer wuerde die Figur am aeussersten
+// Rand knapp ueber den Bildschirmrand hinausragen.
+const EDGE_MARGIN = 20; // Pixel
 
 const FLOOR_Y = STAGE_H - 21;
 

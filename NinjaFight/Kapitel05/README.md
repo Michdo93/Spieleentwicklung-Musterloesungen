@@ -32,8 +32,12 @@ Kapitel05/
         └── tiles.png
 ```
 
-## Nachtraeglicher Fix
+## Nachtraeglicher Fix (korrigiert)
 
-`hero.x` wird jetzt auf `EDGE_MARGIN`/`STAGE_W - EDGE_MARGIN` statt
-auf `0`/`STAGE_W` begrenzt - sonst waere je nach Blickrichtung ein
-grosser Teil des Sprites am Buehnenrand nicht mehr sichtbar gewesen.
+`hero.x` wird auf `EDGE_MARGIN`/`STAGE_W - EDGE_MARGIN` begrenzt,
+statt direkt auf `0`/`STAGE_W`. Der erste Versuch hatte den Puffer
+nach der vollen (groesstenteils transparenten) Sprite-Zelle berechnet
+und war dadurch weit uebertrieben (60px) - das sperrte unnoetig viel
+begehbaren Boden am Rand. Nach dem Vermessen der tatsaechlich
+sichtbaren Pixel (siehe Buch) reichen `EDGE_MARGIN = 20` Pixel voellig
+aus.

@@ -32,8 +32,11 @@ Kapitel06/
         └── tiles.png
 ```
 
-## Nachtraeglicher Fix
+## Nachtraeglicher Fix (korrigiert)
 
-`findLanding()` prueft jetzt mit einer kleinen Toleranz
-(`FOOT_MARGIN`) statt eines exakten Punktvergleichs - vermeidet ein
-seltenes, aber reales Durchfallen an Kachel-Nahtstellen.
+`findLanding()` prueft mit einer Toleranz (`FOOT_MARGIN`) statt eines
+exakten Punktvergleichs. Der erste Versuch (6px) war zu klein und
+fuehlte sich beim Spielen an, als wuerde man an Kanten zu frueh
+herunterfallen, obwohl man optisch noch auf der Plattform stand.
+Nach dem Vermessen der sichtbaren Sprite-Breite (siehe Buch) liegt
+`FOOT_MARGIN` jetzt bei 16 Pixel.

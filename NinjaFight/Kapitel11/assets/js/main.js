@@ -49,18 +49,19 @@ const TILE_SHEET = {
 const GRAVITY = 1400;
 const JUMP_SPEED = 620;
 const WALK_SPEED = 160;
-// Sicherheitsabstand zum Buehnenrand fuer die Randbegrenzung. Das
-// sichtbare Sprite ist NICHT symmetrisch um hero.x zentriert (der
-// Spiegel-Fusspunkt aus Kapitel 2 sitzt naeher an der linken als der
-// rechten Kante) - ohne diesen Puffer waere beim Anlaufen an den
-// Buehnenrand je nach Blickrichtung ein grosser Teil der Figur nicht
-// mehr zu sehen.
-const EDGE_MARGIN = 60;
-// kleine Toleranz um den Fusspunkt beim Landetest - ein Fuss ist keine
-// unendlich duenne Linie. Ohne diese Toleranz kann es (sehr selten,
-// aber beim Testen tatsaechlich aufgetreten) passieren, dass man genau
-// auf der Nahtstelle zwischen zwei Kacheln landet und durchfaellt.
-const FOOT_MARGIN = 6;
+// Sicherheitsabstand zum Buehnenrand, GEMESSEN an den tatsaechlich
+// sichtbaren Pixeln des Sprites (nicht an der vollen, groesstenteils
+// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, fuer die
+// genaue Messung. Ohne diesen Puffer wuerde die Figur am aeussersten
+// Rand knapp ueber den Bildschirmrand hinausragen.
+const EDGE_MARGIN = 20;
+// Toleranz um den Fusspunkt beim Landetest, GEMESSEN an der
+// sichtbaren Breite des Sprites (siehe Buch, Kapitel 6) - solange ein
+// sichtbarer Teil der Figur noch ueber der Plattform ist, gilt sie als
+// getragen. Mit einem einzelnen exakten Punkt (ohne Toleranz) fuehlt
+// sich das Herunterfallen an Kanten spuerbar zu frueh an, weil man
+// optisch noch auf der Plattform zu stehen scheint.
+const FOOT_MARGIN = 16;
 const CLIMB_SPEED = 110;
 
 // Original-Level-Layouts, 1:1 aus levels.js uebernommen. "Bottom" und
