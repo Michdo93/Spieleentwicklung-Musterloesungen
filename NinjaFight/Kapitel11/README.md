@@ -8,16 +8,23 @@ Baut auf Kapitel 10 auf (Kopie + Erweiterung).
 ## Steuerung
 
 - Pfeiltasten/WASD: laufen, springen (Leertaste), klettern
-- **J**: Schlag, **K**: Tritt, **L**: Shuriken werfen
+- **J**: Schlag, **K**: Tritt, **L**: Schwert, **U**: Shuriken werfen
 
 ## Was hier neu dazugekommen ist
 
-- Die `Projectile`-Klasse: eigene Position, eigene Geschwindigkeit,
-  eigenes `update()` - unabhaengig vom Werfer
-- `Throw` als neuer, nicht-endloser Animationszustand
-- Jedes geworfene Shuriken ist ein echtes Objekt in einem
-  `projectiles`-Array, nicht nur eine Wurfanimation
-- Ein Projektil kennt seinen Werfer (`owner`) und trifft ihn nicht
+- Der Held hat von Anfang an **100 Shuriken** dabei
+- `Projectile`-Klasse: eigene Position, eigene Geschwindigkeit,
+  eigenes `update()`, kennt seinen Werfer
+- `throwShuriken()` verbraucht ein Shuriken und erzeugt ein echtes
+  Projektil (nicht nur die Wurfanimation - siehe Buch fuer die echte
+  Bug-Geschichte dazu)
+- `Throw` als neuer Animationszustand
+
+## Ausfuehren
+
+```bash
+python3 -m http.server 8000
+```
 
 ## Dateien
 
@@ -30,5 +37,6 @@ Kapitel11/
     └── img/sprites/
         ├── hero.png
         ├── blue.png
+        ├── green.png
         └── tiles.png
 ```

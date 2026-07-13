@@ -6,15 +6,32 @@ body {
   padding: 20px;
 }
 
+h1 {
+  margin-bottom: 30px;
+}
+
+section {
+  max-width: 480px;
+  margin: 0 auto 36px;
+}
+
+h2 {
+  font-size: 16px;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
 canvas {
   background: #0b1a24;
   border: 2px solid #3a4a58;
   border-radius: 6px;
+  display: block;
 }
 
-#hint {
+.hint {
+  text-align: left;
   max-width: 480px;
-  margin: 12px auto 0;
-  font-size: 14px;
+  margin: 10px auto 0;
+  font-size: 13.5px;
   color: #93a4b3;
 }

@@ -2,120 +2,197 @@
  * Kapitel 6 - Kollision & Plattformen
  * Musterloesung
  *
- * Statt gegen einen einzigen festen Boden zu landen (Kapitel 5), suchen
- * wir jetzt unter mehreren Plattformen diejenige, auf der die Figur
- * gerade landen wuerde - findLanding(), genau wie im spaeteren Spiel.
+ * Drei Beispiele: (1) der AABB-Test, (2) Landung auf einer Plattform
+ * (entspricht findLanding()), (3) mehrere Plattformen mit dem
+ * Unterschied zwischen sichtbarem Sprite und tatsaechlicher
+ * Trefferbox.
  */
 
-const canvas = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
-const W = canvas.width;
-const H = canvas.height;
+const GRAVITY = 1400, JUMP_SPEED = 620;
 
-const GRAVITY = 1400;
-const JUMP_SPEED = 620;
-const WALK_SPEED = 160;
-const SIZE = 30; // Breite/Hoehe der Spielfigur (vereinfachtes Quadrat)
+// entspricht overlaps()/rectOf() in render.js - die Grundfunktionen
+// fuer jede Rechteck-Kollision im ganzen Spiel
+function rectOf(x, y, w, h) { return { left: x, right: x + w, top: y, bottom: y + h }; }
+function overlaps(a, b) { return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
 
-// Jede Plattform: { x, y, w } - eine Linie, auf der man landen kann.
-// y ist die Oberkante der Plattform.
-const platforms = [
-  { x: 0, y: H - 20, w: W },       // durchgehender Boden
-  { x: 60, y: 190, w: 120 },
-  { x: 260, y: 130, w: 120 },
-  { x: 340, y: 220, w: 100 },
-];
+/* ===================================================================
+   Beispiel 1: AABB-Kollision - zwei Rechtecke, ein einziger Test
+   =================================================================== */
+(function example1_aabb() {
+  const canvas = document.getElementById("stage1");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
 
-const player = {
-  x: 20,
-  y: H - 20 - SIZE,
-  vy: 0,
-  onGround: true,
-};
+  const fixed = rectOf(200, 100, 100, 80);
+  let mx = 60, my = 60;
 
-const keys = { left: false, right: false, jump: false };
-window.addEventListener("keydown", (e) => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
-  if (e.code === "Space") { keys.jump = true; e.preventDefault(); }
-});
-window.addEventListener("keyup", (e) => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
-  if (e.code === "Space") keys.jump = false;
-});
+  function draw() {
+    const moving = rectOf(mx, my, 60, 60);
+    const hit = overlaps(moving, fixed);
 
-// AABB-Test: zwei Rechtecke ueberlappen sich, wenn sie sich auf BEIDEN
-// Achsen gleichzeitig ueberschneiden.
-function overlaps(a, b) {
-  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
-}
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(255,107,107,0.35)";
+    ctx.fillRect(fixed.left, fixed.top, fixed.right - fixed.left, fixed.bottom - fixed.top);
+    ctx.fillStyle = hit ? "#5fe0c9" : "#ffb84d";
+    ctx.fillRect(moving.left, moving.top, 60, 60);
 
-// Sucht unter allen Plattformen diejenige, auf der die Figur bei
-// nextY landen wuerde: horizontal drueber, gerade eben noch drueber,
-// und jetzt (fast) drauf.
-function findLanding(nextY) {
-  let best = null;
-  platforms.forEach((p) => {
-    const horizontallyOver = player.x + SIZE > p.x && player.x < p.x + p.w;
-    const wasAboveOrLevel = player.y + SIZE <= p.y + 2;
-    const nowAtOrBelow = nextY + SIZE >= p.y;
-    if (horizontallyOver && wasAboveOrLevel && nowAtOrBelow) {
-      if (!best || p.y < best.y) best = p;
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "13px monospace";
+    ctx.fillText(`overlaps() = ${hit}`, 14, 24);
+  }
+  canvas.addEventListener("mousemove", (e) => {
+    const r = canvas.getBoundingClientRect();
+    mx = e.clientX - r.left - 30;
+    my = e.clientY - r.top - 30;
+    draw();
+  });
+  draw();
+})();
+
+/* ===================================================================
+   Beispiel 2: Landung auf EINER Plattform - entspricht findLanding()
+   =================================================================== */
+(function example2_landing() {
+  const canvas = document.getElementById("stage2");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  const platform = { x: 140, y: 180, w: 200 };
+  let x = W / 2, y = 20, vy = 0, onGround = false;
+
+  window.addEventListener("keydown", (e) => {
+    if (e.code === "Space" && onGround) {
+      vy = -JUMP_SPEED;
+      onGround = false;
+      e.preventDefault();
     }
   });
-  return best;
-}
+  canvas.addEventListener("mousemove", (e) => {
+    const r = canvas.getBoundingClientRect();
+    x = e.clientX - r.left;
+  });
 
-let lastTime = 0;
-
-function update(dt) {
-  if (keys.left) player.x -= WALK_SPEED * dt;
-  if (keys.right) player.x += WALK_SPEED * dt;
-  player.x = Math.max(0, Math.min(W - SIZE, player.x));
-
-  if (keys.jump && player.onGround) {
-    player.vy = -JUMP_SPEED;
-    player.onGround = false;
+  // exakt dieselbe Pruefung wie in Hero.findLanding()/Enemy.findLanding()
+  function findLanding(nextY) {
+    if (x > platform.x && x < platform.x + platform.w && y <= platform.y + 2 && nextY >= platform.y) {
+      return { y: platform.y };
+    }
+    return null;
   }
-  player.vy += GRAVITY * dt;
 
-  const nextY = player.y + player.vy * dt;
-  const landing = player.vy >= 0 ? findLanding(nextY) : null;
-
-  if (landing) {
-    player.y = landing.y - SIZE;
-    player.vy = 0;
-    player.onGround = true;
-  } else {
-    player.y = nextY;
-    player.onGround = false;
-  }
-}
-
-function render() {
-  ctx.fillStyle = "#0b1a24";
-  ctx.fillRect(0, 0, W, H);
-
-  ctx.fillStyle = "#663300";
-  platforms.forEach((p) => ctx.fillRect(p.x, p.y, p.w, 4));
-
-  ctx.fillStyle = player.onGround ? "#5fe0c9" : "#a78bfa";
-  ctx.fillRect(player.x, player.y, SIZE, SIZE);
-}
-
-function loop(now) {
-  if (lastTime === 0) {
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
     lastTime = now;
+
+    vy += GRAVITY * dt;
+    const nextY = y + vy * dt;
+    const landing = findLanding(nextY);
+    if (landing && vy >= 0) {
+      y = landing.y; vy = 0; onGround = true;
+    } else {
+      y = nextY; onGround = false;
+      if (y > H + 40) { y = 20; vy = 0; }
+    }
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#663300";
+    ctx.fillRect(platform.x, platform.y, platform.w, 10);
+    ctx.fillStyle = onGround ? "#5fe0c9" : "#a78bfa";
+    ctx.beginPath();
+    ctx.arc(x, y, 13, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "13px monospace";
+    ctx.fillText(`onGround = ${onGround}`, 14, 24);
+
+    requestAnimationFrame(loop);
   }
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
-
-  update(dt);
-  render();
-
   requestAnimationFrame(loop);
-}
+  canvas.addEventListener("click", () => canvas.focus());
+})();
 
-canvas.focus();
-requestAnimationFrame(loop);
+/* ===================================================================
+   Beispiel 3: mehrere Plattformen + Trefferbox != Sprite
+   Reale Charaktere haben eine kleinere, unsichtbare Trefferbox als ihr
+   gezeichnetes Sprite - hier als gestrichelter Rahmen sichtbar gemacht.
+   =================================================================== */
+(function example3_multi() {
+  const canvas = document.getElementById("stage3");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  const platforms = [
+    { x: 20, y: 220, w: 150 },
+    { x: 220, y: 160, w: 120 },
+    { x: 380, y: 100, w: 80 },
+  ];
+  let x = 60, y = 20, vy = 0, onGround = false;
+  const keys = { left: false, right: false };
+
+  window.addEventListener("keydown", (e) => {
+    if (e.code === "ArrowLeft") keys.left = true;
+    if (e.code === "ArrowRight") keys.right = true;
+    if (e.code === "Space" && onGround) { vy = -JUMP_SPEED; onGround = false; }
+    if (["ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
+  });
+  window.addEventListener("keyup", (e) => {
+    if (e.code === "ArrowLeft") keys.left = false;
+    if (e.code === "ArrowRight") keys.right = false;
+  });
+
+  function findLanding(nextY) {
+    let best = null;
+    platforms.forEach((p) => {
+      if (x > p.x && x < p.x + p.w && y <= p.y + 2 && nextY >= p.y) {
+        if (!best || p.y < best.y) best = { y: p.y };
+      }
+    });
+    return best;
+  }
+
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    if (keys.left) x -= 140 * dt;
+    if (keys.right) x += 140 * dt;
+    x = Math.max(15, Math.min(W - 15, x));
+
+    vy += GRAVITY * dt;
+    const nextY = y + vy * dt;
+    const landing = findLanding(nextY);
+    if (landing && vy >= 0) {
+      y = landing.y; vy = 0; onGround = true;
+    } else {
+      y = nextY; onGround = false;
+      if (y > H + 40) { x = 60; y = 20; vy = 0; }
+    }
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#663300";
+    platforms.forEach((p) => ctx.fillRect(p.x, p.y, p.w, 10));
+
+    // Sprite: gross und leicht versetzt gezeichnet ...
+    ctx.fillStyle = "#5fe0c9";
+    ctx.beginPath();
+    ctx.arc(x, y - 6, 22, 0, Math.PI * 2);
+    ctx.fill();
+    // ... Trefferbox: klein, das ist die tatsaechlich fuer Kollision genutzte Groesse
+    ctx.strokeStyle = "#ffb84d";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.strokeRect(x - 8, y - 16, 16, 16);
+    ctx.setLineDash([]);
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  canvas.addEventListener("click", () => canvas.focus());
+})();

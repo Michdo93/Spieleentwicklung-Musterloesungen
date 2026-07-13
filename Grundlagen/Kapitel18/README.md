@@ -13,13 +13,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-1. **Highscores**: eine Liste mit `localStorage` speichern, sortieren,
-   auf die Top 10 begrenzen
-2. **Sieg oder Niederlage?**: eine interaktive Simulation - ein
-   Zeitablauf ist nur DANN eine Niederlage, wenn zusaetzlich noch
-   Gegner uebrig sind
-3. **`+=` statt `=`**: der Unterschied zwischen einer Formel, die den
-   bisherigen Stand ueberschreibt, und einer, die auf ihm aufbaut
+1. **Highscores mit localStorage** - speichern, sortieren, auf Top 10
+   begrenzen
+2. **Sieg oder Niederlage?** - Zeitablauf ist nur DANN eine Niederlage,
+   wenn zusaetzlich noch Gegner uebrig sind
+3. **Kumulative Lebenspunkte** - `+=` statt `=` ueber mehrere Level
 
 ## Dateien
 

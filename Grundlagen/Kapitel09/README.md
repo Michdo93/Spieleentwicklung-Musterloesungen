@@ -11,12 +11,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Klettern als dritter Bewegungszustand neben Laufen und Springen
-- Innerhalb der Leiterzone: Schwerkraft aus, Position direkt per
-  Hoch/Runter gesteuert, begrenzt auf die Leiterzone
-- `onLadder` wird jeden Frame neu berechnet (kein Zustand ueber
-  mehrere Frames noetig) - nur wenn man sich in der Zone befindet UND
-  nicht gleichzeitig links/rechts gedrueckt wird
+1. **Der echte Bug** - eine versehentlich doppelt addierte Kachelhoehe
+   laesst die Figur am Leiterende ins Leere fallen
+2. **Die Korrektur** - die Zone endet exakt auf Plattformhoehe
+3. **Vollstaendige Integration** - Laufen, Springen und Klettern
+   kombiniert zwischen zwei Plattformen
 
 ## Dateien
 

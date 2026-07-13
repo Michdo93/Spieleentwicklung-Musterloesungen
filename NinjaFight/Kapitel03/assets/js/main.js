@@ -2,10 +2,12 @@
  * Ninja Fight - Kapitel 3: Sprite-Animation
  * Musterloesung
  *
- * Baut auf Kapitel 2 auf. Neu: drawHero() zeichnet nicht mehr nur den
- * ersten Idle-Frame als Standbild, sondern spielt die komplette
- * Idle-Animation endlos ab - der Held "atmet" jetzt, obwohl er sich
- * noch nicht bewegen kann (das kommt erst in Kapitel 5).
+ * Baut auf Kapitel 2 auf. Neu: drawHero() spielt jetzt die
+ * Idle-Animation endlos ab, statt nur den ersten Frame zu zeichnen.
+ * Walk und Jump sind in CHARACTER_STATES bereits vorbereitet, auch
+ * wenn wir sie erst ab Kapitel 4/5 tatsaechlich ansteuern - so muessen
+ * wir dann nur noch die Tasten-Events ergaenzen, statt die
+ * Animationslogik selbst nochmal anzufassen.
  */
 
 const canvas = document.getElementById("stage");
@@ -21,6 +23,11 @@ tileSheet.src = "assets/img/sprites/tiles.png";
 
 const CELL_W = 160;
 const CELL_H = 150;
+const ANCHOR_X = 30;
+const ANCHOR_Y = 145;
+const SPRITE_SCALE = 0.45;
+const DRAW_W = CELL_W * SPRITE_SCALE;
+const DRAW_H = CELL_H * SPRITE_SCALE;
 
 const TILE_SHEET = {
   cellW: 42,
@@ -30,17 +37,20 @@ const TILE_SHEET = {
   },
 };
 
-// entspricht CHARACTER_SHEET.states in Ninja Fight - vorerst nur die
-// Zustaende, die wir bereits brauchen
-const CHARACTER_STATES = {
-  Idle: { row: 0, count: 8 },
-};
+const FLOOR_Y = STAGE_H - 21;
 
-const FPS = 8; // Animationsgeschwindigkeit (Frames der Animation pro Sekunde)
+// bereits alle drei Zustaende vorbereitet - Walk/Jump werden erst ab
+// Kapitel 4/5 tatsaechlich ausgeloest
+const CHARACTER_STATES = {
+  Idle: { row: 0, count: 8, loop: true },
+  Walk: { row: 1, count: 8, loop: true },
+  Jump: { row: 2, count: 8, loop: false },
+};
+const FPS = 8;
 
 const hero = {
-  x: STAGE_W / 2 - CELL_W / 2,
-  y: STAGE_H / 2 - CELL_H / 2 - 40,
+  x: STAGE_W / 2,
+  y: FLOOR_Y,
   facing: 1,
   state: "Idle",
   animTime: 0,
@@ -53,19 +63,23 @@ function drawTile(name, x, y) {
   ctx.drawImage(tileSheet, sx, sy, def.w, def.h, x, y, def.w, def.h);
 }
 
-// Zeichnet den Helden in seinem aktuellen Animationszustand. Der
-// Frame-Index laeuft per Modulo endlos durch - passend fuer Idle, das
-// keinen definierten Anfang oder Ende hat.
+// Zeichnet den Helden in seinem aktuellen Animationszustand, bei
+// (x, y) = Fusspunkt. Der Frame-Index laeuft per Modulo endlos durch
+// (fuer Idle passend, da Idle keinen definierten Anfang/Ende hat).
 function drawHero(x, y, facing, state, animTime) {
   const def = CHARACTER_STATES[state];
-  const frame = Math.floor(animTime * FPS) % def.count;
+  const rawFrame = Math.floor(animTime * FPS);
+  const frame = def.loop ? rawFrame % def.count : Math.min(rawFrame, def.count - 1);
   const sx = frame * CELL_W;
   const sy = def.row * CELL_H;
 
   ctx.save();
-  ctx.translate(x + CELL_W / 2, y);
+  ctx.translate(x, y);
   ctx.scale(facing, 1);
-  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, -CELL_W / 2, 0, CELL_W, CELL_H);
+  ctx.drawImage(
+    heroSheet, sx, sy, CELL_W, CELL_H,
+    -ANCHOR_X * SPRITE_SCALE, -ANCHOR_Y * SPRITE_SCALE, DRAW_W, DRAW_H
+  );
   ctx.restore();
 }
 
@@ -82,9 +96,8 @@ function render() {
   if (!tileSheet.complete || tileSheet.naturalWidth === 0) return;
   if (!heroSheet.complete || heroSheet.naturalWidth === 0) return;
 
-  const floorY = STAGE_H - 21;
   for (let x = 0; x < STAGE_W; x += 41) {
-    drawTile("Floor", x, floorY);
+    drawTile("Floor", x, FLOOR_Y);
   }
 
   drawHero(hero.x, hero.y, hero.facing, hero.state, hero.animTime);

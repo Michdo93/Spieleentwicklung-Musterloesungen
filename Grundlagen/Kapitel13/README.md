@@ -11,13 +11,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- `hasSupportAhead()`: prueft VOR jedem Schritt, ob voraus noch Boden
-  ist - unabhaengig von der tatsaechlichen Plattformlaenge
-- Feste Patrouillengrenzen (`patrolLeft`/`patrolRight`) allein reichen
-  nicht - sie wissen nichts von der Plattformgeometrie
-- Zufaelliges Springen respektiert immer zuerst die
-  Kantenerkennung (`supported`), sonst wuerde es die eigentliche
-  Absicherung unterlaufen
+1. **Naive Patrouille** - laeuft blind ueber die Kante einer zu kurzen
+   Plattform
+2. **Mit Kantenerkennung** - `hasSupportAhead()` verhindert das
+3. **Gelegentliches Springen** - nur wenn auch danach noch Boden
+   erwartet wird
 
 ## Dateien
 
@@ -25,5 +23,6 @@ python3 -m http.server 8000
 Kapitel13/
 ├── index.html
 ├── style.css
-└── script.js
+├── script.js
+└── assets/blue.png
 ```

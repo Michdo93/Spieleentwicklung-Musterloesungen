@@ -5,20 +5,19 @@ Musterloesung zu Kapitel 17 des Buchs
 
 Baut auf Kapitel 16 auf (Kopie + Erweiterung).
 
-## Ausfuehren
-
-```bash
-python3 -m http.server 8000
-```
-
 ## Was hier neu dazugekommen ist
 
 - Start-, Spiel- und Pause-Bildschirm als sich gegenseitig
   ausschliessende Zustaende (`showScreen()`)
 - Der Game-Loop laeuft nur noch im Zustand `"game"` - im Pause- oder
   Start-Zustand plant er sich selbst nicht erneut ein
-  (`requestAnimationFrame`)
 - ESC-Taste und Buttons loesen denselben Zustandswechsel aus
+
+## Ausfuehren
+
+```bash
+python3 -m http.server 8000
+```
 
 ## Dateien
 

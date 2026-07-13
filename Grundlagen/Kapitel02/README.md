@@ -7,16 +7,19 @@ Musterloesung zu Kapitel 2 des Buchs
 
 ```bash
 python3 -m http.server 8000
-# dann im Browser: http://localhost:8000
 ```
 
 ## Was hier passiert
 
-- Ein Bild laden und mit `drawImage()` zeichnen - in seinen zwei
-  wichtigsten Formen: das ganze Bild, und ein ausgeschnittener Frame
-  daraus (Quellrechteck + Zielrechteck)
-- Eine Figur per `translate()` + `scale(-1, 1)` spiegeln, ohne ein
-  zweites Bild zu brauchen
+1. **drawImage()-Grundformen** - ganzes Sheet vs. ein ausgeschnittener Frame
+2. **Spiegeln - falsch vs. richtig**: die Spiegelachse muss der
+   tatsaechliche "Fusspunkt" der Figur sein, nicht die Mitte des
+   ausgeschnittenen Zellbereichs. Falsch gespiegelt "springt" die
+   Figur seitlich; richtig gespiegelt bleibt sie exakt an derselben
+   Stelle
+3. **Skalierung und Position per Regler** - dieselbe Zeichenlogik,
+   aber Groesse/Position kommen aus Reglern statt fest im Code zu
+   stehen
 
 ## Dateien
 
@@ -25,5 +28,5 @@ Kapitel02/
 ├── index.html
 ├── style.css
 ├── script.js
-└── assets/hero.png   echtes Sprite-Sheet aus Ninja Fight
+└── assets/hero.png
 ```

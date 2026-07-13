@@ -2,34 +2,72 @@
  * Kapitel 17 - Menüs & Spielzustände
  * Musterloesung
  *
- * showScreen(name): entfernt "active" von ALLEN Bildschirmen und setzt
- * es nur auf den gewuenschten - nie sind zwei Bildschirme gleichzeitig
- * sichtbar. ESC-Taste und Buttons loesen denselben Zustandswechsel aus.
+ * Drei Beispiele: (1) showScreen() - nur ein Bildschirm ist je aktiv,
+ * (2) ein echter CSS-Spezifitaets-Bug aus der Entwicklung von Ninja
+ * Fight, (3) ESC pausiert und setzt fort.
  */
 
-function showScreen(name) {
-  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
-  const el = document.getElementById("screen-" + name);
-  if (el) el.classList.add("active");
-}
+/* ===================================================================
+   Beispiel 1: showScreen() - entfernt "active" von ALLEN Bildschirmen,
+   setzt es nur auf den gewuenschten.
+   =================================================================== */
+(function example1_showScreen() {
+  function showScreen(name) {
+    document.querySelectorAll("#mock-frame-1 .mock-screen").forEach((s) => s.classList.remove("active"));
+    const el = document.getElementById("mock-" + name);
+    if (el) el.classList.add("active");
+    document.getElementById("current-screen-label").textContent = `aktueller Bildschirm: "${name}"`;
+  }
+  ["start", "pause", "settings"].forEach((name) => {
+    document.getElementById("btn-screen-" + name).addEventListener("click", () => showScreen(name));
+  });
+})();
 
-document.getElementById("btn-play").addEventListener("click", () => showScreen("game"));
-document.getElementById("btn-pause").addEventListener("click", () => showScreen("pause"));
-document.getElementById("btn-resume").addEventListener("click", () => showScreen("game"));
+/* ===================================================================
+   Beispiel 2: der echte Bug - eine gemeinsame .screen-Basisklasse
+   verdunkelte versehentlich auch den Spielbildschirm selbst, der
+   waehrend des Spiels ueber dem Canvas liegt. Der Fix: ein ID-Selektor
+   (#screen-game) hat hoehere Spezifitaet als die Klassenregel.
+   =================================================================== */
+(function example2_bug() {
+  document.getElementById("btn-toggle-bug").addEventListener("click", () => {
+    const frame = document.getElementById("mock-frame-2");
+    frame.classList.toggle("bug-active");
+    const buggy = frame.classList.contains("bug-active");
+    document.getElementById("bug-status").textContent = buggy
+      ? "FEHLERHAFT: #screen-game erbt den dunklen Hintergrund der Basisklasse .screen"
+      : "KORRIGIERT: #screen-game { background: none; } ueberschreibt die Basisklasse gezielt";
+  });
+})();
 
-// Tastatur und Maus loesen denselben Zustandswechsel aus - die
-// eigentliche Logik (showScreen) weiss nichts davon, WIE sie
-// aufgerufen wurde.
-window.addEventListener("keydown", (e) => {
-  if (e.code !== "Escape") return;
-  const gameActive = document.getElementById("screen-game").classList.contains("active");
-  showScreen(gameActive ? "pause" : "game");
-});
+/* ===================================================================
+   Beispiel 3: ESC pausiert und setzt fort - echte Tastatursteuerung
+   fuer Zustandswechsel, nicht nur Buttons.
+   =================================================================== */
+(function example3_esc() {
+  let gameRunning = false;
 
-// Bug-Modus: entfernt die Klasse, die den Fix ermoeglicht (siehe CSS),
-// und reproduziert damit exakt den urspruenglichen Fehler.
-document.getElementById("bug-toggle").addEventListener("change", (e) => {
-  document.body.classList.toggle("show-bug", e.target.checked);
-});
+  function startMockGame() {
+    gameRunning = true;
+    document.getElementById("mock-frame-3").classList.remove("paused");
+    document.getElementById("esc-status").textContent = "Spiel laeuft - ESC druecken zum Pausieren";
+  }
+  function toggleEscPause() {
+    if (!gameRunning) return;
+    const frame = document.getElementById("mock-frame-3");
+    frame.classList.toggle("paused");
+    const paused = frame.classList.contains("paused");
+    document.getElementById("esc-status").textContent = paused
+      ? "Pausiert - ESC oder 'Weiter' zum Fortsetzen"
+      : "Spiel laeuft - ESC druecken zum Pausieren";
+  }
 
-showScreen("start");
+  document.getElementById("btn-start-game").addEventListener("click", startMockGame);
+  document.getElementById("btn-resume").addEventListener("click", toggleEscPause);
+  window.addEventListener("keydown", (e) => {
+    if (e.code === "Escape") {
+      toggleEscPause();
+      e.preventDefault();
+    }
+  });
+})();

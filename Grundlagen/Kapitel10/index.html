@@ -7,8 +7,33 @@
 </head>
 <body>
   <h1>Kapitel 10 – Nahkampf &amp; Hitboxen</h1>
-  <canvas id="stage" width="480" height="200"></canvas>
-  <p id="hint">Pfeiltasten/A/D zum Laufen. J = Schlag (1 Schaden), K = Tritt (2 Schaden, größere Reichweite).</p>
+
+  <section>
+    <h2>Beispiel 1: Trefferzone vor der Figur</h2>
+    <canvas id="stage1" width="300" height="200"></canvas>
+    <div class="controls"><button id="flip-btn">Umdrehen</button></div>
+    <p class="hint">Die Trefferzone (gestrichelt) liegt immer VOR der Figur - bei facing=1 rechts, bei facing=-1 links davon.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: attackHitDone - genau ein Treffer pro Angriff</h2>
+    <canvas id="stage2" width="360" height="220"></canvas>
+    <div class="controls"><button id="attack-btn">Angreifen</button></div>
+    <p class="hint">Ohne Sperre (oben): jeder Frame der Angriffsanimation trifft erneut. Mit attackHitDone (unten): genau einmal pro Angriff.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Unterschiedlicher Schaden je Angriffsart</h2>
+    <canvas id="stage3" width="300" height="200"></canvas>
+    <div class="controls">
+      <button id="btn-hit">Schlag</button>
+      <button id="btn-kick">Tritt</button>
+      <button id="btn-sword">Schwert</button>
+      <button id="reset-btn">Reset</button>
+    </div>
+    <p id="hp-display" class="hp"></p>
+    <p class="hint">Jede Angriffsart bewegt den Gegner auf eine für sie passende Distanz - so wird auch die unterschiedliche Reichweite sichtbar, nicht nur der Schaden.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

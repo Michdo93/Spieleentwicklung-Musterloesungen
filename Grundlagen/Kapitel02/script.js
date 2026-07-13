@@ -2,67 +2,157 @@
  * Kapitel 2 - Sprites zeichnen
  * Musterloesung
  *
- * Zeigt die drei wichtigsten Formen von drawImage() an einem echten
- * Sprite-Sheet: das ganze Bild, ein ausgeschnittener Frame daraus, und
- * derselbe Frame gespiegelt (fuer die andere Blickrichtung).
+ * Drei Beispiele: (1) die Grundformen von drawImage(), (2) der
+ * Spiegel-Achsen-Fehler und seine Korrektur, (3) Skalierung und
+ * Position ueber Regler statt fest im Code.
  */
-
-const canvas = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
-const W = canvas.width;
-const H = canvas.height;
 
 const heroSheet = new Image();
 heroSheet.src = "assets/hero.png";
-
-// Kenngroessen des Sheets: 8 Spalten, 8 Zeilen, jede Zelle 160x150px.
-// Zeile 0 = Idle, Spalte 0 = erster Frame.
 const CELL_W = 160;
 const CELL_H = 150;
 
-function clearStage() {
+heroSheet.addEventListener("load", () => {
+  runExample1();
+  runExample2();
+  runExample3();
+});
+
+/* ===================================================================
+   Beispiel 1: drawImage() - ganzes Sheet vs. ein ausgeschnittener Frame
+   =================================================================== */
+function runExample1() {
+  const canvas = document.getElementById("stage1");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
   ctx.fillStyle = "#0b1a24";
   ctx.fillRect(0, 0, W, H);
-}
 
-function label(text, x, y, color) {
-  ctx.fillStyle = color;
-  ctx.font = "12px monospace";
-  ctx.fillText(text, x, y);
-}
-
-function draw() {
-  clearStage();
-
-  // --- Form 1: drawImage(img, x, y, w, h) - das GANZE Sheet, verkleinert ---
-  // Das Original ist 1280x1200px, viel zu gross fuers Canvas. Wir zeichnen
-  // es hier absichtlich verkleinert, nur zur Anschauung.
-  ctx.drawImage(heroSheet, 0, 0, heroSheet.width, heroSheet.height, 10, 10, 140, 131);
+  // Form 1: das GANZE Sheet, verkleinert auf eine feste Zielgroesse
+  ctx.drawImage(heroSheet, 0, 0, heroSheet.width, heroSheet.height, 10, 10, 160, 150);
   ctx.strokeStyle = "#ffb84d";
-  ctx.strokeRect(10, 10, 140, 131);
-  label("ganzes Sheet", 10, 158, "#ffb84d");
+  ctx.strokeRect(10, 10, 160, 150);
+  ctx.fillStyle = "#ffb84d";
+  ctx.font = "12px monospace";
+  ctx.fillText("ganzes Sheet", 10, 178);
 
-  // --- Form 2: drawImage(img, sx,sy,sw,sh, dx,dy,dw,dh) ---
-  // Quellrechteck (sx,sy,sw,sh) schneidet nur eine Zelle aus dem Sheet
-  // aus: Zeile 0 (Idle), Spalte 0 (erster Frame).
-  const sx = 0, sy = 0;
-  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, 190, 10, CELL_W, CELL_H);
+  // Form 2: EIN Frame ausschneiden - Zeile 0 (Idle), Spalte 0
+  ctx.drawImage(heroSheet, 0, 0, CELL_W, CELL_H, 280, 10, CELL_W, CELL_H);
   ctx.strokeStyle = "#5fe0c9";
-  ctx.strokeRect(190, 10, CELL_W, CELL_H);
-  label("ein Frame", 190, 178, "#5fe0c9");
-
-  // --- Form 3: dieselbe Zelle gespiegelt ---
-  // Trick: zuerst zum gewuenschten Mittelpunkt verschieben (translate),
-  // DANN spiegeln (scale(-1, 1)) und relativ zu (0,0) zeichnen. Wuerde man
-  // zuerst spiegeln und dann verschieben, waere die Position falsch.
-  ctx.save();
-  ctx.translate(380 + CELL_W / 2, 10);
-  ctx.scale(-1, 1);
-  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, -CELL_W / 2, 0, CELL_W, CELL_H);
-  ctx.restore();
-  ctx.strokeStyle = "#a78bfa";
-  ctx.strokeRect(380, 10, CELL_W, CELL_H);
-  label("gespiegelt", 380, 178, "#a78bfa");
+  ctx.strokeRect(280, 10, CELL_W, CELL_H);
+  ctx.fillStyle = "#5fe0c9";
+  ctx.fillText("ein Frame (Zeile 0, Spalte 0)", 280, 178);
 }
 
-heroSheet.addEventListener("load", draw);
+/* ===================================================================
+   Beispiel 2: Spiegeln - falsch vs. richtig
+   =================================================================== */
+function runExample2() {
+  const canvas = document.getElementById("stage2");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  ctx.fillStyle = "#0b1a24";
+  ctx.fillRect(0, 0, W, H);
+
+  const scale = 0.7;
+  const dw = CELL_W * scale;
+  const dh = CELL_H * scale;
+
+  // FEHLER-URSACHE: Der ausgeschnittene Frame (160x150) ist NICHT
+  // symmetrisch um die Spielfigur herum - links und rechts vom Koerper
+  // ist unterschiedlich viel Platz, damit auch Frames mit ausholenden
+  // Bewegungen (Schwert, Tritt) in dieselbe Zellgroesse passen. Die
+  // Mitte des ausgeschnittenen Bereichs (CELL_W/2) ist deshalb NICHT
+  // dieselbe Stelle wie die Mitte der Figur selbst.
+  //
+  // Der echte "Fusspunkt" der Figur innerhalb der Zelle - identisch zu
+  // CHARACTER_SHEET.anchorX/anchorY im fertigen Spiel:
+  const ANCHOR_X = 30;
+  const ANCHOR_Y = 145;
+
+  const groundY = 195;
+  const cols = [
+    { cx: 90, label: "unveraendert", mirror: false, wrong: false },
+    { cx: 280, label: "falsch gespiegelt", mirror: true, wrong: true },
+    { cx: 470, label: "richtig gespiegelt", mirror: true, wrong: false },
+  ];
+
+  cols.forEach((col) => {
+    // Fadenkreuz: zeigt, wo die Figur eigentlich stehen SOLL
+    ctx.strokeStyle = "rgba(255,255,255,0.25)";
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(col.cx, 5);
+    ctx.lineTo(col.cx, H - 30);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.save();
+    ctx.translate(col.cx, groundY);
+    if (col.mirror) ctx.scale(-1, 1);
+
+    if (!col.mirror) {
+      // unveraendert: Achse ist automatisch korrekt, da nicht gespiegelt
+      ctx.drawImage(heroSheet, 0, 0, CELL_W, CELL_H,
+        -ANCHOR_X * scale, -ANCHOR_Y * scale, dw, dh);
+    } else if (col.wrong) {
+      // FALSCH: Spiegelachse = Mitte des AUSGESCHNITTENEN Bereichs
+      ctx.drawImage(heroSheet, 0, 0, CELL_W, CELL_H,
+        -dw / 2, -ANCHOR_Y * scale, dw, dh);
+    } else {
+      // RICHTIG: Spiegelachse = derselbe Fusspunkt wie im unveraenderten Fall
+      ctx.drawImage(heroSheet, 0, 0, CELL_W, CELL_H,
+        -ANCHOR_X * scale, -ANCHOR_Y * scale, dw, dh);
+    }
+    ctx.restore();
+
+    ctx.fillStyle = col.wrong ? "#ff6b9d" : "#93a4b3";
+    ctx.font = "12px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText(col.label, col.cx, H - 10);
+    ctx.textAlign = "left";
+  });
+}
+
+/* ===================================================================
+   Beispiel 3: Skalierung und Position per Regler (statt fest im Code)
+   =================================================================== */
+function runExample3() {
+  const canvas = document.getElementById("stage3");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  const ANCHOR_X = 30;
+  const ANCHOR_Y = 145;
+
+  const scaleSlider = document.getElementById("scale-slider");
+  const posxSlider = document.getElementById("posx-slider");
+  const posySlider = document.getElementById("posy-slider");
+  const scaleLabel = document.getElementById("scale-value");
+
+  function render() {
+    const scale = Number(scaleSlider.value) / 100;
+    const x = Number(posxSlider.value);
+    const y = Number(posySlider.value);
+    scaleLabel.textContent = Math.round(scale * 100) + "%";
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+
+    const dw = CELL_W * scale;
+    const dh = CELL_H * scale;
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.drawImage(heroSheet, 0, 0, CELL_W, CELL_H,
+      -ANCHOR_X * scale, -ANCHOR_Y * scale, dw, dh);
+    ctx.restore();
+  }
+
+  [scaleSlider, posxSlider, posySlider].forEach((el) =>
+    el.addEventListener("input", render)
+  );
+  render();
+}

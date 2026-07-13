@@ -2,11 +2,13 @@
  * Ninja Fight - Kapitel 4: Tastatur- & Maus-Eingabe
  * Musterloesung
  *
- * Baut auf Kapitel 3 auf. Neu: das keys-Objekt (entspricht
- * GameManager.keys in Ninja Fight) sowie ein einfacher Mausklick-
- * Trefftest auf den Helden. Der Held bewegt sich hier noch NICHT -
- * das kommt erst in Kapitel 5. Hier geht es nur darum, Eingaben
- * zuverlaessig zu erfassen.
+ * Baut auf Kapitel 3 auf. A/D oder die Pfeiltasten drehen den Helden
+ * um und spielen die Lauf-Animation in die entsprechende Richtung ab,
+ * solange die Taste gehalten wird. Die Leertaste loest die
+ * Sprung-Animation aus. WICHTIG: Es gibt hier noch KEINERLEI Physik -
+ * der Held bleibt die ganze Zeit an derselben Stelle stehen. Es geht
+ * in diesem Kapitel nur um das Laden und Ansteuern der Animationen;
+ * tatsaechliche Bewegung kommt erst in Kapitel 5.
  */
 
 const canvas = document.getElementById("stage");
@@ -22,6 +24,11 @@ tileSheet.src = "assets/img/sprites/tiles.png";
 
 const CELL_W = 160;
 const CELL_H = 150;
+const ANCHOR_X = 30;
+const ANCHOR_Y = 145;
+const SPRITE_SCALE = 0.45;
+const DRAW_W = CELL_W * SPRITE_SCALE;
+const DRAW_H = CELL_H * SPRITE_SCALE;
 
 const TILE_SHEET = {
   cellW: 42,
@@ -31,22 +38,31 @@ const TILE_SHEET = {
   },
 };
 
-const CHARACTER_STATES = {
-  Idle: { row: 0, count: 8 },
-};
+const FLOOR_Y = STAGE_H - 21;
 
+const CHARACTER_STATES = {
+  Idle: { row: 0, count: 8, loop: true },
+  Walk: { row: 1, count: 8, loop: true },
+  Jump: { row: 2, count: 8, loop: false },
+};
 const FPS = 8;
 
 const hero = {
-  x: STAGE_W / 2 - CELL_W / 2,
-  y: STAGE_H / 2 - CELL_H / 2 - 40,
+  x: STAGE_W / 2,
+  y: FLOOR_Y,
   facing: 1,
   state: "Idle",
   animTime: 0,
 };
 
+function setState(state) {
+  if (hero.state === state) return;
+  hero.state = state;
+  hero.animTime = 0;
+}
+
 // entspricht GameManager.keys in Ninja Fight
-const keys = { left: false, right: false, up: false, down: false };
+const keys = { left: false, right: false, up: false, down: false, jump: false };
 
 function keyDown(e) {
   switch (e.code) {
@@ -54,6 +70,11 @@ function keyDown(e) {
     case "ArrowRight": case "KeyD": keys.right = true; break;
     case "ArrowUp": case "KeyW": keys.up = true; break;
     case "ArrowDown": case "KeyS": keys.down = true; break;
+    case "Space":
+      if (!keys.jump) setState("Jump"); // einmalig ausloesen, nicht bei jeder Tastenwiederholung neu
+      keys.jump = true;
+      e.preventDefault();
+      break;
   }
 }
 function keyUp(e) {
@@ -62,26 +83,11 @@ function keyUp(e) {
     case "ArrowRight": case "KeyD": keys.right = false; break;
     case "ArrowUp": case "KeyW": keys.up = false; break;
     case "ArrowDown": case "KeyS": keys.down = false; break;
+    case "Space": keys.jump = false; break;
   }
 }
 window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
-
-// Mausklick auf den Helden erkennen: Koordinaten umrechnen, dann ein
-// Rechteck-Trefftest gegen die aktuelle Position des Helden.
-canvas.addEventListener("click", (e) => {
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-
-  const hit =
-    mouseX >= hero.x && mouseX <= hero.x + CELL_W &&
-    mouseY >= hero.y && mouseY <= hero.y + CELL_H;
-
-  if (hit) {
-    hero.facing *= -1; // Klick auf den Helden dreht ihn probeweise um
-  }
-});
 
 function drawTile(name, x, y) {
   const def = TILE_SHEET.tiles[name];
@@ -92,14 +98,18 @@ function drawTile(name, x, y) {
 
 function drawHero(x, y, facing, state, animTime) {
   const def = CHARACTER_STATES[state];
-  const frame = Math.floor(animTime * FPS) % def.count;
+  const rawFrame = Math.floor(animTime * FPS);
+  const frame = def.loop ? rawFrame % def.count : Math.min(rawFrame, def.count - 1);
   const sx = frame * CELL_W;
   const sy = def.row * CELL_H;
 
   ctx.save();
-  ctx.translate(x + CELL_W / 2, y);
+  ctx.translate(x, y);
   ctx.scale(facing, 1);
-  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, -CELL_W / 2, 0, CELL_W, CELL_H);
+  ctx.drawImage(
+    heroSheet, sx, sy, CELL_W, CELL_H,
+    -ANCHOR_X * SPRITE_SCALE, -ANCHOR_Y * SPRITE_SCALE, DRAW_W, DRAW_H
+  );
   ctx.restore();
 }
 
@@ -107,8 +117,29 @@ let lastTime = 0;
 
 function update(dt) {
   hero.animTime += dt;
-  // Bewegung selbst kommt erst in Kapitel 5 - hier lesen wir "keys"
-  // noch nicht aus, sondern zeigen den Zustand nur zu Testzwecken an.
+
+  // Springt der Held gerade, lassen wir die Animation ungestoert zu
+  // Ende laufen, bevor wir wieder auf Idle/Walk umschalten.
+  if (hero.state === "Jump") {
+    const def = CHARACTER_STATES.Jump;
+    const finished = hero.animTime >= def.count / FPS;
+    if (finished) {
+      setState(keys.left || keys.right ? "Walk" : "Idle");
+    }
+    return;
+  }
+
+  // Laufrichtung umdrehen und Walk-Animation abspielen - OHNE die
+  // Position tatsaechlich zu veraendern. Das kommt erst in Kapitel 5.
+  if (keys.left) {
+    hero.facing = -1;
+    setState("Walk");
+  } else if (keys.right) {
+    hero.facing = 1;
+    setState("Walk");
+  } else {
+    setState("Idle");
+  }
 }
 
 function render() {
@@ -118,22 +149,15 @@ function render() {
   if (!tileSheet.complete || tileSheet.naturalWidth === 0) return;
   if (!heroSheet.complete || heroSheet.naturalWidth === 0) return;
 
-  const floorY = STAGE_H - 21;
   for (let x = 0; x < STAGE_W; x += 41) {
-    drawTile("Floor", x, floorY);
+    drawTile("Floor", x, FLOOR_Y);
   }
 
   drawHero(hero.x, hero.y, hero.facing, hero.state, hero.animTime);
 
-  // Debug-Anzeige: welche Tasten sind gerade gedrueckt?
-  const pressed = Object.entries(keys).filter(([, v]) => v).map(([k]) => k);
   ctx.fillStyle = "#2e4057";
   ctx.font = "16px monospace";
-  ctx.fillText(
-    "gedrueckt: " + (pressed.length ? pressed.join(", ") : "(keine)"),
-    16, 28
-  );
-  ctx.fillText("Klick auf den Helden dreht ihn um", 16, 50);
+  ctx.fillText(`state = "${hero.state}"   facing = ${hero.facing}`, 16, 28);
 }
 
 function loop(now) {

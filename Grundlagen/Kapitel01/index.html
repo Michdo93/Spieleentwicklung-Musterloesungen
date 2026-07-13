@@ -7,8 +7,24 @@
 </head>
 <body>
   <h1>Kapitel 1 – Canvas-Grundlagen &amp; Game-Loop</h1>
-  <canvas id="stage" width="480" height="270"></canvas>
-  <p id="hint">Das Quadrat bewegt sich mit konstanter Geschwindigkeit, egal wie schnell dein Bildschirm zeichnet.</p>
+
+  <section>
+    <h2>Beispiel 1: Statisches Zeichnen (kein Loop)</h2>
+    <canvas id="stage-static" width="480" height="200"></canvas>
+    <p class="hint">Ein einziger Zeichenaufruf. Ohne Loop passiert danach nichts mehr - das Bild steht für immer fest.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: Naiver Loop (fester Pixel-Schritt pro Frame)</h2>
+    <canvas id="stage-naive" width="480" height="200"></canvas>
+    <p class="hint" id="hint-naive"></p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Zeitbasierter Loop (dieselbe Struktur wie in Ninja Fight)</h2>
+    <canvas id="stage-timed" width="480" height="200"></canvas>
+    <p class="hint" id="hint-timed"></p>
+  </section>
 
   <script src="script.js"></script>
 </body>

@@ -5,23 +5,23 @@ Musterloesung zu Kapitel 12 des Buchs
 
 Baut auf Kapitel 11 auf (Kopie + Erweiterung).
 
-## Steuerung
-
-- Pfeiltasten/WASD: laufen, springen (Leertaste), klettern
-- **J**: Schlag, **K**: Tritt, **L**: Shuriken werfen (braucht zuerst
-  aufgesammelte Shuriken!)
-
 ## Was hier neu dazugekommen ist
 
-- Die `PowerUp`-Klasse: faellt mit derselben Schwerkraft wie der Held,
+- `PowerUp`-Klasse: faellt mit derselben Schwerkraft wie eine Figur,
   landet auf `level.platforms`
-- Drei Items zu Levelbeginn: Herz, Schwert, Shuriken
-- Drei Effekt-Muster: **sofortig** (Herz heilt direkt),
-  **zeitbegrenzt** (Schwert 30s), **zaehlbegrenzt** (Shuriken-Munition)
-- `throwShuriken()` braucht jetzt `hasShuriken`/`shurikenCount` - ohne
-  aufgesammelte Shuriken kann nicht mehr geworfen werden
-- Items pruefen ALLE Kandidaten (Held und Gegner) - wer zuerst
-  ankommt, bekommt das Item
+- `setupPowerUpSchedule()`: 3-10 zufaellige Items (70% Herz, 20%
+  Shuriken, 10% Schwert), die in zeitlichen Abstaenden ins Level
+  fallen (vereinfacht auf einen festen Zeitabstand, da unser Buch das
+  Level-Zeitlimit erst in Kapitel 18 einfuehrt)
+- `hero.collectPowerUp()`: die drei Effekt-Muster
+  (sofortig/befristet/zaehlbasiert)
+- Jeder Kandidat (Held UND Gegner) kann ein Item aufheben
+
+## Ausfuehren
+
+```bash
+python3 -m http.server 8000
+```
 
 ## Dateien
 
@@ -34,5 +34,6 @@ Kapitel12/
     └── img/sprites/
         ├── hero.png
         ├── blue.png
+        ├── green.png
         └── tiles.png
 ```

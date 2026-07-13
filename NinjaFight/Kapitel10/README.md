@@ -5,28 +5,27 @@ Musterloesung zu Kapitel 10 des Buchs
 
 Baut auf Kapitel 9 auf (Kopie + Erweiterung).
 
+## Steuerung
+
+- Pfeiltasten/WASD: laufen, springen (Leertaste), klettern
+- **J**: Schlag, **K**: Tritt, **L**: Schwert (von Anfang an unbegrenzt verfuegbar)
+
+## Was hier neu dazugekommen ist
+
+- 3 Gegner in Level 1 (Blue) und Level 2 (Green) - noch ohne Bewegung/KI
+- `Hit`/`Kick`/`SwordHit` als neue Animationszustaende
+- `ATTACKS`/`DAMAGE` koppeln Reichweite und Schaden je Angriffsart
+- `checkMeleeHit()`: prueft waehrend eines laufenden Angriffs einmalig,
+  ob die Hitbox einen Gegner trifft
+- Gegner koennen sterben und verschwinden (`en.dead`)
+- Eine HTML-Liste **unter** dem Canvas zeigt die Lebenspunkte jedes
+  Gegners live an
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
 ```
-
-## Steuerung
-
-- Pfeiltasten/WASD: laufen, springen (Leertaste), klettern
-- **J**: Schlag (1 Schaden, kurze Reichweite)
-- **K**: Tritt (2 Schaden, groessere Reichweite)
-
-## Was hier neu dazugekommen ist
-
-- `Hit` und `Kick` als neue, nicht-endlose Animationszustaende
-- `ATTACKS` koppelt Reichweite und Schaden je Angriffsart
-- `checkMeleeHit()` (entspricht `hitNearbyEnemies()`): prueft waehrend
-  eines laufenden Angriffs, ob die Hitbox den Gegner trifft
-- `attackHitDone` verhindert Mehrfachtreffer waehrend einer einzigen
-  Angriffsanimation
-- Ein einzelner Test-Gegner mit HP-Balken (noch ohne KI - die kommt
-  erst in Kapitel 13/14)
 
 ## Dateien
 
@@ -39,5 +38,6 @@ Kapitel10/
     └── img/sprites/
         ├── hero.png
         ├── blue.png
+        ├── green.png
         └── tiles.png
 ```

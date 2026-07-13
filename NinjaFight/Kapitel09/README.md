@@ -5,23 +5,22 @@ Musterloesung zu Kapitel 9 des Buchs
 
 Baut auf Kapitel 8 auf (Kopie + Erweiterung).
 
+## Was hier neu dazugekommen ist
+
+- `mergeLadderColumns()`: fasst einzelne Leiter-Kacheln aus Level 1 zu
+  einer zusammenhaengenden Kletterzone zusammen
+- `hero.onLadder` wird jeden Frame neu berechnet
+- Im Klettermodus: Schwerkraft aus, Position direkt per Hoch/Runter
+  gesteuert
+- `"Climb"` nutzt optisch dieselbe Sprite-Zeile wie `"Jump"` - im
+  Original-Flash-Spiel gab es Leitern ueberhaupt nicht, daher auch
+  keine eigene Kletter-Animation
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
 ```
-
-## Was hier neu dazugekommen ist
-
-- Eine Leiter (`Ladder`-Kacheln) verbindet den Boden mit der
-  schwebenden Plattform
-- `mergeLadderColumns()` fasst einzelne Leiter-Kacheln zu einer
-  zusammenhaengenden Kletterzone zusammen
-- Der Held erkennt jeden Frame neu, ob er sich in der Leiterzone
-  befindet UND nicht gleichzeitig links/rechts gedrueckt wird
-  (`hero.onLadder`)
-- Im Klettermodus: Schwerkraft aus, Position direkt per Hoch/Runter
-  gesteuert, begrenzt auf die Leiterzone
 
 ## Dateien
 

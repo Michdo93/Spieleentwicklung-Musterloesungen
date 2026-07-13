@@ -2,136 +2,176 @@
  * Kapitel 14 - Gegner-KI: Kampf & Gegnertypen
  * Musterloesung
  *
- * Ein einfacher Entscheidungsbaum nach Abstand reicht fuer
- * glaubwuerdiges Angriffsverhalten - Nahkampf zuerst pruefen, dann
- * Fernkampf, dann Schwert. Faehigkeiten und HP lassen sich sauber an
- * den Gegnertyp koppeln, statt fuer jeden Typ eigenen Code zu
- * schreiben.
+ * Drei Beispiele: (1) Aggro-Bereich & Angriffsauswahl nach Abstand,
+ * (2) vier Gegnertypen mit eigenen Faehigkeiten, (3) Friendly Fire
+ * zwischen Gegnern - entspricht dem Entscheidungsbaum in
+ * Enemy.update() plus ENEMY_TYPES/HP_BY_TYPE aus entities.js.
  */
 
-const canvas = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
-const W = canvas.width;
-const H = canvas.height;
+const sheets = {};
+["hero", "blue", "green", "red", "white"].forEach((n) => {
+  sheets[n] = new Image();
+  sheets[n].src = `assets/${n}.png`;
+});
+const ANCHOR_X = 30, ANCHOR_Y = 145, SPRITE_SCALE = 0.45;
+function whenReady(fn) {
+  const ready = () => Object.values(sheets).every((i) => i.complete && i.naturalWidth > 0);
+  if (ready()) fn();
+  else Object.values(sheets).forEach((i) => i.addEventListener("load", () => ready() && fn()));
+}
+function drawChar(ctx, name, x, y, facing = 1, scale = 1) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(facing, 1);
+  const s = SPRITE_SCALE * scale;
+  ctx.drawImage(sheets[name], 0, 0, 160, 150, -ANCHOR_X * s, -ANCHOR_Y * s, 160 * s, 150 * s);
+  ctx.restore();
+}
 
-const GROUND_Y = H - 60;
-const SIZE = 30;
-const SPEED = 140;
+/* ===================================================================
+   Beispiel 1: Aggro-Bereich & Angriffsauswahl - entspricht dem
+   Entscheidungsbaum in Enemy.update(): nah = Nahkampf, mittel =
+   Shuriken (falls vorhanden), nah-mittel = Schwert (falls vorhanden).
+   =================================================================== */
+(function example1_aggro() {
+  const canvas = document.getElementById("stage1");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  let heroX = W / 2 + 120;
+  const enemyX = W / 2 - 60;
+  const enemyType = { canShuriken: true, canSword: true }; // White: kann beides
 
-// Faehigkeiten und HP sind an den TYP gekoppelt, nicht an einzelne
-// Instanzen - ein neuer Gegnertyp braucht nur einen neuen Eintrag.
+  function decide(dist) {
+    if (dist < 40) return "Nahkampf (Hit/Kick)";
+    if (dist < 260 && enemyType.canShuriken) return "Shuriken werfen";
+    if (dist < 60 && enemyType.canSword) return "Schwert";
+    return "ausser Reichweite - nur beobachten";
+  }
+  function draw() {
+    const dist = Math.abs(heroX - enemyX);
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = "rgba(255,107,107,0.4)";
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.arc(enemyX, 150, 40, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(255,184,77,0.4)";
+    ctx.beginPath();
+    ctx.arc(enemyX, 150, 260, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    whenReady(() => {
+      drawChar(ctx, "hero", heroX, 150, heroX > enemyX ? 1 : -1);
+      drawChar(ctx, "white", enemyX, 150, heroX > enemyX ? 1 : -1);
+    });
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "13px monospace";
+    ctx.fillText(`Abstand: ${dist.toFixed(0)}px  ->  ${decide(dist)}`, 14, 24);
+  }
+  canvas.addEventListener("mousemove", (e) => {
+    const r = canvas.getBoundingClientRect();
+    heroX = Math.max(20, Math.min(W - 20, e.clientX - r.left));
+    draw();
+  });
+  whenReady(draw);
+})();
+
+/* ===================================================================
+   Beispiel 2: vier Gegnertypen, vier Faehigkeitsprofile - entspricht
+   ENEMY_TYPES + HP_BY_TYPE aus entities.js.
+   =================================================================== */
 const ENEMY_TYPES = {
-  Blue: { canShuriken: false, canSword: false, color: "#3b82c4" },
-  Green: { canShuriken: true, canSword: false, color: "#22c55e" },
-  White: { canShuriken: true, canSword: true, color: "#e5e7eb" },
+  Blue: { canShuriken: false, canSword: false, hp: 10 },
+  Green: { canShuriken: true, canSword: false, hp: 20 },
+  Red: { canShuriken: false, canSword: true, hp: 30 },
+  White: { canShuriken: true, canSword: true, hp: 50 },
 };
-const HP_BY_TYPE = { Blue: 10, Green: 20, White: 50 };
 
-function overlaps(a, b) {
-  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
-}
-function rectOf(x, y, w, h) {
-  return { left: x, right: x + w, top: y, bottom: y + h };
-}
+(function example2_types() {
+  const canvas = document.getElementById("stage2");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
 
-const player = { x: 60, hp: 20 };
+  whenReady(() => {
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    const names = Object.keys(ENEMY_TYPES);
+    names.forEach((name, i) => {
+      const x = 80 + i * 110;
+      drawChar(ctx, name.toLowerCase(), x, 150, 1, 0.9);
+      const def = ENEMY_TYPES[name];
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#93a4b3";
+      ctx.font = "12px monospace";
+      ctx.fillText(name, x, 175);
+      ctx.fillText(`${def.hp} HP`, x, 190);
+      ctx.fillStyle = def.canShuriken ? "#ffd23f" : "#3a4657";
+      ctx.fillText("Shuriken", x, 204);
+      ctx.fillStyle = def.canSword ? "#cccccc" : "#3a4657";
+      ctx.fillText("Schwert", x, 218);
+      ctx.textAlign = "left";
+    });
+  });
+})();
 
-let enemy = makeEnemy("Blue");
+/* ===================================================================
+   Beispiel 3: Friendly Fire - entspricht hitNearbyEnemies()/Projectile
+   mit Werfer-Ausschluss: ein Wurf trifft "jeden ausser dem Werfer",
+   also auch andere Gegner.
+   =================================================================== */
+(function example3_friendlyFire() {
+  const canvas = document.getElementById("stage3");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
 
-function makeEnemy(type) {
-  return {
-    type,
-    def: ENEMY_TYPES[type],
-    x: 320,
-    hp: HP_BY_TYPE[type],
-    maxHp: HP_BY_TYPE[type],
-    shurikenCount: ENEMY_TYPES[type].canShuriken ? 99 : 0,
-    attackCooldown: 0,
-    lastAction: "-",
-  };
-}
+  const thrower = { x: 60, y: 150 };
+  const bystander = { x: 220, y: 150, hp: 30, type: "red" }; // steht im Weg
+  const hero = { x: W - 60, y: 150 };
+  let projectiles = [];
 
-document.querySelectorAll("button[data-type]").forEach((btn) => {
-  btn.addEventListener("click", () => { enemy = makeEnemy(btn.dataset.type); });
-});
-
-const keys = { left: false, right: false };
-window.addEventListener("keydown", (e) => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
-});
-window.addEventListener("keyup", (e) => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
-});
-
-// Der eigentliche Entscheidungsbaum: NAHKAMPF zuerst pruefen (kuerzeste
-// Reichweite, staerkste Bindung), dann Fernkampf, dann Schwert. Diese
-// Reihenfolge ist wichtig - ein Gegner in Schlagreichweite sollte
-// zuschlagen, nicht erst ueberlegen, ob er lieber wirft.
-function decideAttack(dist) {
-  if (dist < 40) return "Nahkampf";
-  if (dist < 220 && enemy.def.canShuriken) return "Shuriken";
-  if (dist < 60 && enemy.def.canSword) return "Schwert"; // greift nur, wenn Shuriken nicht verfuegbar ist (Pruefreihenfolge!)
-  return null;
-}
-
-let lastTime = 0;
-
-function update(dt) {
-  if (keys.left) player.x -= SPEED * dt;
-  if (keys.right) player.x += SPEED * dt;
-  player.x = Math.max(0, Math.min(W - SIZE, player.x));
-
-  enemy.attackCooldown -= dt;
-  const dist = Math.abs(player.x - enemy.x);
-
-  if (enemy.attackCooldown <= 0) {
-    const action = decideAttack(dist);
-    if (action) {
-      enemy.lastAction = `${action} (Abstand ${dist.toFixed(0)}px)`;
-      enemy.attackCooldown = 1 + Math.random();
-    } else {
-      enemy.lastAction = "wartet (ausser Reichweite)";
-    }
+  function throwShuriken() {
+    projectiles.push({ x: thrower.x + 20, y: 130, dir: 1 });
   }
-}
+  document.getElementById("btn-throw").addEventListener("click", throwShuriken);
+  document.getElementById("reset-btn").addEventListener("click", () => (bystander.hp = 30));
 
-function render() {
-  ctx.fillStyle = "#0b1a24";
-  ctx.fillRect(0, 0, W, H);
-
-  ctx.fillStyle = "#663300";
-  ctx.fillRect(0, GROUND_Y + SIZE, W, 4);
-
-  ctx.fillStyle = "#a78bfa";
-  ctx.fillRect(player.x, GROUND_Y, SIZE, SIZE);
-
-  ctx.fillStyle = enemy.def.color;
-  ctx.fillRect(enemy.x, GROUND_Y, SIZE, SIZE);
-
-  ctx.fillStyle = "#3a4a58";
-  ctx.fillRect(enemy.x, GROUND_Y - 12, SIZE, 6);
-  ctx.fillStyle = "#ff6b9d";
-  ctx.fillRect(enemy.x, GROUND_Y - 12, SIZE * (enemy.hp / enemy.maxHp), 6);
-
-  ctx.fillStyle = "#93a4b3";
-  ctx.font = "13px monospace";
-  ctx.fillText(`Typ: ${enemy.type}  HP: ${enemy.hp}/${enemy.maxHp}`, 14, 24);
-  ctx.fillText(`Aktion: ${enemy.lastAction}`, 14, 42);
-}
-
-function loop(now) {
-  if (lastTime === 0) {
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
     lastTime = now;
+
+    projectiles.forEach((p) => {
+      p.x += p.dir * 480 * dt;
+      // trifft JEDEN ausser dem Werfer - hier: den Bystander, der im
+      // Weg steht, NICHT den Werfer selbst
+      if (!p.dead && bystander.hp > 0 && Math.abs(p.x - bystander.x) < 20) {
+        bystander.hp = Math.max(0, bystander.hp - 5);
+        p.dead = true;
+      }
+    });
+    projectiles = projectiles.filter((p) => !p.dead && p.x < W + 20);
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    whenReady(() => {
+      drawChar(ctx, "green", thrower.x, thrower.y, 1);
+      if (bystander.hp > 0) drawChar(ctx, bystander.type, bystander.x, bystander.y, 1);
+      drawChar(ctx, "hero", hero.x, hero.y, -1);
+    });
+    ctx.fillStyle = "#5fe0c9";
+    projectiles.forEach((p) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "12px monospace";
+    ctx.fillText(`Red-HP (Mitgegner): ${bystander.hp}/30`, 14, 24);
+
+    requestAnimationFrame(loop);
   }
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
-
-  update(dt);
-  render();
-
   requestAnimationFrame(loop);
-}
-
-requestAnimationFrame(loop);
+})();

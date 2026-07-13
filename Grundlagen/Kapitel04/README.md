@@ -11,13 +11,12 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Das Key-State-Muster: `keydown`/`keyup` setzen nur Flags in einem
-  `keys`-Objekt, der Game-Loop fragt sie jeden Frame ab - dadurch
-  bewegt sich das Quadrat, solange eine Taste GEHALTEN wird
-- `e.code` statt `e.key` (physische Taste statt layoutabhaengigem
-  Zeichen)
-- Mausklick-Koordinaten per `getBoundingClientRect()` in
-  Canvas-Koordinaten umrechnen, dann ein Rechteck-Trefftest
+1. **Rohe Tastatur-Events** - keydown/keyup, key vs. code, live protokolliert
+2. **Key-State-Objekt** - keydown/keyup setzen nur Flags, der Loop
+   fragt sie jeden Frame ab (WASD/Pfeiltasten)
+3. **Maus-Klicks** - Koordinaten umrechnen, Rechteck-Trefftest, mit
+   Klick-Protokoll
+4. **Kombiniert** - Steuerung UND Klick-Erkennung in einem Beispiel
 
 ## Dateien
 

@@ -2,100 +2,143 @@
  * Kapitel 3 - Sprite-Animation
  * Musterloesung
  *
- * Eine Animation ist nichts weiter als: mehrere Frames eines Sprite-
- * Sheets schnell genug nacheinander zeigen. Dieses Beispiel zeigt beide
- * in Ninja Fight benoetigten Varianten:
- * - eine ENDLOS laufende Animation (Walk, per Modulo)
- * - eine EINMALIGE Animation, die am letzten Frame stehen bleibt (Jump)
+ * Drei Beispiele: (1) Frames von Hand durchklicken, (2) automatische
+ * Wiedergabe mit einstellbarer FPS, (3) mehrere Zustaende mit
+ * Loop- vs. Einmalig-Verhalten. Zusammen ergeben sie exakt die Logik,
+ * die spaeter drawNinja() in Ninja Fight verwendet.
  */
-
-const canvas = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
-const W = canvas.width;
-const H = canvas.height;
 
 const heroSheet = new Image();
 heroSheet.src = "assets/hero.png";
 
-const CELL_W = 160;
-const CELL_H = 150;
-
-// entspricht CHARACTER_SHEET.states in Ninja Fight
+// entspricht CHARACTER_SHEET in Ninja Fight: 8 Spalten, eine Zeile pro
+// Zustand, 8 abgetastete Frames pro Zustand
+const CELL_W = 160, CELL_H = 150;
 const STATES = {
-  Walk: { row: 1, count: 8 },
-  Jump: { row: 2, count: 8 },
+  Idle: { row: 0, count: 8, loop: true },
+  Walk: { row: 1, count: 8, loop: true },
+  Jump: { row: 2, count: 8, loop: false },
 };
 
-const FPS = 10; // Frames der Animation pro Sekunde (nicht zu verwechseln mit der Bildwiederholrate!)
+function whenReady(fn) {
+  if (heroSheet.complete && heroSheet.naturalWidth > 0) fn();
+  else heroSheet.addEventListener("load", fn, { once: true });
+}
 
-// linke Figur: laeuft endlos
-let walkTime = 0;
-
-// rechte Figur: springt einmal, wenn man auf den Knopf klickt
-let jumping = false;
-let jumpTime = 0;
-
-function drawFrame(state, frameIndex, x, y) {
+function drawFrame(ctx, state, frame, x, y, scale) {
   const def = STATES[state];
-  const sx = frameIndex * CELL_W;
-  const sy = def.row * CELL_H;
-  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, x, y, CELL_W, CELL_H);
+  const sx = frame * CELL_W, sy = def.row * CELL_H;
+  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, x, y, CELL_W * scale, CELL_H * scale);
 }
 
-let lastTime = 0;
+/* ===================================================================
+   Beispiel 1: Frame fuer Frame von Hand durchklicken
+   =================================================================== */
+(function example1_manual() {
+  const canvas = document.getElementById("stage1");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  let frame = 0;
 
-function update(dt) {
-  walkTime += dt;
-
-  if (jumping) {
-    jumpTime += dt;
-    const totalFrames = STATES.Jump.count;
-    const rawFrame = Math.floor(jumpTime * FPS);
-    if (rawFrame >= totalFrames) {
-      jumping = false; // Animation fertig, bleibt am letzten Frame stehen
-    }
+  function draw() {
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    drawFrame(ctx, "Walk", frame, 20, 10, 0.9);
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "12px monospace";
+    ctx.fillText(`Frame ${frame + 1} / ${STATES.Walk.count}`, 10, 170);
   }
-}
 
-function render() {
-  ctx.fillStyle = "#0b1a24";
-  ctx.fillRect(0, 0, W, H);
+  document.getElementById("btn-next").addEventListener("click", () => {
+    frame = (frame + 1) % STATES.Walk.count;
+    draw();
+  });
+  document.getElementById("btn-prev").addEventListener("click", () => {
+    frame = (frame - 1 + STATES.Walk.count) % STATES.Walk.count;
+    draw();
+  });
 
-  if (!heroSheet.complete || heroSheet.naturalWidth === 0) return;
+  whenReady(draw);
+})();
 
-  // Endlos-Animation: Modulo sorgt dafuer, dass der Frame-Index immer
-  // wieder von vorn beginnt (0,1,2,...,7,0,1,2,...)
-  const walkFrame = Math.floor(walkTime * FPS) % STATES.Walk.count;
-  drawFrame("Walk", walkFrame, 60, 30);
+/* ===================================================================
+   Beispiel 2: automatische, zeitbasierte Wiedergabe mit FPS-Regler
+   Kernzeile (entspricht drawNinja()):
+     let frame = Math.floor(t * fps); frame = frame % def.count;
+   =================================================================== */
+(function example2_auto() {
+  const canvas = document.getElementById("stage2");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const fpsSlider = document.getElementById("fps-slider");
+  const fpsValue = document.getElementById("fps-value");
 
-  // Einmalige Animation: Math.min() sorgt dafuer, dass der Frame-Index
-  // nie ueber den letzten Frame hinausgeht - die Animation "haengt" am
-  // letzten Frame, statt von vorn zu beginnen.
-  const jumpFrame = Math.min(Math.floor(jumpTime * FPS), STATES.Jump.count - 1);
-  drawFrame("Jump", jumpFrame, 260, 30);
+  let t = 0, lastTime = 0;
 
-  ctx.fillStyle = "#93a4b3";
-  ctx.font = "12px monospace";
-  ctx.fillText("Walk (endlos)", 60, 195);
-  ctx.fillText("Jump (einmalig)", 260, 195);
-}
-
-function loop(now) {
-  if (lastTime === 0) {
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
     lastTime = now;
+    t += dt;
+
+    const fps = Number(fpsSlider.value);
+    fpsValue.textContent = fps;
+    const frame = Math.floor(t * fps) % STATES.Walk.count;
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    drawFrame(ctx, "Walk", frame, 20, 10, 0.9);
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "12px monospace";
+    ctx.fillText(`fps = ${fps}`, 10, 170);
+
+    requestAnimationFrame(loop);
   }
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
 
-  update(dt);
-  render();
+  whenReady(() => requestAnimationFrame(loop));
+})();
 
-  requestAnimationFrame(loop);
-}
+/* ===================================================================
+   Beispiel 3: mehrere benannte Zustaende - Loop vs. einmalig
+   =================================================================== */
+(function example3_states() {
+  const canvas = document.getElementById("stage3");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
 
-document.getElementById("jump-btn").addEventListener("click", () => {
-  jumping = true;
-  jumpTime = 0;
-});
+  let state = "Idle";
+  let t = 0, lastTime = 0;
 
-requestAnimationFrame(loop);
+  function setState(s) {
+    state = s;
+    t = 0; // bei jedem Zustandswechsel von vorn beginnen
+  }
+
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+    t += dt;
+
+    const def = STATES[state];
+    const fps = state === "Idle" ? 6 : state === "Walk" ? 12 : 10;
+    let frame = Math.floor(t * fps);
+    // Idle/Walk: endlos (Modulo). Jump: einmalig, bleibt am letzten Frame stehen.
+    frame = def.loop ? frame % def.count : Math.min(frame, def.count - 1);
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    drawFrame(ctx, state, frame, 20, 10, 0.9);
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "12px monospace";
+    ctx.fillText(`state = "${state}"`, 10, 170);
+
+    requestAnimationFrame(loop);
+  }
+
+  document.getElementById("btn-idle").addEventListener("click", () => setState("Idle"));
+  document.getElementById("btn-walk").addEventListener("click", () => setState("Walk"));
+  document.getElementById("btn-jump").addEventListener("click", () => setState("Jump"));
+
+  whenReady(() => requestAnimationFrame(loop));
+})();

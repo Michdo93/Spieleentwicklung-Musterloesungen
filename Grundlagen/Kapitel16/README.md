@@ -11,12 +11,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- `drawHealthBar()`: ein Hintergrundrechteck plus ein proportional
-  skaliertes Rechteck - mehr steckt nicht hinter einem Lebensbalken
-- Ein DOM-Overlay (`#hud`) fuer Text-HUD-Elemente (Leben, Punkte,
-  Zeit) statt alles auf den Canvas zu zeichnen
-- `updateHudText()` wird JEDEN Frame aufgerufen, nicht nur bei
-  Ereignissen - robuster gegen vergessene Aktualisierungsstellen
+1. **Die richtige Balkenposition** - ein zu kleiner Abstand legt den
+   Lebensbalken mitten in den Kopf der Figur
+2. **HUD-Text als DOM-Overlay**
+3. **Wann aktualisiert sich das HUD?** - jeden Frame ist robuster als
+   nur bei Ereignissen
 
 ## Dateien
 
@@ -24,5 +23,6 @@ python3 -m http.server 8000
 Kapitel16/
 ├── index.html
 ├── style.css
-└── script.js
+├── script.js
+└── assets/red.png
 ```

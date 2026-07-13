@@ -11,20 +11,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Die `SoundController`-Klasse buendelt alle Audio-Objekte an einem
-  Ort
-- Musikstuecke schliessen sich explizit gegenseitig aus
-  (`playMenuMusic()`/`playGameMusic()` pausieren jeweils das andere)
-- `currentTime = 0` vor jedem `play()` erlaubt wiederholtes,
-  schnelles Ausloesen desselben Soundeffekts
-- Eine gemeinsame Lautstaerke beeinflusst alle Audio-Objekte auf
-  einmal
-
-## Original-Audiodateien
-
-Alle vier Sounds in diesem Kapitel (`Game-Menu.mp3`, `Lost-Jungle.mp3`,
-`sword.mp3`, `Coins.mp3`) sind unveraenderte Original-Assets aus
-Ninja Fight.
+1. **Musik abspielen und wechseln** - Menue-/Spielmusik schliessen
+   sich gegenseitig aus
+2. **Soundeffekte mehrfach ausloesen** - `currentTime = 0` vor jedem
+   `play()`
+3. **Gemeinsame Lautstaerke** - ein Regler fuer Musik UND Soundeffekte
 
 ## Dateien
 

@@ -11,13 +11,10 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Die `PowerUp`-Klasse: faellt mit derselben Schwerkraft wie eine
-  Spielfigur, landet auf dem Boden - nur ohne eigene Steuerung
-- Drei Effekt-Muster: **sofortig** (Herz, direkt angewendet),
-  **zeitbegrenzt** (Schwert, eigener Countdown-Timer),
-  **zaehlbegrenzt** (Shuriken, Munitionszaehler)
-- Die Kollisionspruefung laeuft gegen ALLE Kandidaten (Spieler UND
-  Gegner) - dadurch kann jeder das Item zuerst erreichen
+1. **Ein fallendes Item** - dieselbe Schwerkraft/Landung wie eine Figur
+2. **Drei Effekt-Muster** - sofortig (Herz), befristet (Schwert,
+   30s), zaehlbasiert (Shuriken)
+3. **Jeder kann es aufheben** - Held und Gegner werden beide geprueft
 
 ## Dateien
 
@@ -25,5 +22,9 @@ python3 -m http.server 8000
 Kapitel12/
 ├── index.html
 ├── style.css
-└── script.js
+├── script.js
+└── assets/
+    ├── tiles.png
+    ├── hero.png
+    └── blue.png
 ```

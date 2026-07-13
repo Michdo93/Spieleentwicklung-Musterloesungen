@@ -11,11 +11,12 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Die `Projectile`-Klasse: eigene Position, eigene Geschwindigkeit,
-  eigenes `update()` - unabhaengig vom Werfer
-- Ein Wurf braucht ein echtes OBJEKT, nicht nur eine Animation
-- Ein Projektil kennt seinen Werfer (`owner`) und trifft diesen nicht
-- Projektile ausserhalb des sichtbaren Bereichs werden entfernt
+1. **Nur die Animation** - der Original-Bug aus Ninja Fight: die
+   Wurfanimation laeuft, aber es existiert kein Shuriken-Objekt
+2. **Ein echtes Projektil-Objekt** - die `Projectile`-Klasse mit
+   eigener Position, Geschwindigkeit, `update()`
+3. **Kollision + Werfer ausschliessen** - das Projektil trifft jeden
+   ausser seinem eigenen Werfer
 
 ## Dateien
 
@@ -23,5 +24,9 @@ python3 -m http.server 8000
 Kapitel11/
 ├── index.html
 ├── style.css
-└── script.js
+├── script.js
+└── assets/
+    ├── hero.png
+    ├── green.png
+    └── tiles.png
 ```

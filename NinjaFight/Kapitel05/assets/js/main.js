@@ -2,10 +2,11 @@
  * Ninja Fight - Kapitel 5: Bewegung & Schwerkraft
  * Musterloesung
  *
- * Baut auf Kapitel 4 auf. Der Held bewegt sich jetzt tatsaechlich:
- * links/rechts per WALK_SPEED, Sprung + Schwerkraft per GRAVITY/
- * JUMP_SPEED - exakt die Werte und die Logik aus Hero.update() im
- * fertigen Spiel. Gelandet wird vorerst auf einem festen Boden; echte
+ * Baut auf Kapitel 4 auf. Jetzt bewegt sich der Held tatsaechlich:
+ * links/rechts per WALK_SPEED, Sprung + Schwerkraft per
+ * GRAVITY/JUMP_SPEED - exakt die Werte und Logik aus Hero.update() im
+ * fertigen Spiel, jetzt mit der korrekten Groesse und Spiegelachse
+ * aus Kapitel 2. Gelandet wird vorerst auf einem festen Boden; echte
  * Plattformen mit Luecken dazwischen kommen erst in Kapitel 6.
  */
 
@@ -22,6 +23,11 @@ tileSheet.src = "assets/img/sprites/tiles.png";
 
 const CELL_W = 160;
 const CELL_H = 150;
+const ANCHOR_X = 30;
+const ANCHOR_Y = 145;
+const SPRITE_SCALE = 0.45;
+const DRAW_W = CELL_W * SPRITE_SCALE;
+const DRAW_H = CELL_H * SPRITE_SCALE;
 
 const TILE_SHEET = {
   cellW: 42,
@@ -37,9 +43,7 @@ const JUMP_SPEED = 620;   // px/s (Anfangsgeschwindigkeit nach oben)
 const WALK_SPEED = 160;   // px/s
 
 const FLOOR_Y = STAGE_H - 21;
-const GROUND_TOP_Y = FLOOR_Y - CELL_H; // hier "landet" der Held (Sprite-Oberkante)
 
-// Idle/Walk laufen endlos, Jump laeuft einmal durch und bleibt stehen
 const CHARACTER_STATES = {
   Idle: { row: 0, count: 8, loop: true },
   Walk: { row: 1, count: 8, loop: true },
@@ -47,9 +51,10 @@ const CHARACTER_STATES = {
 };
 const FPS = 8;
 
+// hero.x/hero.y = Fusspunkt der Figur (siehe Kapitel 2)
 const hero = {
-  x: STAGE_W / 2 - CELL_W / 2,
-  y: GROUND_TOP_Y,
+  x: STAGE_W / 2,
+  y: FLOOR_Y,
   vy: 0,
   facing: 1,
   state: "Idle",
@@ -101,9 +106,12 @@ function drawHero(x, y, facing, state, animTime) {
   const sy = def.row * CELL_H;
 
   ctx.save();
-  ctx.translate(x + CELL_W / 2, y);
+  ctx.translate(x, y);
   ctx.scale(facing, 1);
-  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, -CELL_W / 2, 0, CELL_W, CELL_H);
+  ctx.drawImage(
+    heroSheet, sx, sy, CELL_W, CELL_H,
+    -ANCHOR_X * SPRITE_SCALE, -ANCHOR_Y * SPRITE_SCALE, DRAW_W, DRAW_H
+  );
   ctx.restore();
 }
 
@@ -120,7 +128,7 @@ function moveHorizontal(dt) {
   } else if (hero.state === "Walk") {
     setState("Idle");
   }
-  hero.x = Math.max(0, Math.min(STAGE_W - CELL_W, hero.x));
+  hero.x = Math.max(0, Math.min(STAGE_W, hero.x));
 }
 
 let lastTime = 0;
@@ -138,8 +146,8 @@ function update(dt) {
   hero.vy += GRAVITY * dt;
 
   const nextY = hero.y + hero.vy * dt;
-  if (nextY >= GROUND_TOP_Y && hero.vy >= 0) {
-    hero.y = GROUND_TOP_Y;
+  if (nextY >= FLOOR_Y && hero.vy >= 0) {
+    hero.y = FLOOR_Y;
     hero.vy = 0;
     hero.onGround = true;
     if (hero.state === "Jump") setState(keys.left || keys.right ? "Walk" : "Idle");

@@ -7,18 +7,34 @@
 </head>
 <body>
   <h1>Kapitel 15 – Sound &amp; Musik</h1>
-  <div class="panel">
-    <button id="btn-menu">Menü-Musik</button>
-    <button id="btn-game">Spiel-Musik</button>
-    <button id="btn-stop">Stopp</button>
-  </div>
-  <div class="panel">
-    <button id="btn-sfx">Soundeffekt (mehrfach schnell klicken!)</button>
-  </div>
-  <div class="panel">
-    <label>Lautstärke: <input type="range" id="volume" min="0" max="100" value="60"></label>
-  </div>
-  <p id="hint">Menü- und Spielmusik schließen sich gegenseitig aus. Der Soundeffekt lässt sich beliebig oft schnell hintereinander auslösen.</p>
+
+  <section>
+    <h2>Beispiel 1: Musik abspielen und wechseln</h2>
+    <div class="controls">
+      <button id="btn-menu-music">Menü-Musik</button>
+      <button id="btn-game-music">Spiel-Musik</button>
+      <button id="btn-stop-music">Stopp</button>
+    </div>
+    <p id="music-status" class="hp"></p>
+    <p class="hint">Menü- und Spielmusik schließen sich gegenseitig aus - playMenuMusic() stoppt automatisch die Spielmusik und umgekehrt.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: Soundeffekte mehrfach schnell auslösen</h2>
+    <div class="controls">
+      <button id="btn-sword-sfx">Schwert-Sound</button>
+      <button id="btn-coins-sfx">Münzen-Sound</button>
+    </div>
+    <p id="sfx-count" class="hp"></p>
+    <p class="hint">currentTime = 0 vor jedem play() erlaubt, denselben Sound mehrfach schnell hintereinander abzuspielen, ohne auf das Ende zu warten.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Gemeinsame Lautstärke</h2>
+    <label>Lautstärke: <input type="range" id="volume-slider" min="0" max="100" value="60"> <span id="volume-value">60%</span></label>
+    <div class="controls"><button id="btn-test-volume">Testton abspielen</button></div>
+    <p class="hint">Ein Regler steuert die Lautstärke für Musik UND Soundeffekte gleichzeitig - jede Audio-Datei bekommt denselben volume-Wert zugewiesen.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

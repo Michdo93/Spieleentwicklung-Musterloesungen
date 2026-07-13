@@ -8,27 +8,46 @@
 <body>
   <h1>Kapitel 17 – Menüs &amp; Spielzustände</h1>
 
-  <label class="bugtoggle">
-    <input type="checkbox" id="bug-toggle">
-    Bug-Modus aktivieren (zeigt den echten CSS-Fehler)
-  </label>
-
-  <div id="stage-wrapper">
-    <div id="screen-game" class="screen">
-      <p>Hier läuft das eigentliche Spiel (Platzhalter).</p>
-      <button id="btn-pause">Pause (oder ESC)</button>
+  <section>
+    <h2>Beispiel 1: showScreen() - nur ein Bildschirm ist je aktiv</h2>
+    <div class="mock-frame" id="mock-frame-1">
+      <div class="mock-canvas-standin">Spiel-Canvas (Platzhalter)</div>
+      <div class="mock-screen" id="mock-start">Start-Bildschirm</div>
+      <div class="mock-screen" id="mock-pause">Pause-Bildschirm</div>
+      <div class="mock-screen" id="mock-settings">Einstellungen</div>
     </div>
-
-    <div id="screen-start" class="screen active">
-      <h2>Ninja Fight</h2>
-      <button id="btn-play">Start</button>
+    <div class="controls">
+      <button id="btn-screen-start">Start zeigen</button>
+      <button id="btn-screen-pause">Pause zeigen</button>
+      <button id="btn-screen-settings">Einstellungen zeigen</button>
     </div>
+    <p id="current-screen-label" class="hp"></p>
+    <p class="hint">showScreen(name) entfernt die "active"-Klasse von allen Bildschirmen und setzt sie nur auf den gewünschten - nie zwei gleichzeitig sichtbar.</p>
+  </section>
 
-    <div id="screen-pause" class="screen">
-      <h2>Pause</h2>
+  <section>
+    <h2>Beispiel 2: Der echte CSS-Bug</h2>
+    <div class="mock-frame" id="mock-frame-2">
+      <div class="mock-canvas-standin" id="mock-game-2">Spiel-Canvas (Platzhalter)</div>
+    </div>
+    <div class="controls"><button id="btn-toggle-bug">Bug umschalten</button></div>
+    <p id="bug-status" class="hp"></p>
+    <p class="hint">Auf 'Bug umschalten' klicken - das Canvas-Ersatzfeld wird plötzlich abgedunkelt, obwohl gar kein Menü-Bildschirm aktiv sein soll.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: ESC pausiert und setzt fort</h2>
+    <div class="mock-frame" id="mock-frame-3">
+      <div class="mock-canvas-standin">Spiel-Canvas (Platzhalter)</div>
+      <div class="mock-screen mock-pause">Pausiert</div>
+    </div>
+    <div class="controls">
+      <button id="btn-start-game">Spiel starten</button>
       <button id="btn-resume">Weiter (oder ESC)</button>
     </div>
-  </div>
+    <p id="esc-status" class="hp"></p>
+    <p class="hint">ESC pausiert und setzt fort - echte Tastatursteuerung für Zustandswechsel, nicht nur Buttons.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

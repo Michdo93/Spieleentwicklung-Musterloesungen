@@ -2,143 +2,229 @@
  * Kapitel 9 - Leitern & Klettern
  * Musterloesung
  *
- * Klettern ist ein dritter Bewegungszustand neben Laufen und Springen:
- * Innerhalb einer Leiterzone schalten wir die Schwerkraft ab und steuern
- * die Position direkt per Tastatur - begrenzt auf die Leiterzone.
+ * Drei Beispiele: (1) der echte Bug (Leiterzone zu gross berechnet),
+ * (2) die Korrektur, (3) vollstaendige Integration mit Laufen und
+ * Springen - genau der Weg, den auch mergeLadderColumns()/Hero.update()
+ * in Ninja Fight gehen.
  */
 
-const canvas = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
-const W = canvas.width;
-const H = canvas.height;
+const GRAVITY = 1400, JUMP_SPEED = 620, CLIMB_SPEED = 110;
 
-const GRAVITY = 1400;
-const JUMP_SPEED = 620;
-const WALK_SPEED = 160;
-const CLIMB_SPEED = 110;
-const SIZE = 28;
-
-const platforms = [
-  { x: 0, y: H - 20, w: 160 },
-  { x: 320, y: H - 20, w: 160 },
-  { x: 60, y: 100, w: 160 },
-];
-
-// Eine Leiterzone verbindet zwei Plattformen. left/right begrenzen die
-// Breite, top/bottom die Hoehe, innerhalb derer geklettert werden kann.
-const ladder = { left: 110, right: 150, top: 100, bottom: H - 20 };
-
-const player = {
-  x: 20,
-  y: H - 20 - SIZE,
-  vy: 0,
-  onGround: true,
-  onLadder: false,
-};
-
-const keys = { left: false, right: false, up: false, down: false, jump: false };
-window.addEventListener("keydown", (e) => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
-  if (e.code === "ArrowUp" || e.code === "KeyW") keys.up = true;
-  if (e.code === "ArrowDown" || e.code === "KeyS") keys.down = true;
-  if (e.code === "Space") { keys.jump = true; e.preventDefault(); }
-});
-window.addEventListener("keyup", (e) => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
-  if (e.code === "ArrowUp" || e.code === "KeyW") keys.up = false;
-  if (e.code === "ArrowDown" || e.code === "KeyS") keys.down = false;
-  if (e.code === "Space") keys.jump = false;
-});
-
-function findLanding(nextY) {
-  let best = null;
-  platforms.forEach((p) => {
-    const over = player.x + SIZE > p.x && player.x < p.x + p.w;
-    const wasAbove = player.y + SIZE <= p.y + 2;
-    const nowBelow = nextY + SIZE >= p.y;
-    if (over && wasAbove && nowBelow) {
-      if (!best || p.y < best.y) best = p;
-    }
-  });
-  return best;
-}
-
-let lastTime = 0;
-
-function update(dt) {
-  const midX = player.x + SIZE / 2;
-  const midY = player.y + SIZE / 2;
-
-  // In der Leiterzone, UND nur hoch/runter gedrueckt (nicht gleichzeitig
-  // links/rechts) -> Klettermodus. Kein Frame-Gedaechtnis noetig: der
-  // Zustand ergibt sich jeden Frame neu aus der aktuellen Situation.
-  const inLadderZone =
-    midX > ladder.left - 4 && midX < ladder.right + 4 &&
-    midY > ladder.top - 6 && midY < ladder.bottom + 6;
-  player.onLadder = inLadderZone && !keys.left && !keys.right;
-
-  if (player.onLadder) {
-    player.vy = 0;
-    if (keys.up) player.y -= CLIMB_SPEED * dt;
-    else if (keys.down) player.y += CLIMB_SPEED * dt;
-    player.y = Math.max(ladder.top, Math.min(ladder.bottom - SIZE, player.y));
-    player.onGround = false;
-  } else {
-    if (keys.left) player.x -= WALK_SPEED * dt;
-    if (keys.right) player.x += WALK_SPEED * dt;
-    player.x = Math.max(0, Math.min(W - SIZE, player.x));
-
-    if (keys.jump && player.onGround) {
-      player.vy = -JUMP_SPEED;
-      player.onGround = false;
-    }
-    player.vy += GRAVITY * dt;
-
-    const nextY = player.y + player.vy * dt;
-    const landing = player.vy >= 0 ? findLanding(nextY) : null;
-    if (landing) {
-      player.y = landing.y - SIZE;
-      player.vy = 0;
-      player.onGround = true;
-    } else {
-      player.y = nextY;
-      player.onGround = false;
-    }
-  }
-}
-
-function render() {
+function drawLadderScene(ctx, W, H, platformY, ladder, x, y, climbing) {
   ctx.fillStyle = "#0b1a24";
   ctx.fillRect(0, 0, W, H);
-
   ctx.fillStyle = "#663300";
-  platforms.forEach((p) => ctx.fillRect(p.x, p.y, p.w, 4));
+  ctx.fillRect(0, 40, 40, platformY - 40 + 10);
+  ctx.fillRect(0, 40, 200, 10);
+  ctx.fillRect(0, platformY, 200, 10);
 
-  ctx.fillStyle = "#8a6b3a";
+  ctx.strokeStyle = "#ffb84d";
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 3]);
+  ctx.strokeRect(ladder.left, ladder.top, ladder.right - ladder.left, ladder.bottom - ladder.top);
+  ctx.setLineDash([]);
+  ctx.fillStyle = "rgba(255,184,77,0.15)";
   ctx.fillRect(ladder.left, ladder.top, ladder.right - ladder.left, ladder.bottom - ladder.top);
 
-  ctx.fillStyle = player.onLadder ? "#ffb84d" : player.onGround ? "#5fe0c9" : "#a78bfa";
-  ctx.fillRect(player.x, player.y, SIZE, SIZE);
-
-  ctx.fillStyle = "#93a4b3";
-  ctx.font = "13px monospace";
-  ctx.fillText(`onLadder = ${player.onLadder}`, 14, 24);
-}
-
-function loop(now) {
-  if (lastTime === 0) {
-    lastTime = now;
+  ctx.strokeStyle = "#845232";
+  ctx.lineWidth = 2;
+  for (let ry = ladder.top + 6; ry < ladder.bottom - 4; ry += 10) {
+    ctx.beginPath();
+    ctx.moveTo(ladder.left + 2, ry);
+    ctx.lineTo(ladder.right - 2, ry);
+    ctx.stroke();
   }
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
 
-  update(dt);
-  render();
-
-  requestAnimationFrame(loop);
+  ctx.fillStyle = climbing ? "#a78bfa" : "#5fe0c9";
+  ctx.beginPath();
+  ctx.arc(x, y, 12, 0, Math.PI * 2);
+  ctx.fill();
 }
 
-canvas.focus();
-requestAnimationFrame(loop);
+/* ===================================================================
+   Beispiel 1: die zu gross berechnete Leiter-Zone - der echte Bug.
+   In einer frueheren Version wurde beim Zusammenfassen der Leiter-
+   Sprossen zu einer Zone versehentlich ZWEIMAL eine Kachelhoehe
+   addiert - die Zone reichte dadurch weit unter den Boden.
+   =================================================================== */
+(function example1_bug() {
+  const canvas = document.getElementById("stage1");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  const platformY = 200;
+  const rungTop = 80, rungBottom = 160;
+  // FALSCH: hier wird die Kachelhoehe (24) UND zusaetzlich noch einmal
+  // eine ganze Kachelhoehe drauf addiert
+  const ladder = { left: 80, right: 105, top: rungTop, bottom: rungBottom + 24 + 24 };
+
+  let x = 92, y = rungTop, vy = 0, onLadder = false;
+  const keys = {};
+  window.addEventListener("keydown", (e) => { keys[e.code] = true; e.preventDefault(); });
+  window.addEventListener("keyup", (e) => (keys[e.code] = false));
+
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    const inZone = x > ladder.left - 4 && x < ladder.right + 4 && y > ladder.top - 6 && y < ladder.bottom + 6;
+    onLadder = inZone && !keys["ArrowLeft"] && !keys["ArrowRight"];
+
+    if (onLadder) {
+      vy = 0;
+      if (keys["ArrowUp"]) y -= CLIMB_SPEED * dt;
+      else if (keys["ArrowDown"]) y += CLIMB_SPEED * dt;
+      y = Math.max(ladder.top, Math.min(ladder.bottom, y)); // die FALSCHE (zu grosse) Zone
+    } else {
+      if (keys["ArrowLeft"]) x -= 100 * dt;
+      if (keys["ArrowRight"]) x += 100 * dt;
+    }
+
+    if (!onLadder) {
+      vy += GRAVITY * dt;
+      const nextY = y + vy * dt;
+      if (nextY >= platformY && y <= platformY + 2 && vy >= 0) { y = platformY; vy = 0; }
+      else { y = nextY; if (y > H + 40) { x = 92; y = rungTop; vy = 0; } }
+    }
+
+    drawLadderScene(ctx, W, H, platformY, ladder, x, y, onLadder);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  canvas.addEventListener("click", () => canvas.focus());
+})();
+
+/* ===================================================================
+   Beispiel 2: die korrigierte Zone - bottom endet exakt auf
+   Plattformhoehe.
+   =================================================================== */
+(function example2_fixed() {
+  const canvas = document.getElementById("stage2");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  const platformY = 200;
+  const rungTop = 80, rungBottom = 160;
+  // RICHTIG: die Zone endet genau eine Sprossen-Distanz unter der
+  // letzten Sprosse - exakt auf Plattformhoehe
+  const ladder = { left: 80, right: 105, top: rungTop, bottom: rungBottom + 24 };
+
+  let x = 92, y = rungTop, vy = 0, onLadder = false;
+  const keys = {};
+  window.addEventListener("keydown", (e) => { keys[e.code] = true; e.preventDefault(); });
+  window.addEventListener("keyup", (e) => (keys[e.code] = false));
+
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    const inZone = x > ladder.left - 4 && x < ladder.right + 4 && y > ladder.top - 6 && y < ladder.bottom + 6;
+    onLadder = inZone && !keys["ArrowLeft"] && !keys["ArrowRight"];
+
+    if (onLadder) {
+      vy = 0;
+      if (keys["ArrowUp"]) y -= CLIMB_SPEED * dt;
+      else if (keys["ArrowDown"]) y += CLIMB_SPEED * dt;
+      y = Math.max(ladder.top, Math.min(ladder.bottom, y));
+    } else {
+      if (keys["ArrowLeft"]) x -= 100 * dt;
+      if (keys["ArrowRight"]) x += 100 * dt;
+    }
+
+    if (!onLadder) {
+      vy += GRAVITY * dt;
+      const nextY = y + vy * dt;
+      if (nextY >= platformY && y <= platformY + 2 && vy >= 0) { y = platformY; vy = 0; }
+      else { y = nextY; if (y > H + 40) { x = 92; y = rungTop; vy = 0; } }
+    }
+
+    drawLadderScene(ctx, W, H, platformY, ladder, x, y, onLadder);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  canvas.addEventListener("click", () => canvas.focus());
+})();
+
+/* ===================================================================
+   Beispiel 3: vollstaendige Integration - Leiter verbindet zwei
+   Plattformen, freies Laufen/Springen/Klettern kombiniert.
+   =================================================================== */
+(function example3_full() {
+  const canvas = document.getElementById("stage3");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+
+  const platforms = [{ y: 200, x: 0, w: 200 }, { y: 90, x: 160, w: 200 }];
+  const ladder = { left: 175, right: 200, top: 90, bottom: 200 };
+  let x = 40, y = 190, vy = 0, onLadder = false, onGround = false;
+  const keys = {};
+  window.addEventListener("keydown", (e) => { keys[e.code] = true; e.preventDefault(); });
+  window.addEventListener("keyup", (e) => (keys[e.code] = false));
+
+  function findLanding(nextY) {
+    let best = null;
+    platforms.forEach((p) => {
+      if (x > p.x && x < p.x + p.w && y <= p.y + 2 && nextY >= p.y) {
+        if (!best || p.y < best.y) best = { y: p.y };
+      }
+    });
+    return best;
+  }
+
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    const inZone = x > ladder.left - 4 && x < ladder.right + 4 && y > ladder.top - 6 && y < ladder.bottom + 6;
+    onLadder = inZone && !keys["ArrowLeft"] && !keys["ArrowRight"];
+
+    if (onLadder) {
+      vy = 0;
+      if (keys["ArrowUp"]) y -= CLIMB_SPEED * dt;
+      else if (keys["ArrowDown"]) y += CLIMB_SPEED * dt;
+      y = Math.max(ladder.top, Math.min(ladder.bottom, y));
+    } else {
+      if (keys["ArrowLeft"]) x -= 130 * dt;
+      if (keys["ArrowRight"]) x += 130 * dt;
+      x = Math.max(10, Math.min(W - 10, x));
+    }
+
+    if (!onLadder) {
+      if (keys["Space"] && onGround) { vy = -JUMP_SPEED; onGround = false; }
+      vy += GRAVITY * dt;
+      const nextY = y + vy * dt;
+      const landing = findLanding(nextY);
+      if (landing && vy >= 0) { y = landing.y; vy = 0; onGround = true; }
+      else { y = nextY; onGround = false; if (y > H + 40) { x = 40; y = 190; vy = 0; } }
+    } else {
+      onGround = false;
+    }
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#663300";
+    platforms.forEach((p) => ctx.fillRect(p.x, p.y, p.w, 10));
+    ctx.strokeStyle = "#845232";
+    ctx.lineWidth = 2;
+    for (let ry = ladder.top + 6; ry < ladder.bottom; ry += 10) {
+      ctx.beginPath();
+      ctx.moveTo(ladder.left + 4, ry);
+      ctx.lineTo(ladder.right - 4, ry);
+      ctx.stroke();
+    }
+    ctx.fillStyle = onLadder ? "#a78bfa" : "#5fe0c9";
+    ctx.beginPath();
+    ctx.arc(x, y - 6, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  canvas.addEventListener("click", () => canvas.focus());
+})();

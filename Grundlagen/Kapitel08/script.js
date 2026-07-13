@@ -2,119 +2,180 @@
  * Kapitel 8 - Hindernisse & Gefahren
  * Musterloesung
  *
- * checkHazards(): nicht jedes auffaellige Level-Element ist gefaehrlich
- * (Wasser sieht gefaehrlich aus, ist aber nur eine normale Plattform),
- * und kontinuierlicher Schaden braucht eine Abklingzeit (invulnTimer) -
- * sonst wuerde ein 60fps-Loop auch 60 Treffer pro Sekunde verursachen.
+ * Drei Beispiele: (1) Wasser ist begehbar (keine Gefahr), (2) Feuer -
+ * Schaden ueber Zeit mit Abklingzeit, (3) Stacheln - hoeherer Schaden,
+ * dieselbe Technik. checkHazards() existiert im fertigen Spiel fast
+ * wortgleich fuer Hero UND Enemy, weil beide denselben Gefahren
+ * ausgesetzt sind.
  */
 
-const canvas = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
-const W = canvas.width;
-const H = canvas.height;
-
-const SPEED = 160;
-const SIZE = 26;
-const GROUND_Y = H - 50;
-
-// Zonen im Level. "Water" ist bewusst KEINE Gefahr - nur zur Anschauung,
-// dass nicht jedes auffaellige Element automatisch schadet.
-const zones = [
-  { type: "Water", x: 40, w: 100, color: "#3b82c4" },
-  { type: "Flame", x: 220, w: 60, color: "#ffb84d" },
-  { type: "Knives", x: 360, w: 60, color: "#93a4b3" },
-];
-
-// Schadenswert und Abklingzeit je Gefahrentyp. Neue Gefahren lassen sich
-// spaeter mit minimalem Zusatzcode einfuehren, sobald dieses Grundmuster
-// (Schaden + Abklingzeit) einmal steht.
-const HAZARDS = {
-  Flame: { damage: 1, cooldown: 0.6 },
-  Knives: { damage: 3, cooldown: 0.6 },
+const tileSheet = new Image();
+tileSheet.src = "assets/tiles.png";
+const TILE_CELL_W = 42, TILE_CELL_H = 66;
+const TILES = {
+  Floor: { row: 0, w: 41, h: 21 },
+  WaterGround: { row: 1, w: 40, h: 18 },
+  Knives: { row: 4, w: 18, h: 16 },
 };
-
-const player = {
-  x: 20,
-  hp: 10,
-  invulnTimer: 0,
-};
-
-const keys = { left: false, right: false };
-window.addEventListener("keydown", (e) => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
-});
-window.addEventListener("keyup", (e) => {
-  if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
-  if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
-});
-
-// Prueft, ob die Spielfigur gerade in einer Gefahrenzone steht. WICHTIG:
-// erst pruefen (und ggf. Schaden zufuegen), DANN am Ende des Frames den
-// Timer runterzaehlen - nicht umgekehrt.
-function checkHazards(dt) {
-  if (player.invulnTimer <= 0) {
-    zones.forEach((zone) => {
-      const def = HAZARDS[zone.type];
-      if (!def) return; // z.B. "Water" hat keinen Eintrag in HAZARDS -> keine Gefahr
-
-      const overlapping = player.x + SIZE > zone.x && player.x < zone.x + zone.w;
-      if (overlapping) {
-        player.hp = Math.max(0, player.hp - def.damage);
-        player.invulnTimer = def.cooldown;
-      }
-    });
-  }
-
-  if (player.invulnTimer > 0) {
-    player.invulnTimer -= dt;
-  }
+function whenReady(fn) {
+  if (tileSheet.complete && tileSheet.naturalWidth > 0) fn();
+  else tileSheet.addEventListener("load", fn, { once: true });
+}
+function drawTile(ctx, name, x, y) {
+  const def = TILES[name];
+  const sx = (TILE_CELL_W - def.w) / 2, sy = def.row * TILE_CELL_H + (TILE_CELL_H - def.h) / 2;
+  ctx.drawImage(tileSheet, sx, sy, def.w, def.h, x, y, def.w, def.h);
+}
+function drawFlame(ctx, x, y, w, h) {
+  // y ist die BASIS (Bodenkontakt) - die Flamme waechst nach OBEN
+  const flick = 0.7 + Math.sin(performance.now() / 90 + x) * 0.3;
+  ctx.fillStyle = `rgba(255,${100 + flick * 80},60,0.95)`;
+  ctx.beginPath();
+  ctx.moveTo(x + w / 2, y - h);
+  ctx.quadraticCurveTo(x + w, y - h * 0.6, x + w / 2, y + 4);
+  ctx.quadraticCurveTo(x, y - h * 0.6, x + w / 2, y - h);
+  ctx.fill();
 }
 
-let lastTime = 0;
+/* ===================================================================
+   Beispiel 1: Wasser ist begehbar - keine Gefahr. WaterGround gehoert
+   zu den PLATFORM_TYPES, nicht zu den Gefahren.
+   =================================================================== */
+(function example1_water() {
+  const canvas = document.getElementById("stage1");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  let x = 40;
+  const keys = {};
+  window.addEventListener("keydown", (e) => (keys[e.code] = true));
+  window.addEventListener("keyup", (e) => (keys[e.code] = false));
 
-function update(dt) {
-  if (keys.left) player.x -= SPEED * dt;
-  if (keys.right) player.x += SPEED * dt;
-  player.x = Math.max(0, Math.min(W - SIZE, player.x));
-
-  checkHazards(dt);
-}
-
-function render() {
-  ctx.fillStyle = "#0b1a24";
-  ctx.fillRect(0, 0, W, H);
-
-  ctx.fillStyle = "#663300";
-  ctx.fillRect(0, GROUND_Y + SIZE, W, 4);
-
-  zones.forEach((zone) => {
-    ctx.fillStyle = zone.color;
-    ctx.fillRect(zone.x, GROUND_Y, zone.w, SIZE);
-  });
-
-  // waehrend der Unverwundbarkeit blinkt die Figur leicht, damit man
-  // sieht, dass gerade kein weiterer Treffer registriert wird
-  const flashing = player.invulnTimer > 0 && Math.floor(player.invulnTimer * 10) % 2 === 0;
-  ctx.fillStyle = flashing ? "#ffffff" : "#a78bfa";
-  ctx.fillRect(player.x, GROUND_Y, SIZE, SIZE);
-
-  ctx.fillStyle = "#93a4b3";
-  ctx.font = "14px monospace";
-  ctx.fillText(`HP: ${player.hp} / 10`, 14, 24);
-}
-
-function loop(now) {
-  if (lastTime === 0) {
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
     lastTime = now;
+    if (keys["ArrowLeft"]) x -= 140 * dt;
+    if (keys["ArrowRight"]) x += 140 * dt;
+    x = Math.max(10, Math.min(W - 30, x));
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    whenReady(() => {
+      for (let gx = 0; gx < W; gx += 40) {
+        drawTile(ctx, "WaterGround", gx, 160);
+        const wobble = Math.sin(performance.now() / 400 + gx) * 1.5;
+        ctx.fillStyle = "rgba(88,184,243,0.55)";
+        ctx.fillRect(gx, 158 + wobble, 40, 3);
+      }
+      ctx.fillStyle = "#5fe0c9";
+      ctx.beginPath();
+      ctx.arc(x + 10, 148, 12, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    requestAnimationFrame(loop);
   }
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
-
-  update(dt);
-  render();
-
   requestAnimationFrame(loop);
-}
+  canvas.addEventListener("click", () => canvas.focus());
+})();
 
-requestAnimationFrame(loop);
+/* ===================================================================
+   Beispiel 2: Feuer - Schaden ueber Zeit, mit Abklingzeit (invulnTimer)
+   =================================================================== */
+(function example2_flame() {
+  const canvas = document.getElementById("stage2");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const hpDisplay = document.getElementById("hp-display2");
+
+  const flame = { x: 220, y: 160, w: 26, h: 34 };
+  let x = 40, hp = 10, invulnTimer = 0;
+  const keys = {};
+  window.addEventListener("keydown", (e) => (keys[e.code] = true));
+  window.addEventListener("keyup", (e) => (keys[e.code] = false));
+
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+    if (keys["ArrowLeft"]) x -= 140 * dt;
+    if (keys["ArrowRight"]) x += 140 * dt;
+    x = Math.max(10, Math.min(W - 30, x));
+
+    if (invulnTimer > 0) invulnTimer -= dt;
+    // entspricht exakt dem Flame-Teil von checkHazards()
+    const footX = x + 10, footY = 160;
+    if (invulnTimer <= 0 && footX > flame.x - 2 && footX < flame.x + flame.w && footY > flame.y - flame.h && footY <= flame.y + 4) {
+      hp = Math.max(0, hp - 1);
+      invulnTimer = 0.6;
+    }
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#663300";
+    ctx.fillRect(0, 160, W, 6);
+    drawFlame(ctx, flame.x, flame.y, flame.w, flame.h);
+    ctx.fillStyle = invulnTimer > 0 ? "#ffb84d" : "#5fe0c9";
+    ctx.beginPath();
+    ctx.arc(x + 10, 148, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    hpDisplay.textContent = `HP: ${hp}/10   Abklingzeit: ${invulnTimer > 0 ? invulnTimer.toFixed(1) + "s" : "bereit"}`;
+    if (hp <= 0) hp = 10;
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  canvas.addEventListener("click", () => canvas.focus());
+})();
+
+/* ===================================================================
+   Beispiel 3: Stacheln - hoeherer Einzelschaden, dieselbe Abklingzeit
+   =================================================================== */
+(function example3_knives() {
+  const canvas = document.getElementById("stage3");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const hpDisplay = document.getElementById("hp-display3");
+
+  const knives = { x: 220, y: 144, w: 18, h: 16 };
+  let x = 40, hp = 10, invulnTimer = 0;
+  const keys = {};
+  window.addEventListener("keydown", (e) => (keys[e.code] = true));
+  window.addEventListener("keyup", (e) => (keys[e.code] = false));
+
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+    if (keys["ArrowLeft"]) x -= 140 * dt;
+    if (keys["ArrowRight"]) x += 140 * dt;
+    x = Math.max(10, Math.min(W - 30, x));
+
+    if (invulnTimer > 0) invulnTimer -= dt;
+    const footX = x + 10, footY = 160;
+    if (invulnTimer <= 0 && footX > knives.x && footX < knives.x + knives.w && footY > knives.y && footY < knives.y + knives.h + 6) {
+      hp = Math.max(0, hp - 5);
+      invulnTimer = 0.6;
+    }
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#663300";
+    ctx.fillRect(0, 160, W, 6);
+    whenReady(() => drawTile(ctx, "Knives", knives.x, knives.y));
+    ctx.fillStyle = invulnTimer > 0 ? "#ffb84d" : "#5fe0c9";
+    ctx.beginPath();
+    ctx.arc(x + 10, 148, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    hpDisplay.textContent = `HP: ${hp}/10   Abklingzeit: ${invulnTimer > 0 ? invulnTimer.toFixed(1) + "s" : "bereit"}`;
+    if (hp <= 0) hp = 10;
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  canvas.addEventListener("click", () => canvas.focus());
+})();

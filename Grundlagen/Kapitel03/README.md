@@ -7,16 +7,16 @@ Musterloesung zu Kapitel 3 des Buchs
 
 ```bash
 python3 -m http.server 8000
-# dann im Browser: http://localhost:8000
 ```
 
 ## Was hier passiert
 
-- Eine endlos laufende Animation (Walk) per `frame % count`
-- Eine einmalige Animation (Jump), die am letzten Frame stehen bleibt,
-  per `Math.min(frame, count - 1)`
-- Beide Varianten nutzen dieselbe zeitbasierte Formel:
-  `frame = Math.floor(t * fps)`
+1. **Von Hand durchklicken** - Frame fuer Frame per Button, zeigt: eine
+   Animation ist nur eine Liste von Posen
+2. **Automatisch mit FPS-Regler** - `frame = Math.floor(t*fps) % count`,
+   Geschwindigkeit live einstellbar
+3. **Mehrere Zustaende** - Idle/Walk (endlos) vs. Jump (einmalig, bleibt
+   am letzten Frame stehen)
 
 ## Dateien
 

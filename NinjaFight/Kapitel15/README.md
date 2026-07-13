@@ -17,11 +17,9 @@ Nutzerinteraktion, bevor Audio abgespielt werden darf).
 ## Was hier neu dazugekommen ist
 
 - Die `SoundController`-Klasse (Musik + SFX + gemeinsame Lautstaerke)
-- Der Held startet in diesem Kapitel direkt mit Schwert (das
-  Item-System wurde in Kapitel 13/14 zugunsten der Gegner-KI aus der
-  Szene genommen) - Taste **K** loest jetzt `SwordHit` statt `Kick`
-  aus, mit Soundeffekt
-- Eingesammelte Power-Ups spielen `playCollect()`
+- Schwerthieb spielt einen Sound (`sound.playSword()`)
+- Eingesammelte Power-Ups spielen einen Muenz-Sound
+  (`sound.playCoins()`)
 
 ## Dateien
 
@@ -35,9 +33,5 @@ Kapitel15/
     │   ├── Lost-Jungle.mp3
     │   ├── sword.mp3
     │   └── Coins.mp3
-    └── img/sprites/
-        ├── hero.png
-        ├── blue.png
-        ├── green.png
-        └── tiles.png
+    └── img/sprites/...
 ```

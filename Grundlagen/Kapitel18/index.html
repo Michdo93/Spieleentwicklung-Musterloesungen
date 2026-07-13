@@ -8,28 +8,35 @@
 <body>
   <h1>Kapitel 18 – Highscores &amp; Levelfortschritt</h1>
 
-  <section class="panel">
-    <h2>1. Highscores (localStorage)</h2>
-    <input id="name-input" placeholder="Name" maxlength="16">
-    <input id="points-input" type="number" placeholder="Punkte" value="100">
-    <button id="btn-save">Speichern</button>
+  <section>
+    <h2>Beispiel 1: Highscores mit localStorage</h2>
+    <input id="score-name" placeholder="Name" maxlength="16">
+    <div class="controls">
+      <button id="btn-save-score">Zufälligen Punktestand speichern</button>
+      <button id="btn-clear-scores">Liste löschen</button>
+    </div>
     <pre id="highscore-list"></pre>
+    <p class="hint">localStorage übersteht einen Seitenneuladen - Einträge speichern, Seite neu laden, sie sind noch da.</p>
   </section>
 
-  <section class="panel">
-    <h2>2. Sieg oder Niederlage?</h2>
-    <label>HP: <input type="range" id="hp" min="0" max="10" value="5"></label>
-    <label>Zeit übrig (s): <input type="range" id="time" min="0" max="60" value="30"></label>
-    <label>Gegner übrig: <input type="range" id="enemiesLeft" min="0" max="5" value="2"></label>
-    <label>Level: <input type="range" id="levelNum" min="1" max="10" value="1"></label>
-    <p id="result"></p>
+  <section>
+    <h2>Beispiel 2: Sieg oder Niederlage?</h2>
+    <label>Level: <input type="range" id="sim-level" min="1" max="10" value="5"></label>
+    <label><input type="checkbox" id="sim-alive" checked> Held lebt</label>
+    <label>Gegner übrig: <input type="range" id="sim-enemies" min="0" max="5" value="0"></label>
+    <label><input type="checkbox" id="sim-timeup"> Zeit abgelaufen</label>
+    <p id="outcome-display" class="hp"></p>
+    <p class="hint">Regler und Kontrollkästchen verändern die Simulation live - probiere verschiedene Kombinationen aus.</p>
   </section>
 
-  <section class="panel">
-    <h2>3. Kumulative Lebenspunkte: += statt =</h2>
-    <button id="btn-nextlevel">Nächstes Level</button>
-    <button id="btn-reset">Zurücksetzen</button>
-    <p id="cumulative"></p>
+  <section>
+    <h2>Beispiel 3: Kumulative Lebenspunkte über Level</h2>
+    <div class="controls">
+      <button id="btn-next-level">Nächstes Level</button>
+      <button id="btn-take-damage">Schaden nehmen (-7)</button>
+    </div>
+    <pre id="life-log"></pre>
+    <p class="hint">Die kumulative Formel aus GameManager.nextLevel(): jedes Level fügt Lebenspunkte hinzu, statt sie zurückzusetzen.</p>
   </section>
 
   <script src="script.js"></script>

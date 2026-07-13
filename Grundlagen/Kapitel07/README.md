@@ -11,12 +11,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Level als reine Datenliste (`{ type, x, y }`) statt hartkodierter
-  `fillRect()`-Aufrufe
-- `buildLevel()` sortiert die flache Rohdatenliste einmal nach
-  Bedeutung (Plattform oder nicht)
-- Ein Klick auf den Knopf tauscht das komplette Level aus - derselbe
-  Zeichencode stellt zwei unterschiedliche Level dar
+1. **Hartkodiert vs. Daten** - derselbe Level, zwei Schreibweisen
+2. **buildLevel()** - sortiert eine flache `{type,x,y}`-Liste nach
+   Bedeutung (platforms/ladders/hazards)
+3. **Level austauschen** - exakt derselbe Zeichencode, nur eine andere
+   Datenliste
 
 ## Dateien
 
@@ -24,5 +23,6 @@ python3 -m http.server 8000
 Kapitel07/
 ├── index.html
 ├── style.css
-└── script.js
+├── script.js
+└── assets/tiles.png
 ```

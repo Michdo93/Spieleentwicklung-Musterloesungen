@@ -7,8 +7,24 @@
 </head>
 <body>
   <h1>Kapitel 13 – Gegner-KI: Bewegung</h1>
-  <canvas id="stage" width="480" height="220"></canvas>
-  <p id="hint">Der Gegner patrouilliert selbstständig. Er erkennt die Kante der Plattform, bevor er herunterfällt, und springt gelegentlich zufällig - aber nur, wenn es sicher ist.</p>
+
+  <section>
+    <h2>Beispiel 1: Naive Patrouille (fällt von der Plattform)</h2>
+    <canvas id="stage1" width="320" height="220"></canvas>
+    <p class="hint">Patrouille zwischen zwei festen X-Werten - ohne zu prüfen, ob die Plattform überhaupt so weit reicht. Die Figur läuft blind über die Kante.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: Mit Kantenerkennung</h2>
+    <canvas id="stage2" width="320" height="220"></canvas>
+    <p class="hint">hasSupportAhead() prüft vor jedem Schritt: ist da vorne noch Boden? Wenn nicht, umdrehen statt herunterfallen.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Gelegentliches Springen</h2>
+    <canvas id="stage3" width="320" height="220"></canvas>
+    <p class="hint">Wie Beispiel 2, plus gelegentliches zufälliges Springen - aber nur, wenn auch nach dem Sprung noch Boden erwartet wird.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

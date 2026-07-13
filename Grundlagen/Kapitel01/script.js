@@ -2,57 +2,102 @@
  * Kapitel 1 - Canvas-Grundlagen & Game-Loop
  * Musterloesung
  *
- * Zeitbasierter Game-Loop: Die Bewegung wird nicht in "Pixel pro Frame",
- * sondern in "Pixel pro Sekunde" angegeben. Dazu messen wir bei jedem
- * Frame die tatsaechlich vergangene Zeit (dt) und skalieren die Bewegung
- * damit. So laeuft das Spiel auf jedem Bildschirm gleich schnell,
- * unabhaengig von dessen Bildwiederholrate.
+ * Drei Beispiele, die parallel und unabhaengig voneinander laufen -
+ * jedes auf seinem eigenen <canvas>. Zusammen zeigen sie den Weg vom
+ * Standbild zum zeitbasierten Game-Loop, wie er in Ninja Fight
+ * (GameManager.loop()) tatsaechlich verwendet wird.
  */
 
-const canvas = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
-const W = canvas.width;
-const H = canvas.height;
+/* ===================================================================
+   Beispiel 1: Statisches Zeichnen - kein Loop, nur ein einziger Aufruf
+   =================================================================== */
+(function example1_static() {
+  const canvas = document.getElementById("stage-static");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
 
-const SPEED = 140; // Pixel pro Sekunde
-
-const square = {
-  x: 40,
-  y: 105,
-  size: 60,
-};
-
-let lastTime = 0;
-
-function update(dt) {
-  square.x += SPEED * dt;
-  if (square.x > W - square.size) {
-    square.x = 40;
-  }
-}
-
-function render() {
   ctx.fillStyle = "#0b1a24";
   ctx.fillRect(0, 0, W, H);
 
-  ctx.fillStyle = "#a78bfa";
-  ctx.fillRect(square.x, square.y, square.size, square.size);
+  ctx.fillStyle = "#5fe0c9";
+  ctx.fillRect(80, 70, 60, 60);
   ctx.strokeStyle = "#0a0e14";
   ctx.lineWidth = 2;
-  ctx.strokeRect(square.x, square.y, square.size, square.size);
-}
+  ctx.strokeRect(80, 70, 60, 60);
 
-function loop(now) {
-  if (lastTime === 0) {
-    lastTime = now;
+  // Das war's - es gibt keinen weiteren Aufruf, also bleibt das Bild
+  // fuer immer genau so stehen, wie es hier einmal gezeichnet wurde.
+})();
+
+/* ===================================================================
+   Beispiel 2: Naiver Loop - ein fester Pixel-Schritt pro Frame.
+   Das Problem: Die Geschwindigkeit haengt von der Bildrate ab. Auf
+   einem 30-Hz-Bildschirm waere das Quadrat nur halb so schnell wie
+   bei 60 Hz.
+   =================================================================== */
+(function example2_naive() {
+  const canvas = document.getElementById("stage-naive");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const hint = document.getElementById("hint-naive");
+  hint.textContent = "square.x += 2 pro Frame - bei 60fps doppelt so schnell wie bei 30fps. Genau das Problem, das Beispiel 3 loest.";
+
+  let x = 40;
+
+  function frame() {
+    x += 2; // fester Schritt, unabhaengig von der tatsaechlich vergangenen Zeit
+    if (x > W - 60) x = 40;
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#ffb84d";
+    ctx.fillRect(x, 70, 60, 60);
+    ctx.strokeStyle = "#0a0e14";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, 70, 60, 60);
+
+    requestAnimationFrame(frame);
   }
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
+  requestAnimationFrame(frame);
+})();
 
-  update(dt);
-  render();
+/* ===================================================================
+   Beispiel 3: Zeitbasierter Loop - dieselbe Struktur wie in Ninja
+   Fight (GameManager.loop): Zeitdifferenz seit dem letzten Frame
+   berechnen, Bewegung mit dieser Differenz (dt) statt mit einem
+   festen Wert skalieren. Laeuft auf jedem Bildschirm gleich schnell.
+   =================================================================== */
+(function example3_timed() {
+  const canvas = document.getElementById("stage-timed");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const hint = document.getElementById("hint-timed");
+  hint.textContent = "square.x += SPEED * dt - dieselbe Struktur wie GameManager.loop() in Ninja Fight. Laeuft bei jeder Bildrate gleich schnell.";
 
+  const SPEED = 140; // Pixel pro Sekunde, nicht pro Frame
+  let x = 40;
+  let lastTime = 0;
+
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05); // Sekunden seit letztem Frame
+    lastTime = now;
+
+    x += SPEED * dt;
+    if (x > W - 60) x = 40;
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#a78bfa";
+    ctx.fillRect(x, 70, 60, 60);
+    ctx.strokeStyle = "#0a0e14";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, 70, 60, 60);
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "13px monospace";
+    ctx.fillText(`dt = ${dt.toFixed(4)}s`, 14, 24);
+
+    requestAnimationFrame(loop);
+  }
   requestAnimationFrame(loop);
-}
-
-requestAnimationFrame(loop);
+})();

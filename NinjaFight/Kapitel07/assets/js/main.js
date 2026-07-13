@@ -2,10 +2,13 @@
  * Ninja Fight - Kapitel 7: Level-Daten & Tile-Rendering
  * Musterloesung
  *
- * Baut auf Kapitel 6 auf. Die in Kapitel 6 hartkodierte platforms-Liste
- * wird ersetzt durch echte Level-DATEN (LEVELS, wie in levels.js) plus
- * buildLevel(), das die Rohdaten einmal nach Bedeutung sortiert - exakt
- * das Prinzip aus render.js im fertigen Spiel.
+ * Baut auf Kapitel 6 auf. Statt weniger Testplattformen bauen wir jetzt
+ * die ersten beiden ECHTEN Level aus Ninja Fight nach - Koordinaten 1:1
+ * aus levels.js uebernommen. buildLevel() sortiert die Rohdaten nach
+ * Bedeutung; in diesem Kapitel interessieren uns nur Plattformen und
+ * Leitern (rein optisch) - Feuer, Messer und Wasser-Kacheln ignorieren
+ * wir bewusst noch (kommt in Kapitel 8/9 dazu), man kann also ueberall
+ * problemlos stehen.
  */
 
 const canvas = document.getElementById("stage");
@@ -21,12 +24,22 @@ tileSheet.src = "assets/img/sprites/tiles.png";
 
 const CELL_W = 160;
 const CELL_H = 150;
+const ANCHOR_X = 30;
+const ANCHOR_Y = 145;
+const SPRITE_SCALE = 0.45;
+const DRAW_W = CELL_W * SPRITE_SCALE;
+const DRAW_H = CELL_H * SPRITE_SCALE;
 
+// entspricht TILE_SHEET in spritedata.js - je Kacheltyp seine eigene,
+// tatsaechliche Groesse (nicht alle Kacheln sind gleich gross!)
 const TILE_SHEET = {
-  cellW: 42,
-  cellH: 66,
+  cellW: 42, cellH: 66,
   tiles: {
     Floor: { row: 0, w: 41, h: 21 },
+    WaterGround: { row: 1, w: 40, h: 18 },
+    Bridge: { row: 2, w: 36, h: 13 },
+    Ladder: { row: 3, w: 25, h: 24 },
+    Small: { row: 5, w: 41, h: 24 },
   },
 };
 
@@ -34,49 +47,162 @@ const GRAVITY = 1400;
 const JUMP_SPEED = 620;
 const WALK_SPEED = 160;
 
-const FLOOR_Y = STAGE_H - 21;
-
-// Kleiner Helfer, NUR um die Leveldaten unten kompakt zu formulieren -
-// buildLevel() bekommt am Ende ohnehin eine flache Liste einzelner
-// Kacheln, genau wie levels.js im fertigen Spiel.
-function floorRun(xStart, xEnd, y) {
-  const tiles = [];
-  for (let x = xStart; x < xEnd; x += 41) tiles.push({ type: "Floor", x, y });
-  return tiles;
-}
-
-// Rohe Level-Daten: eine flache Liste aus { type, x, y }. Diese Liste
-// entspricht LEVELS in levels.js - dort aus den Original-Leveldaten
-// des Spiels extrahiert.
+// Original-Level-Layouts, 1:1 aus levels.js uebernommen. "Bottom" und
+// "WaterTop" sind rein dekorativ (keine eigene Kollision), "Flame" und
+// "Knives" sind Gefahren - beides ignorieren wir in diesem Kapitel noch.
 const LEVELS = {
   1: [
-    ...floorRun(0, 400, FLOOR_Y),
-    ...floorRun(620, STAGE_W, FLOOR_Y),
-    ...floorRun(420, 640, FLOOR_Y - 160),
-    ...floorRun(700, 880, FLOOR_Y - 280),
+    { type: "WaterGround", x: 760.0, y: 434.1 },
+    { type: "WaterGround", x: 800.0, y: 434.1 },
+    { type: "WaterGround", x: 840.0, y: 434.1 },
+    { type: "WaterGround", x: 880.0, y: 434.1 },
+    { type: "WaterGround", x: 920.0, y: 434.1 },
+    { type: "Floor", x: 0.0, y: 414.1 },
+    { type: "Floor", x: 40.0, y: 414.1 },
+    { type: "Floor", x: 80.0, y: 413.8 },
+    { type: "Floor", x: 120.0, y: 414.1 },
+    { type: "Floor", x: 160.0, y: 414.1 },
+    { type: "Floor", x: 200.0, y: 414.1 },
+    { type: "Floor", x: 240.0, y: 414.1 },
+    { type: "Floor", x: 280.0, y: 414.1 },
+    { type: "Floor", x: 320.0, y: 414.1 },
+    { type: "Floor", x: 360.0, y: 414.0 },
+    { type: "Floor", x: 400.0, y: 414.0 },
+    { type: "Floor", x: 440.0, y: 414.1 },
+    { type: "Floor", x: 480.0, y: 413.9 },
+    { type: "Floor", x: 520.0, y: 413.9 },
+    { type: "Floor", x: 560.0, y: 414.0 },
+    { type: "Floor", x: 600.0, y: 413.9 },
+    { type: "Floor", x: 640.0, y: 413.9 },
+    { type: "Floor", x: 680.0, y: 413.9 },
+    { type: "Floor", x: 720.0, y: 413.9 },
+    { type: "Floor", x: 959.8, y: 414.1 },
+    { type: "Floor", x: 999.8, y: 413.9 },
+    { type: "Bottom", x: 429.0, y: 316.9 },
+    { type: "Bottom", x: 548.3, y: 316.9 },
+    { type: "Floor", x: 429.0, y: 297.6 },
+    { type: "Floor", x: 548.3, y: 297.6 },
+    { type: "Bottom", x: 700.1, y: 316.4 },
+    { type: "Bottom", x: 740.1, y: 316.4 },
+    { type: "Floor", x: 700.1, y: 297.6 },
+    { type: "Floor", x: 736.6, y: 297.6 },
+    { type: "Floor", x: 776.2, y: 297.6 },
+    { type: "Small", x: 37.8, y: 361.4 },
+    { type: "Small", x: 77.8, y: 361.4 },
+    { type: "Small", x: 117.8, y: 361.4 },
+    { type: "Small", x: 157.8, y: 361.4 },
+    { type: "Small", x: 169.2, y: 309.6 },
+    { type: "Small", x: 209.2, y: 309.6 },
+    { type: "Small", x: 249.2, y: 309.6 },
+    { type: "Small", x: 289.2, y: 309.6 },
+    { type: "Small", x: 469.0, y: 316.9 },
+    { type: "Small", x: 508.8, y: 316.9 },
+    { type: "Small", x: 329.2, y: 309.6 },
+    { type: "WaterTop", x: 760.0, y: 415.8 },
+    { type: "WaterTop", x: 800.0, y: 415.6 },
+    { type: "WaterTop", x: 840.0, y: 415.9 },
+    { type: "WaterTop", x: 879.8, y: 415.8 },
+    { type: "WaterTop", x: 919.8, y: 415.9 },
+    { type: "Flame", x: 589.7, y: 298.4 },
+    { type: "Flame", x: 433.4, y: 414.4 },
+    { type: "Flame", x: 73.5, y: 360.2 },
+    { type: "Bridge", x: 664.0, y: 298.5 },
+    { type: "Bridge", x: 628.0, y: 298.5 },
+    { type: "Knives", x: 481.4, y: 299.9 },
+    { type: "Knives", x: 497.9, y: 299.9 },
+    { type: "Ladder", x: 726.5, y: 389.8 },
+    { type: "Ladder", x: 726.5, y: 365.8 },
+    { type: "Ladder", x: 726.5, y: 341.8 },
+    { type: "Ladder", x: 726.5, y: 317.9 },
+    { type: "Ladder", x: 726.5, y: 293.4 },
+    { type: "Small", x: 588.0, y: 298.6 },
+  ],
+  2: [
+    { type: "Floor", x: 0.0, y: 414.1 },
+    { type: "Floor", x: 40.0, y: 414.1 },
+    { type: "Floor", x: 80.0, y: 413.8 },
+    { type: "Floor", x: 120.0, y: 414.1 },
+    { type: "Floor", x: 160.0, y: 414.1 },
+    { type: "Floor", x: 200.0, y: 414.1 },
+    { type: "Floor", x: 240.0, y: 414.1 },
+    { type: "Floor", x: 280.0, y: 414.1 },
+    { type: "Floor", x: 320.0, y: 414.1 },
+    { type: "Floor", x: 360.0, y: 414.0 },
+    { type: "Floor", x: 400.0, y: 414.0 },
+    { type: "Floor", x: 440.0, y: 414.1 },
+    { type: "Floor", x: 480.0, y: 413.9 },
+    { type: "Floor", x: 520.0, y: 413.9 },
+    { type: "Floor", x: 560.0, y: 414.0 },
+    { type: "Floor", x: 600.0, y: 413.9 },
+    { type: "Floor", x: 640.0, y: 413.9 },
+    { type: "Floor", x: 680.0, y: 413.9 },
+    { type: "Floor", x: 720.0, y: 413.9 },
+    { type: "Floor", x: 959.8, y: 414.1 },
+    { type: "Floor", x: 999.8, y: 413.9 },
+    { type: "Bottom", x: 429.0, y: 316.9 },
+    { type: "Floor", x: 429.0, y: 297.6 },
+    { type: "Small", x: 37.8, y: 361.4 },
+    { type: "Small", x: 77.8, y: 361.4 },
+    { type: "Small", x: 117.8, y: 361.4 },
+    { type: "Small", x: 157.8, y: 361.4 },
+    { type: "Small", x: 169.2, y: 309.6 },
+    { type: "Small", x: 209.2, y: 309.6 },
+    { type: "Small", x: 249.2, y: 309.6 },
+    { type: "Small", x: 289.2, y: 309.6 },
+    { type: "Small", x: 469.0, y: 316.9 },
+    { type: "Small", x: 508.8, y: 316.9 },
+    { type: "Small", x: 329.2, y: 309.6 },
+    { type: "WaterTop", x: 760.0, y: 415.8 },
+    { type: "WaterTop", x: 800.0, y: 415.6 },
+    { type: "WaterTop", x: 840.0, y: 415.9 },
+    { type: "WaterTop", x: 879.8, y: 415.8 },
+    { type: "WaterTop", x: 919.8, y: 415.9 },
+    { type: "Flame", x: 433.4, y: 414.4 },
+    { type: "Flame", x: 73.5, y: 360.2 },
+    { type: "Knives", x: 481.4, y: 299.9 },
+    { type: "Knives", x: 497.9, y: 299.9 },
+    { type: "WaterGround", x: 760.0, y: 434.1 },
+    { type: "WaterGround", x: 800.0, y: 434.1 },
+    { type: "WaterGround", x: 840.0, y: 434.1 },
+    { type: "WaterGround", x: 880.0, y: 434.1 },
+    { type: "WaterGround", x: 920.0, y: 434.1 },
   ],
 };
 
-const PLATFORM_TYPES = new Set(["Floor"]);
+const PLATFORM_TYPES = new Set(["Floor", "Bridge", "Small", "WaterGround"]);
 
-// Sortiert die flache Rohdatenliste einmal nach Bedeutung. Der Rest des
-// Spiels arbeitet nur noch mit level.platforms - nie wieder mit rohen
-// Typnamen aus LEVELS.
+// entspricht buildLevel() in render.js: sortiert die flache Rohdatenliste
+// einmal nach Bedeutung. Ladder wird hier nur fuers Zeichnen erfasst -
+// die eigentliche Kletterlogik kommt erst in Kapitel 9 dazu.
 function buildLevel(levelNum) {
   const raw = LEVELS[levelNum];
   const platforms = [];
+  const ladders = [];
 
   raw.forEach((el) => {
     if (PLATFORM_TYPES.has(el.type)) {
-      platforms.push({ x: el.x, y: el.y, w: 41 });
+      const size = TILE_SHEET.tiles[el.type];
+      platforms.push({ type: el.type, x: el.x, y: el.y, w: size.w, h: size.h });
+    } else if (el.type === "Ladder") {
+      ladders.push({ x: el.x, y: el.y });
     }
-    // Leitern (Kapitel 9) und Gefahren (Kapitel 8) kommen hier dazu
+    // Flame/Knives/Bottom/WaterTop: bewusst noch ignoriert (Kapitel 8/9)
   });
 
-  return { platforms };
+  return { platforms, ladders };
 }
 
-const level = buildLevel(1);
+let level = buildLevel(1);
+let currentLevelNum = 1;
+
+document.getElementById("btn-level1").addEventListener("click", () => {
+  currentLevelNum = 1;
+  level = buildLevel(1);
+});
+document.getElementById("btn-level2").addEventListener("click", () => {
+  currentLevelNum = 2;
+  level = buildLevel(2);
+});
 
 const CHARACTER_STATES = {
   Idle: { row: 0, count: 8, loop: true },
@@ -86,8 +212,8 @@ const CHARACTER_STATES = {
 const FPS = 8;
 
 const hero = {
-  x: 150,
-  y: FLOOR_Y - CELL_H,
+  x: 60,
+  y: 414.1,
   vy: 0,
   facing: 1,
   state: "Idle",
@@ -138,9 +264,12 @@ function drawHero(x, y, facing, state, animTime) {
   const sy = def.row * CELL_H;
 
   ctx.save();
-  ctx.translate(x + CELL_W / 2, y);
+  ctx.translate(x, y);
   ctx.scale(facing, 1);
-  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, -CELL_W / 2, 0, CELL_W, CELL_H);
+  ctx.drawImage(
+    heroSheet, sx, sy, CELL_W, CELL_H,
+    -ANCHOR_X * SPRITE_SCALE, -ANCHOR_Y * SPRITE_SCALE, DRAW_W, DRAW_H
+  );
   ctx.restore();
 }
 
@@ -156,16 +285,14 @@ function moveHorizontal(dt) {
   } else if (hero.state === "Walk") {
     setState("Idle");
   }
-  hero.x = Math.max(0, Math.min(STAGE_W - CELL_W, hero.x));
+  hero.x = Math.max(0, Math.min(STAGE_W, hero.x));
 }
 
 function findLanding(nextY) {
-  const footX = hero.x + CELL_W / 2;
   let best = null;
   level.platforms.forEach((p) => {
-    const top = p.y;
-    if (footX > p.x && footX < p.x + p.w && hero.y + CELL_H <= top + 2 && nextY + CELL_H >= top) {
-      if (!best || top < best.y) best = { y: top };
+    if (hero.x > p.x && hero.x < p.x + p.w && hero.y <= p.y + 2 && nextY >= p.y) {
+      if (!best || p.y < best.y) best = { y: p.y };
     }
   });
   return best;
@@ -189,13 +316,17 @@ function update(dt) {
   const landing = hero.vy >= 0 ? findLanding(nextY) : null;
 
   if (landing) {
-    hero.y = landing.y - CELL_H;
+    hero.y = landing.y;
     hero.vy = 0;
     hero.onGround = true;
     if (hero.state === "Jump") setState(keys.left || keys.right ? "Walk" : "Idle");
   } else {
     hero.y = nextY;
     hero.onGround = false;
+    if (hero.y > STAGE_H + 60) {
+      // aus dem Level gefallen - zurueck an den Start (kein "Sterben" bislang)
+      hero.x = 60; hero.y = 414.1; hero.vy = 0;
+    }
   }
 }
 
@@ -206,9 +337,14 @@ function render() {
   if (!tileSheet.complete || tileSheet.naturalWidth === 0) return;
   if (!heroSheet.complete || heroSheet.naturalWidth === 0) return;
 
-  level.platforms.forEach((p) => drawTile("Floor", p.x, p.y));
+  level.platforms.forEach((p) => drawTile(p.type, p.x, p.y));
+  level.ladders.forEach((l) => drawTile("Ladder", l.x, l.y));
 
   drawHero(hero.x, hero.y, hero.facing, hero.state, hero.animTime);
+
+  ctx.fillStyle = "#2e4057";
+  ctx.font = "16px monospace";
+  ctx.fillText(`Level ${currentLevelNum}`, 16, 28);
 }
 
 function loop(now) {

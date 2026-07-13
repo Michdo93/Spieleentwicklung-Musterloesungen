@@ -7,8 +7,26 @@
 </head>
 <body>
   <h1>Kapitel 2 – Sprites zeichnen</h1>
-  <canvas id="stage" width="560" height="200"></canvas>
-  <p id="hint">Links: das ganze Sprite-Sheet verkleinert. Mitte: eine einzelne Zelle daraus ausgeschnitten. Rechts: dieselbe Zelle gespiegelt.</p>
+
+  <section>
+    <h2>Beispiel 1: drawImage() – ganzes Sheet vs. ein Frame</h2>
+    <canvas id="stage1" width="560" height="200"></canvas>
+    <p class="hint">Links das ganze Sheet verkleinert, rechts eine einzelne ausgeschnittene Zelle.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: Spiegeln – falsch vs. richtig</h2>
+    <canvas id="stage2" width="560" height="230"></canvas>
+    <p class="hint">Links unverändert. Mitte: falsch gespiegelt (Achse = Mitte des AUSGESCHNITTENEN Bereichs). Rechts: richtig gespiegelt (Achse = Mitte der tatsächlichen Zeichnung). Beachte den Versatz in der Mitte!</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Skalierung und Position per Regler</h2>
+    <canvas id="stage3" width="480" height="260"></canvas>
+    <label>Größe: <input type="range" id="scale-slider" min="50" max="150" value="90"> <span id="scale-value">90%</span></label>
+    <label>Position X: <input type="range" id="posx-slider" min="40" max="440" value="240"></label>
+    <label>Position Y (Fußpunkt): <input type="range" id="posy-slider" min="100" max="250" value="230"></label>
+  </section>
 
   <script src="script.js"></script>
 </body>

@@ -6,16 +6,20 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <div id="game">
+  <div id="stage-wrapper">
     <canvas id="stage" width="1024" height="576"></canvas>
-
     <div id="hud">
-      <span id="hud-life">❤ 10</span>
+      <span id="hud-life">Leben: 10/10</span>
       <span id="hud-weapons"></span>
       <span id="hud-points">Punkte: 0</span>
-      <span id="hud-time">0:00</span>
+      <span id="hud-time">Level 1</span>
     </div>
   </div>
+  <div id="level-controls">
+    <button id="btn-level1">Level 1</button>
+    <button id="btn-level2">Level 2</button>
+  </div>
+  <div id="enemy-hp-list"></div>
 
   <script src="assets/js/main.js"></script>
 </body>

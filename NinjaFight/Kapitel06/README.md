@@ -5,21 +5,19 @@ Musterloesung zu Kapitel 6 des Buchs
 
 Baut auf Kapitel 5 auf (Kopie + Erweiterung).
 
+## Korrektur gegenueber der ersten Fassung
+
+Der Held schwebte zuvor sichtbar ueber Plattformen und fiel an der
+falschen Stelle durch. Ursache war eine fehlerhafte Umrechnung
+zwischen Sprite-Groesse und Plattformhoehe. Seit `hero.x`/`hero.y`
+(Kapitel 2) den tatsaechlichen Fusspunkt der Figur bedeuten, ist die
+Landepruefung direkt und fehlerfrei - kein Umrechnen mehr noetig.
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
 ```
-
-## Was hier neu dazugekommen ist
-
-- `platforms` - eine Liste aus mehreren Plattformen auf
-  unterschiedlichen Hoehen, statt eines einzigen festen Bodens
-- `findLanding()` - sucht bei jedem Frame die passende Plattform
-  darunter (horizontal drueber + eben noch drueber + jetzt (fast)
-  drauf)
-- Der Held kann jetzt zwischen Plattformen springen und ueber eine
-  Luecke im Boden fallen
 
 ## Dateien
 

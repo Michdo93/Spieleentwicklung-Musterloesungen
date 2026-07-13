@@ -11,12 +11,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Die Trefferzone (Hitbox) liegt immer vor der Figur - ihre Position
-  haengt von der Blickrichtung ab (`facing`)
-- `attackHitDone` sorgt dafuer, dass ein Angriff trotz mehrerer Frames
-  Animationsdauer nur EINMAL trifft
-- Reichweite und Schaden sind gekoppelt: der Tritt trifft weiter und
-  haerter als der Schlag
+1. **Trefferzone vor der Figur** - abhaengig von der Blickrichtung
+2. **attackHitDone** - verhindert Mehrfachtreffer waehrend einer
+   Angriffsanimation
+3. **Unterschiedlicher Schaden je Angriffsart** - Schlag/Tritt/Schwert
+   mit je eigener Reichweite und Schadenswert
 
 ## Dateien
 
@@ -24,5 +23,8 @@ python3 -m http.server 8000
 Kapitel10/
 ├── index.html
 ├── style.css
-└── script.js
+├── script.js
+└── assets/
+    ├── hero.png
+    └── blue.png
 ```

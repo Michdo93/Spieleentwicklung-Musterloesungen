@@ -7,8 +7,24 @@
 </head>
 <body>
   <h1>Kapitel 5 – Bewegung &amp; Schwerkraft</h1>
-  <canvas id="stage" width="480" height="270" tabindex="0"></canvas>
-  <p id="hint">Leertaste zum Springen, während der Kreis auf dem Boden steht.</p>
+
+  <section>
+    <h2>Beispiel 1: Position vs. Geschwindigkeit</h2>
+    <canvas id="stage1" width="480" height="220"></canvas>
+    <p class="hint">Oben: x += SPEED*dt (konstant, wie in Kapitel 4). Unten: vx wird selbst schneller - Beschleunigung statt konstanter Geschwindigkeit.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: Schwerkraft</h2>
+    <canvas id="stage2" width="480" height="240"></canvas>
+    <p class="hint">vy += GRAVITY * dt, y += vy * dt - genau diese zwei Zeilen erzeugen jeden Fall in Ninja Fight.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Der vollständige Sprung</h2>
+    <canvas id="stage3" width="480" height="240" tabindex="0"></canvas>
+    <p class="hint">Leertaste drücken, während der Kreis auf dem Boden steht - vy = -JUMP_SPEED, danach zieht GRAVITY ihn zurück.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

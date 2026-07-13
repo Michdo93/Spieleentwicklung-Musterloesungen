@@ -11,15 +11,10 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- `showScreen(name)`: entfernt "active" von allen Bildschirmen, setzt
-  es nur auf den gewuenschten - nie zwei gleichzeitig sichtbar
-- Der Bug-Modus-Schalter reproduziert einen echten CSS-Fehler: eine
-  gemeinsame `.screen`-Basisklasse verdunkelte urspruenglich auch den
-  Spielbildschirm selbst
-- Der Fix: ein ID-Selektor (`#screen-game.active`) hat hoehere
-  Spezifitaet als die Klassenregel und gewinnt daher unabhaengig von
-  der Reihenfolge im Stylesheet
-- ESC-Taste und Buttons loesen denselben Zustandswechsel aus
+1. **showScreen()** - nur ein Bildschirm ist je aktiv
+2. **Der echte CSS-Bug** - eine gemeinsame Basisklasse verdunkelte
+   versehentlich auch den Spielbildschirm
+3. **ESC pausiert und setzt fort**
 
 ## Dateien
 

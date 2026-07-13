@@ -2,124 +2,170 @@
  * Kapitel 13 - Gegner-KI: Bewegung
  * Musterloesung
  *
- * Feste Patrouillengrenzen allein wissen nichts von der tatsaechlichen
- * Plattformgeometrie - ein Gegner mit nur festen Grenzen wuerde ueber
- * die Kante einer kuerzeren Plattform hinauslaufen und fallen.
- * hasSupportAhead() prueft VOR jedem Schritt, ob voraus noch Boden ist.
+ * Drei Beispiele: (1) naive Patrouille (faellt von der Plattform),
+ * (2) mit Kantenerkennung (hasSupportAhead), (3) plus gelegentliches
+ * Springen. Das Original-Ninja-Fight hatte fuer Gegner ueberhaupt
+ * keine KI - diese Patrouillenlogik war eine Nacharbeit, die erst
+ * beim tatsaechlichen Testen noetig wurde (Gegner fielen zu oft von
+ * Plattformen).
  */
 
-const canvas = document.getElementById("stage");
-const ctx = canvas.getContext("2d");
-const W = canvas.width;
-const H = canvas.height;
-
-const GRAVITY = 1400;
-const ENEMY_SPEED = 90;
-const SIZE = 28;
-
-// EINE Plattform, die schmaler ist als die Patrouillengrenzen unten.
-// Ohne Kantenerkennung wuerde der Gegner bis zu patrolRight/patrolLeft
-// laufen und dabei ueber den Rand der Plattform hinausfallen.
-const platforms = [
-  { x: 100, y: H - 40, w: 280 },
-];
-
-const enemy = {
-  x: 220,
-  y: H - 40 - SIZE,
-  vy: 0,
-  facing: 1,
-  onGround: true,
-  patrolLeft: 20,
-  patrolRight: 460,
-  jumpCooldown: 2 + Math.random() * 2,
-};
-
-// Prueft, ob "dist" Pixel voraus (in Blickrichtung) noch eine Plattform
-// ist. Ohne diese Pruefung liefe der Gegner blind ueber jede Kante.
-function hasSupportAhead(dist) {
-  const aheadX = enemy.x + enemy.facing * dist;
-  return platforms.some((p) => aheadX > p.x - 4 && aheadX < p.x + p.w + 4 && Math.abs(p.y - (enemy.y + SIZE)) < 6);
+const enemySheet = new Image();
+enemySheet.src = "assets/blue.png";
+const ANCHOR_X = 30, ANCHOR_Y = 145, SPRITE_SCALE = 0.45;
+function whenReady(fn) {
+  if (enemySheet.complete && enemySheet.naturalWidth > 0) fn();
+  else enemySheet.addEventListener("load", fn, { once: true });
 }
-
-function findLanding(nextY) {
-  let best = null;
-  platforms.forEach((p) => {
-    const over = enemy.x + SIZE > p.x && enemy.x < p.x + p.w;
-    const wasAbove = enemy.y + SIZE <= p.y + 2;
-    const nowBelow = nextY + SIZE >= p.y;
-    if (over && wasAbove && nowBelow) {
-      if (!best || p.y < best.y) best = p;
-    }
-  });
-  return best;
+function drawEnemy(ctx, x, y, facing) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(facing, 1);
+  ctx.drawImage(enemySheet, 0, 150, 160, 150, -ANCHOR_X * SPRITE_SCALE, -ANCHOR_Y * SPRITE_SCALE, 160 * SPRITE_SCALE, 150 * SPRITE_SCALE);
+  ctx.restore();
 }
+const GRAVITY = 1400, ENEMY_SPEED = 90;
 
-let lastTime = 0;
+/* ===================================================================
+   Beispiel 1: naive Patrouille - laeuft blind zwischen zwei X-Werten
+   hin und her, ohne zu pruefen, ob unter ihr noch Boden ist.
+   =================================================================== */
+(function example1_naive() {
+  const canvas = document.getElementById("stage1");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const platform = { x: 60, y: 180, w: 140 }; // kuerzer als der Patrouillenbereich!
+  let x = 90, y = platform.y, vy = 0, facing = 1, onGround = true;
+  const patrolLeft = 60, patrolRight = 260; // reicht ueber die Plattform hinaus
 
-function update(dt) {
-  enemy.jumpCooldown -= dt;
-
-  const lookAhead = 22;
-  const supported = hasSupportAhead(lookAhead);
-
-  if (!supported) {
-    // Kante erkannt -> umdrehen, statt blind weiterzulaufen und zu fallen
-    enemy.facing *= -1;
-  } else {
-    enemy.x += enemy.facing * ENEMY_SPEED * dt;
-  }
-
-  if (enemy.x <= enemy.patrolLeft) { enemy.x = enemy.patrolLeft; enemy.facing = 1; }
-  else if (enemy.x >= enemy.patrolRight - SIZE) { enemy.x = enemy.patrolRight - SIZE; enemy.facing = -1; }
-
-  // zufaelliges Springen - WICHTIG: nur wenn "supported" true ist. Ein
-  // Zufallssprung ohne diese Pruefung wuerde die Kantenerkennung
-  // unterlaufen und den Gegner doch noch von der Plattform werfen.
-  if (supported && enemy.onGround && enemy.jumpCooldown <= 0 && Math.random() < 0.01) {
-    enemy.vy = -520;
-    enemy.onGround = false;
-    enemy.jumpCooldown = 2 + Math.random() * 2;
-  }
-
-  enemy.vy += GRAVITY * dt;
-  const nextY = enemy.y + enemy.vy * dt;
-  const landing = enemy.vy >= 0 ? findLanding(nextY) : null;
-  if (landing) {
-    enemy.y = landing.y - SIZE;
-    enemy.vy = 0;
-    enemy.onGround = true;
-  } else {
-    enemy.y = nextY;
-    enemy.onGround = false;
-  }
-}
-
-function render() {
-  ctx.fillStyle = "#0b1a24";
-  ctx.fillRect(0, 0, W, H);
-
-  ctx.fillStyle = "#663300";
-  platforms.forEach((p) => ctx.fillRect(p.x, p.y, p.w, 4));
-
-  ctx.fillStyle = "#ffb84d";
-  ctx.fillRect(enemy.x, enemy.y, SIZE, SIZE);
-  // Blickrichtung als kleiner Pfeil zur Anschauung
-  ctx.fillStyle = "#0b1a24";
-  ctx.fillRect(enemy.x + (enemy.facing > 0 ? SIZE - 4 : 0), enemy.y + SIZE / 2 - 2, 4, 4);
-}
-
-function loop(now) {
-  if (lastTime === 0) {
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
     lastTime = now;
+
+    x += facing * ENEMY_SPEED * dt;
+    if (x <= patrolLeft) { x = patrolLeft; facing = 1; }
+    if (x >= patrolRight) { x = patrolRight; facing = -1; }
+
+    vy += GRAVITY * dt;
+    const nextY = y + vy * dt;
+    if (x > platform.x && x < platform.x + platform.w && y <= platform.y + 2 && nextY >= platform.y) {
+      y = platform.y; vy = 0; onGround = true;
+    } else {
+      y = nextY; onGround = false;
+      if (y > H + 60) { x = 90; y = platform.y; vy = 0; onGround = true; }
+    }
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#663300";
+    ctx.fillRect(platform.x, platform.y, platform.w, 8);
+    whenReady(() => drawEnemy(ctx, x, y, facing));
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "12px monospace";
+    ctx.fillText(`onGround = ${onGround}`, 14, 24);
+
+    requestAnimationFrame(loop);
   }
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
-
-  update(dt);
-  render();
-
   requestAnimationFrame(loop);
-}
+})();
 
-requestAnimationFrame(loop);
+/* ===================================================================
+   Beispiel 2: mit Kantenerkennung - entspricht hasSupportAhead().
+   =================================================================== */
+(function example2_edge() {
+  const canvas = document.getElementById("stage2");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const platform = { x: 60, y: 180, w: 140 };
+  let x = 90, y = platform.y, vy = 0, facing = 1, onGround = true;
+
+  function hasSupportAhead(lookAhead) {
+    const aheadX = x + facing * lookAhead;
+    return aheadX > platform.x - 4 && aheadX < platform.x + platform.w + 4;
+  }
+
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    if (!hasSupportAhead(26)) facing *= -1; // Kante erkannt -> umdrehen
+    else x += facing * ENEMY_SPEED * dt;
+
+    vy += GRAVITY * dt;
+    const nextY = y + vy * dt;
+    if (x > platform.x && x < platform.x + platform.w && y <= platform.y + 2 && nextY >= platform.y) {
+      y = platform.y; vy = 0; onGround = true;
+    } else {
+      y = nextY; onGround = false;
+    }
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#663300";
+    ctx.fillRect(platform.x, platform.y, platform.w, 8);
+    whenReady(() => drawEnemy(ctx, x, y, facing));
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "12px monospace";
+    ctx.fillText(`onGround = ${onGround}  (bleibt immer true)`, 14, 24);
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ===================================================================
+   Beispiel 3: gelegentliches Springen - fuer ein lebendigeres
+   Verhalten, ohne die Kantenerkennung zu verlieren.
+   =================================================================== */
+(function example3_jump() {
+  const canvas = document.getElementById("stage3");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const platform = { x: 30, y: 180, w: 260 };
+  let x = 90, y = platform.y, vy = 0, facing = 1, onGround = true, jumpCooldown = 1;
+
+  function hasSupportAhead(lookAhead) {
+    const aheadX = x + facing * lookAhead;
+    return aheadX > platform.x - 4 && aheadX < platform.x + platform.w + 4;
+  }
+
+  let lastTime = 0;
+  function loop(now) {
+    if (lastTime === 0) lastTime = now;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+    jumpCooldown -= dt;
+
+    const supported = hasSupportAhead(26);
+    if (!supported) facing *= -1;
+    else x += facing * ENEMY_SPEED * dt;
+
+    if (supported && onGround && jumpCooldown <= 0 && Math.random() < 0.01) {
+      vy = -420; onGround = false; jumpCooldown = 1.5 + Math.random() * 2;
+    }
+
+    vy += GRAVITY * dt;
+    const nextY = y + vy * dt;
+    if (x > platform.x && x < platform.x + platform.w && y <= platform.y + 2 && nextY >= platform.y) {
+      y = platform.y; vy = 0; onGround = true;
+    } else {
+      y = nextY; onGround = false;
+    }
+
+    ctx.fillStyle = "#0b1a24";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#663300";
+    ctx.fillRect(platform.x, platform.y, platform.w, 8);
+    whenReady(() => drawEnemy(ctx, x, y, facing));
+    ctx.fillStyle = "#93a4b3";
+    ctx.font = "12px monospace";
+    ctx.fillText(`onGround = ${onGround}`, 14, 24);
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();

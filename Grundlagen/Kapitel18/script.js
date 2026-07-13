@@ -2,94 +2,90 @@
  * Kapitel 18 - Highscores & Levelfortschritt
  * Musterloesung
  *
- * Drei letzte Bausteine: Ergebnisse dauerhaft speichern (localStorage),
- * die Bedingungen fuer Sieg und Niederlage, und der Unterschied
- * zwischen += und = bei einer Formel, die ueber mehrere Level gilt.
+ * Drei Beispiele: (1) Highscores mit localStorage, (2) Sieg- oder
+ * Niederlage-Bedingungen, (3) kumulative Lebenspunkte ueber mehrere
+ * Level hinweg.
  */
 
-// === 1. Highscores mit localStorage ===
+/* ===================================================================
+   Beispiel 1: Highscores mit localStorage
+   =================================================================== */
 const HIGHSCORE_KEY = "grundlagen-ch18-highscores";
 
-function loadHighscoreList() {
-  try {
-    return JSON.parse(localStorage.getItem(HIGHSCORE_KEY) || "[]");
-  } catch (e) {
-    return [];
-  }
+function loadHighscores() {
+  try { return JSON.parse(localStorage.getItem(HIGHSCORE_KEY) || "[]"); }
+  catch (e) { return []; }
 }
-
-function saveHighscoreEntry(name, points) {
-  const list = loadHighscoreList();
-  list.push({ name: name || "Anonymous", points });
-  // absteigend sortieren, dann auf die Top 10 begrenzen - localStorage
-  // hat keine eingebaute Sortierung oder Groessenbegrenzung, das
-  // erledigen wir selbst vor jedem Speichern.
+function saveHighscore(name, points, level) {
+  const list = loadHighscores();
+  list.push({ name: name || "Anonymous", points, level });
   list.sort((a, b) => b.points - a.points);
   localStorage.setItem(HIGHSCORE_KEY, JSON.stringify(list.slice(0, 10)));
 }
-
-function renderHighscoreList() {
-  const list = loadHighscoreList();
+function renderHighscores() {
+  const list = loadHighscores();
   const el = document.getElementById("highscore-list");
-  if (list.length === 0) {
-    el.textContent = "Noch keine Eintraege.";
-    return;
-  }
-  el.textContent = list.map((e, i) => `${i + 1}. ${e.name} - ${e.points}`).join("\n");
+  el.textContent = list.length === 0
+    ? "Noch keine Eintraege."
+    : list.map((e, i) => `${i + 1}. ${e.name} - ${e.points} Punkte (Level ${e.level})`).join("\n");
 }
-
-document.getElementById("btn-save").addEventListener("click", () => {
-  const name = document.getElementById("name-input").value;
-  const points = Number(document.getElementById("points-input").value) || 0;
-  saveHighscoreEntry(name, points);
-  renderHighscoreList();
+document.getElementById("btn-save-score").addEventListener("click", () => {
+  const name = document.getElementById("score-name").value.trim() || "Spieler";
+  const points = Math.floor(Math.random() * 50) + 1;
+  const level = Math.floor(Math.random() * 10) + 1;
+  saveHighscore(name, points, level);
+  renderHighscores();
 });
-
-renderHighscoreList();
-
-// === 2. Sieg- oder Niederlage-Bedingungen ===
-// Ein Zeitablauf ist NICHT automatisch eine Niederlage - er ist nur
-// dann eine, wenn zusaetzlich noch Gegner uebrig sind. Sind alle
-// Gegner besiegt, zaehlt Zeitablauf nicht gegen den Spieler.
-function evaluateOutcome(hp, timeLeft, enemiesLeft, levelNum, maxLevels) {
-  if (hp <= 0) return "Niederlage - keine Lebensenergie mehr";
-  if (timeLeft <= 0 && enemiesLeft > 0) return "Niederlage - Zeit abgelaufen, Gegner uebrig";
-  if (levelNum >= maxLevels && enemiesLeft === 0) return "Sieg - alle Level geschafft!";
-  return "Spiel laeuft weiter";
-}
-
-function updateOutcome() {
-  const hp = Number(document.getElementById("hp").value);
-  const time = Number(document.getElementById("time").value);
-  const enemiesLeft = Number(document.getElementById("enemiesLeft").value);
-  const levelNum = Number(document.getElementById("levelNum").value);
-  document.getElementById("result").textContent = evaluateOutcome(hp, time, enemiesLeft, levelNum, 10);
-}
-["hp", "time", "enemiesLeft", "levelNum"].forEach((id) => {
-  document.getElementById(id).addEventListener("input", updateOutcome);
+document.getElementById("btn-clear-scores").addEventListener("click", () => {
+  localStorage.removeItem(HIGHSCORE_KEY);
+  renderHighscores();
 });
-updateOutcome();
+renderHighscores();
 
-// === 3. += statt = bei kumulativen Werten ===
-let lifeEnergyWrong = 20;
-let lifeEnergyRight = 20;
-let levelNum = 1;
-
-function renderCumulative() {
-  document.getElementById("cumulative").textContent =
-    `Level ${levelNum}  |  falsch (=): ${lifeEnergyWrong}  |  richtig (+=): ${lifeEnergyRight}`;
+/* ===================================================================
+   Beispiel 2: Sieg oder Niederlage? - entspricht winGame() vs.
+   endGame() in GameManager. Ein Zeitablauf ist nur DANN eine
+   Niederlage, wenn zusaetzlich noch Gegner uebrig sind.
+   =================================================================== */
+function evaluateOutcome(levelNum, maxLevels, heroAlive, enemiesRemaining, timeUp) {
+  if (!heroAlive) return { won: false, reason: "Der Held ist gestorben." };
+  if (timeUp && enemiesRemaining > 0) return { won: false, reason: "Zeit abgelaufen, aber noch Gegner uebrig." };
+  if (levelNum >= maxLevels) return { won: true, reason: "Alle Level ohne Tod abgeschlossen!" };
+  return { won: null, reason: "Spiel laeuft noch weiter." };
 }
-renderCumulative();
+function updateOutcomeDisplay() {
+  const levelNum = Number(document.getElementById("sim-level").value);
+  const heroAlive = document.getElementById("sim-alive").checked;
+  const enemiesRemaining = Number(document.getElementById("sim-enemies").value);
+  const timeUp = document.getElementById("sim-timeup").checked;
+  const result = evaluateOutcome(levelNum, 10, heroAlive, enemiesRemaining, timeUp);
+  const el = document.getElementById("outcome-display");
+  el.textContent = result.won === true ? `SIEG - ${result.reason}` : result.won === false ? `NIEDERLAGE - ${result.reason}` : `Spiel laeuft - ${result.reason}`;
+  el.style.color = result.won === true ? "#5fe0c9" : result.won === false ? "#ff6b6b" : "#93a4b3";
+}
+["sim-level", "sim-alive", "sim-enemies", "sim-timeup"].forEach((id) =>
+  document.getElementById(id).addEventListener("input", updateOutcomeDisplay)
+);
+updateOutcomeDisplay();
 
-document.getElementById("btn-nextlevel").addEventListener("click", () => {
+/* ===================================================================
+   Beispiel 3: kumulative Lebenspunkte ueber Level - entspricht
+   this.lifeEnergy += 10 * levelNum in nextLevel(). += statt = ist
+   hier der entscheidende Unterschied.
+   =================================================================== */
+let lifeEnergy = 0, levelNum = 0;
+function nextLevel() {
   levelNum++;
-  lifeEnergyWrong = 10 * levelNum;  // FALSCH: ueberschreibt den bisherigen Stand jedes Mal
-  lifeEnergyRight += 10 * levelNum; // richtig: baut auf dem vorherigen Stand auf
-  renderCumulative();
-});
-document.getElementById("btn-reset").addEventListener("click", () => {
-  levelNum = 1;
-  lifeEnergyWrong = 20;
-  lifeEnergyRight = 20;
-  renderCumulative();
-});
+  lifeEnergy += 10 * levelNum; // aufaddieren, NICHT zuruecksetzen
+  logLife(`Level ${levelNum}: +${10 * levelNum} -> Lebensenergie insgesamt: ${lifeEnergy}`);
+}
+function takeDamage() {
+  lifeEnergy = Math.max(0, lifeEnergy - 7);
+  logLife(`Schaden genommen (-7) -> Lebensenergie: ${lifeEnergy}`);
+}
+function logLife(msg) {
+  const el = document.getElementById("life-log");
+  el.textContent = msg + "\n" + el.textContent;
+}
+document.getElementById("btn-next-level").addEventListener("click", nextLevel);
+document.getElementById("btn-take-damage").addEventListener("click", takeDamage);

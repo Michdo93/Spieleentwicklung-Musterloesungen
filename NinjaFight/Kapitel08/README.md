@@ -5,21 +5,26 @@ Musterloesung zu Kapitel 8 des Buchs
 
 Baut auf Kapitel 7 auf (Kopie + Erweiterung).
 
+## Was hier neu dazugekommen ist
+
+- `HAZARD_TYPES` (Flame: 1 Schaden, Knives: 5 Schaden, je 0,6s
+  Abklingzeit)
+- `buildLevel()` sortiert Flame/Knives jetzt zusaetzlich in
+  `level.hazards`
+- `checkHazards()` prueft jeden Frame, ob der Held in einer
+  Gefahrenzone steht
+- Der Held blinkt kurz waehrend der Unverwundbarkeit
+- HUD-Zeile zeigt die verbleibende Lebensenergie
+
+**Wichtig:** Sterben und Game Over gibt es in diesem Kapitel noch
+nicht - der Held verliert nur Lebenspunkte, auch bei 0 passiert noch
+nichts weiter.
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
 ```
-
-## Was hier neu dazugekommen ist
-
-- Zwei neue Level-Elementtypen: `Flame` (Feuer, animiert) und `Knives`
-  (Messer, statisch) - beide echte Gefahren
-- `HAZARD_TYPES` beschreibt Schaden und Abklingzeit je Gefahrentyp
-- `checkHazards()` prueft bei jedem Frame, ob der Held gerade in
-  einer Gefahrenzone steht, und zieht ggf. Lebensenergie ab
-- Der Held blinkt kurz, waehrend er unverwundbar ist (`invulnTimer`)
-- Eine HUD-Zeile zeigt die verbleibende Lebensenergie
 
 ## Dateien
 

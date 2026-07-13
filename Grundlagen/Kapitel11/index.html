@@ -7,8 +7,30 @@
 </head>
 <body>
   <h1>Kapitel 11 – Fernkampf &amp; Projektile</h1>
-  <canvas id="stage" width="480" height="200"></canvas>
-  <p id="hint">Pfeiltasten/A/D zum Laufen, L zum Werfen. Jeder Wurf erzeugt ein eigenständiges Projektil-Objekt.</p>
+
+  <section>
+    <h2>Beispiel 1: Nur die Animation (der Original-Bug)</h2>
+    <canvas id="stage1" width="360" height="200"></canvas>
+    <div class="controls"><button id="btn-throw1">Werfen</button></div>
+    <p class="hint">doAction("Throw") spielt nur die Armbewegung ab - kein Shuriken existiert als eigenes Objekt. Der Wurf sieht aus wie ein Wurf, trifft aber nie irgendwas.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: Ein echtes Projektil-Objekt</h2>
+    <canvas id="stage2" width="360" height="200"></canvas>
+    <div class="controls"><button id="btn-throw2">Werfen</button></div>
+    <p class="hint">Jetzt existiert ein echtes Objekt UND die Wurfanimation läuft gleichzeitig - beides zusammen macht den vollständigen Wurf aus.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Kollision + Werfer ausschließen</h2>
+    <canvas id="stage3" width="360" height="200"></canvas>
+    <div class="controls">
+      <button id="btn-throw3">Werfen</button>
+      <button id="reset-btn3">Reset</button>
+    </div>
+    <p class="hint">Das Projektil trifft jeden außer seinen eigenen Werfer - die gestrichelte Kreisfläche markiert die tatsächliche Trefferzone des Gegners.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

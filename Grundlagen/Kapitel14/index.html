@@ -7,13 +7,28 @@
 </head>
 <body>
   <h1>Kapitel 14 – Gegner-KI: Kampf &amp; Gegnertypen</h1>
-  <canvas id="stage" width="480" height="200"></canvas>
-  <p id="hint">Pfeiltasten/A/D zum Laufen. Nähere dich dem Gegner unterschiedlich weit an, um zu sehen, wie sich seine Angriffswahl ändert.</p>
-  <div>
-    <button data-type="Blue">Blue (nur Nahkampf)</button>
-    <button data-type="Green">Green (+ Shuriken)</button>
-    <button data-type="White">White (+ Shuriken + Schwert)</button>
-  </div>
+
+  <section>
+    <h2>Beispiel 1: Aggro-Bereich &amp; Angriffsauswahl</h2>
+    <canvas id="stage1" width="480" height="220"></canvas>
+    <p class="hint">Ziehe die Maus über das Canvas - je nach Abstand wechselt die Angriffsentscheidung des Gegners.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: Vier Gegnertypen, vier Fähigkeitsprofile</h2>
+    <canvas id="stage2" width="480" height="220"></canvas>
+    <p class="hint">Jeder Typ mit eigenen HP und eigenen Spezialfähigkeiten. Alle können zusätzlich Schlagen und Treten.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Friendly Fire</h2>
+    <canvas id="stage3" width="480" height="220"></canvas>
+    <div class="controls">
+      <button id="btn-throw">Shuriken werfen</button>
+      <button id="reset-btn">Reset</button>
+    </div>
+    <p class="hint">Der grüne Ninja wirft in Richtung des Helden - steht ein anderer Gegner im Weg, trifft es ihn versehentlich.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

@@ -5,22 +5,23 @@ Musterloesung zu Kapitel 4 des Buchs
 
 Baut auf Kapitel 3 auf (Kopie + Erweiterung).
 
+## Wichtig: noch keine Physik!
+
+Der Held bewegt sich in diesem Kapitel **nicht** von der Stelle - es
+geht nur um das Laden und Ansteuern der Animationen. Echte Bewegung
+kommt erst in Kapitel 5.
+
+## Steuerung
+
+- **A/D oder Pfeiltasten links/rechts halten**: Blickrichtung dreht
+  sich um, Walk-Animation spielt ab (Position bleibt gleich!)
+- **Leertaste**: Sprung-Animation (einmalig, dann zurueck zu Idle/Walk)
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
 ```
-
-## Was hier neu dazugekommen ist
-
-- `keys` - das Key-State-Objekt (entspricht `GameManager.keys` in
-  Ninja Fight), befuellt per `keydown`/`keyup`
-- Ein Mausklick-Trefftest: Klickst du auf den Helden, dreht er sich
-  probeweise um (`hero.facing *= -1`)
-- Eine Debug-Zeile zeigt an, welche Tasten gerade gedrueckt sind
-
-Der Held bewegt sich hier **noch nicht** - `keys` wird zwar befuellt,
-aber erst in Kapitel 5 tatsaechlich fuer Bewegung ausgewertet.
 
 ## Dateien
 

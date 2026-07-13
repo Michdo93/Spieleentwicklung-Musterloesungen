@@ -71,8 +71,9 @@ python3 -m http.server 8000
 
 ## Status
 
-Alle 18 Kapitel sind vollstaendig, fuer beide Tracks (Grundlagen und
-NinjaFight).
+Alle 19 Kapitel sind vollstaendig. Kapitel 1-18 fuer beide Tracks
+(Grundlagen und NinjaFight); Kapitel 19 ist das vollstaendige,
+fertige Original-Spiel (siehe `NinjaFight/Kapitel19/`).
 
 ## Zugehoeriges Buch
 

@@ -5,21 +5,22 @@ Musterloesung zu Kapitel 7 des Buchs
 
 Baut auf Kapitel 6 auf (Kopie + Erweiterung).
 
+## Was hier neu dazugekommen ist
+
+- **Die ersten beiden echten Level aus Ninja Fight**, Koordinaten 1:1
+  aus `levels.js` uebernommen
+- `buildLevel()` sortiert die Rohdaten nach Bedeutung
+  (`platforms`/`ladders`) - Feuer, Messer und dekorative Elemente
+  ignorieren wir hier bewusst noch (Kapitel 8/9)
+- Zwei Buttons wechseln zwischen Level 1 und Level 2
+- Jeder Plattformtyp (Floor/Bridge/Small/WaterGround) hat seine
+  tatsaechliche Groesse aus `TILE_SHEET`
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
 ```
-
-## Was hier neu dazugekommen ist
-
-- `LEVELS` - die hartkodierte `platforms`-Liste aus Kapitel 6 wird
-  durch echte Level-Daten ersetzt (entspricht `levels.js`)
-- `buildLevel()` sortiert die flache Rohdatenliste einmal nach
-  Bedeutung (`PLATFORM_TYPES`) - entspricht `buildLevel()` in
-  `render.js`
-- Der Rest des Spiels (Bewegung, Kollision, Zeichnen) arbeitet nur
-  noch mit `level.platforms`, nie mehr mit rohen Typnamen
 
 ## Dateien
 

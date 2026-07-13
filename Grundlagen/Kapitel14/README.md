@@ -11,11 +11,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- `ENEMY_TYPES`/`HP_BY_TYPE`: Faehigkeiten und Lebenspunkte an den
-  Gegnertyp gekoppelt, statt eigenen Code pro Typ zu schreiben
-- `decideAttack()`: ein einfacher Entscheidungsbaum nach Abstand -
-  Nahkampf zuerst pruefen, dann Fernkampf, dann Schwert
-- Drei Gegnertypen mit unterschiedlichen Faehigkeiten und HP
+1. **Aggro-Bereich & Angriffsauswahl** - Entscheidungsbaum nach Abstand
+2. **Vier Gegnertypen** - Blue/Green/Red/White mit eigenen HP und
+   Faehigkeiten
+3. **Friendly Fire** - ein Wurf trifft auch andere Gegner, nicht nur
+   den Helden
 
 ## Dateien
 
@@ -23,5 +23,11 @@ python3 -m http.server 8000
 Kapitel14/
 ├── index.html
 ├── style.css
-└── script.js
+├── script.js
+└── assets/
+    ├── hero.png
+    ├── blue.png
+    ├── green.png
+    ├── red.png
+    └── white.png
 ```

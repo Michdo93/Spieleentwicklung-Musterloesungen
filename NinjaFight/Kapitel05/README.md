@@ -5,23 +5,19 @@ Musterloesung zu Kapitel 5 des Buchs
 
 Baut auf Kapitel 4 auf (Kopie + Erweiterung).
 
+## Korrektur gegenueber der ersten Fassung
+
+Die Bewegungslogik (Laufen/Idle/Springen) war inhaltlich bereits
+richtig - der Folgefehler lag in der Sprite-Darstellung: zu grosse
+Anzeige und falsche Spiegelachse. Beides ist jetzt identisch zu
+Kapitel 2/3/4 korrigiert (`SPRITE_SCALE = 0.45`,
+`ANCHOR_X`/`ANCHOR_Y` als Spiegelachse, `hero.x`/`hero.y` = Fusspunkt).
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
 ```
-
-## Was hier neu dazugekommen ist
-
-- Der Held bewegt sich jetzt tatsaechlich: `keys.left`/`keys.right`
-  bewegen ihn mit `WALK_SPEED`, `keys.jump` (Leertaste) loest einen
-  Sprung aus
-- Schwerkraft (`GRAVITY`) und Sprunggeschwindigkeit (`JUMP_SPEED`) -
-  identische Werte wie im fertigen Spiel
-- Animationszustand wechselt automatisch zwischen `Idle`, `Walk` und
-  `Jump`
-- Gelandet wird vorerst auf einem festen Boden (`GROUND_TOP_Y`) -
-  echte Plattformen mit Luecken folgen in Kapitel 6
 
 ## Dateien
 

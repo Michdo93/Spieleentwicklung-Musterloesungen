@@ -7,9 +7,34 @@
 </head>
 <body>
   <h1>Kapitel 3 – Sprite-Animation</h1>
-  <canvas id="stage" width="480" height="220"></canvas>
-  <p id="hint">Links läuft die Walk-Animation endlos. Klicke "Springen", um rechts die Jump-Animation einmal abzuspielen - sie bleibt danach am letzten Frame stehen.</p>
-  <button id="jump-btn">Springen</button>
+
+  <section>
+    <h2>Beispiel 1: Frame für Frame von Hand durchklicken</h2>
+    <canvas id="stage1" width="200" height="180"></canvas>
+    <div class="controls">
+      <button id="btn-prev">&larr; zurück</button>
+      <button id="btn-next">weiter &rarr;</button>
+    </div>
+    <p class="hint">Eine Animation ist nur eine Liste von Posen. Klicke dich selbst durch alle 8 Walk-Frames.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: Automatisch, mit FPS-Regler</h2>
+    <canvas id="stage2" width="200" height="180"></canvas>
+    <label>Animations-FPS: <input type="range" id="fps-slider" min="1" max="24" value="12"> <span id="fps-value">12</span></label>
+    <p class="hint">frame = Math.floor(t * fps) % count - dieselbe Formel wie später in drawNinja(). Verstelle die FPS und beobachte das Tempo.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Mehrere Zustände - Loop vs. einmalig</h2>
+    <canvas id="stage3" width="200" height="180"></canvas>
+    <div class="controls">
+      <button id="btn-idle">Idle</button>
+      <button id="btn-walk">Walk</button>
+      <button id="btn-jump">Jump</button>
+    </div>
+    <p class="hint">Idle/Walk laufen endlos (loop: true), Jump läuft einmal durch und bleibt am letzten Frame stehen.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

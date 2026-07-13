@@ -4,8 +4,16 @@
  *
  * Baut auf Kapitel 5 auf. Statt eines einzigen festen Bodens gibt es
  * jetzt mehrere Plattformen auf unterschiedlichen Hoehen -
- * findLanding() sucht bei jedem Frame die passende darunter, exakt wie
- * in Hero.update()/findLanding() im fertigen Spiel.
+ * findLanding() sucht bei jedem Frame die passende darunter.
+ *
+ * Korrektur gegenueber der ersten Fassung dieses Kapitels: Weil
+ * hero.x/hero.y seit Kapitel 2 der tatsaechliche FUSSPUNKT der Figur
+ * sind (nicht mehr die linke obere Sprite-Ecke), ist die Landepruefung
+ * jetzt genauso einfach wie im fertigen Spiel: Wir vergleichen einfach
+ * hero.y direkt mit der Plattformhoehe, ganz ohne Umrechnung ueber
+ * Sprite-Breiten/Hoehen. Vorher fuehrte genau diese Umrechnung dazu,
+ * dass der Held ueber Plattformen schwebte oder an der falschen Stelle
+ * durchfiel.
  */
 
 const canvas = document.getElementById("stage");
@@ -21,6 +29,11 @@ tileSheet.src = "assets/img/sprites/tiles.png";
 
 const CELL_W = 160;
 const CELL_H = 150;
+const ANCHOR_X = 30;
+const ANCHOR_Y = 145;
+const SPRITE_SCALE = 0.45;
+const DRAW_W = CELL_W * SPRITE_SCALE;
+const DRAW_H = CELL_H * SPRITE_SCALE;
 
 const TILE_SHEET = {
   cellW: 42,
@@ -36,13 +49,13 @@ const WALK_SPEED = 160;
 
 const FLOOR_Y = STAGE_H - 21;
 
-// Jede Plattform: { x, y, w } - y ist die Oberkante. In Kapitel 7 kommen
-// diese Werte aus echten Level-Daten statt hier hartkodiert zu sein.
+// Jede Plattform: { x, y, w } - y ist die Oberkante, an der der
+// Fusspunkt des Helden zum Stehen kommt.
 const platforms = [
-  { x: 0, y: FLOOR_Y, w: 400 },
-  { x: 620, y: FLOOR_Y, w: STAGE_W - 620 },
-  { x: 420, y: FLOOR_Y - 160, w: 220 },
-  { x: 700, y: FLOOR_Y - 280, w: 180 },
+  { x: 0, y: FLOOR_Y, w: 380 },
+  { x: 640, y: FLOOR_Y, w: STAGE_W - 640 },
+  { x: 440, y: FLOOR_Y - 160, w: 200 },
+  { x: 720, y: FLOOR_Y - 280, w: 160 },
 ];
 
 const CHARACTER_STATES = {
@@ -54,7 +67,7 @@ const FPS = 8;
 
 const hero = {
   x: 150,
-  y: FLOOR_Y - CELL_H,
+  y: FLOOR_Y,
   vy: 0,
   facing: 1,
   state: "Idle",
@@ -105,9 +118,12 @@ function drawHero(x, y, facing, state, animTime) {
   const sy = def.row * CELL_H;
 
   ctx.save();
-  ctx.translate(x + CELL_W / 2, y);
+  ctx.translate(x, y);
   ctx.scale(facing, 1);
-  ctx.drawImage(heroSheet, sx, sy, CELL_W, CELL_H, -CELL_W / 2, 0, CELL_W, CELL_H);
+  ctx.drawImage(
+    heroSheet, sx, sy, CELL_W, CELL_H,
+    -ANCHOR_X * SPRITE_SCALE, -ANCHOR_Y * SPRITE_SCALE, DRAW_W, DRAW_H
+  );
   ctx.restore();
 }
 
@@ -123,20 +139,18 @@ function moveHorizontal(dt) {
   } else if (hero.state === "Walk") {
     setState("Idle");
   }
-  hero.x = Math.max(0, Math.min(STAGE_W - CELL_W, hero.x));
+  hero.x = Math.max(0, Math.min(STAGE_W, hero.x));
 }
 
-// Sucht unter allen Plattformen diejenige, auf der der Held bei nextY
-// landen wuerde. footX ist der Fusspunkt in der Mitte des Sprites -
-// entspricht this.x in Hero.as/entities.js (dort ist x bereits der
-// Mittelpunkt, nicht die linke Kante).
+// entspricht Hero.findLanding(): horizontal ueber der Plattform, UND
+// eben noch drueber, UND jetzt (fast) drauf. hero.x/hero.y sind der
+// Fusspunkt - deshalb reicht ein direkter Vergleich, ganz ohne
+// Sprite-Massumrechnung.
 function findLanding(nextY) {
-  const footX = hero.x + CELL_W / 2;
   let best = null;
   platforms.forEach((p) => {
-    const top = p.y;
-    if (footX > p.x && footX < p.x + p.w && hero.y + CELL_H <= top + 2 && nextY + CELL_H >= top) {
-      if (!best || top < best.y) best = { y: top };
+    if (hero.x > p.x && hero.x < p.x + p.w && hero.y <= p.y + 2 && nextY >= p.y) {
+      if (!best || p.y < best.y) best = { y: p.y };
     }
   });
   return best;
@@ -160,7 +174,7 @@ function update(dt) {
   const landing = hero.vy >= 0 ? findLanding(nextY) : null;
 
   if (landing) {
-    hero.y = landing.y - CELL_H;
+    hero.y = landing.y;
     hero.vy = 0;
     hero.onGround = true;
     if (hero.state === "Jump") setState(keys.left || keys.right ? "Walk" : "Idle");

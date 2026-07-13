@@ -5,21 +5,19 @@ Musterloesung zu Kapitel 13 des Buchs
 
 Baut auf Kapitel 12 auf (Kopie + Erweiterung).
 
+## Was hier neu dazugekommen ist
+
+- Die 3 Gegner patrouillieren jetzt selbststaendig
+- `hasSupportAhead()`: Kantenerkennung, bevor der Gegner ueber eine
+  Plattform hinauslaeuft
+- Gelegentliches, zufaelliges Springen (nur wenn sicher)
+- Eigene Patrouillengrenzen pro Gegner
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
 ```
-
-## Was hier neu dazugekommen ist
-
-- `updateEnemy()`: der Test-Gegner patrouilliert jetzt selbststaendig
-  auf dem Bodenabschnitt
-- `hasSupportAhead()`: erkennt die Kante der Plattform, bevor der
-  Gegner darueber hinauslaeuft
-- Gelegentliches, zufaelliges Springen - nur wenn `supported` true ist
-- Patrouillengrenzen (`patrolLeft`/`patrolRight`) als zusaetzliche
-  Absicherung
 
 ## Dateien
 
@@ -32,5 +30,6 @@ Kapitel13/
     └── img/sprites/
         ├── hero.png
         ├── blue.png
+        ├── green.png
         └── tiles.png
 ```

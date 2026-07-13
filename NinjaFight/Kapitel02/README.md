@@ -5,20 +5,22 @@ Musterloesung zu Kapitel 2 des Buchs
 
 Baut auf Kapitel 1 auf (Kopie + Erweiterung).
 
+## Korrektur gegenueber der ersten Fassung
+
+- Der Held wird jetzt in der echten Groesse gezeichnet
+  (`SPRITE_SCALE = 0.45` statt volle 160x150px Zellgroesse)
+- Die Spiegelachse ist jetzt der tatsaechliche Fusspunkt der Figur
+  (`ANCHOR_X = 30, ANCHOR_Y = 145`, identisch zu
+  `CHARACTER_SHEET.anchorX/anchorY` im fertigen Spiel) statt der
+  Mitte des ausgeschnittenen Zellbereichs
+- `hero.x`/`hero.y` bedeuten ab jetzt den Fusspunkt der Figur auf der
+  Buehne, nicht mehr die linke obere Ecke der Sprite-Zelle
+
 ## Ausfuehren
 
 ```bash
 python3 -m http.server 8000
-# dann im Browser: http://localhost:8000
 ```
-
-## Was hier neu dazugekommen ist
-
-- `drawTile()` - zeichnet Level-Kacheln aus dem gemeinsamen
-  `tiles.png`-Sheet; eine Reihe Boden-Kacheln laeuft jetzt ueber die
-  gesamte Buehnenbreite
-- `drawHero()` - kann den Helden jetzt auch gespiegelt (nach links
-  blickend) zeichnen, per `translate()` + `scale(-1, 1)`
 
 ## Dateien
 

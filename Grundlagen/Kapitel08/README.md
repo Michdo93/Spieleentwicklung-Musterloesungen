@@ -11,14 +11,10 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- `checkHazards()`: prueft, ob die Figur in einer Gefahrenzone steht
-- Wasser ist bewusst KEINE Gefahr - nur zur Anschauung, dass nicht
-  jedes auffaellige Element automatisch schadet
-- Feuer und Stacheln schaden per Abklingzeit (`invulnTimer`), nicht
-  bei jedem einzelnen Frame - sonst waeren es bei 60fps auch 60
-  Treffer pro Sekunde
-- Reihenfolge: erst pruefen/Schaden zufuegen, dann den Timer
-  runterzaehlen
+1. **Wasser ist begehbar** - `WaterGround` gehoert zu den
+   `PLATFORM_TYPES`, keine Gefahr
+2. **Feuer** - Schaden ueber Zeit mit Abklingzeit (`invulnTimer`)
+3. **Stacheln** - hoeherer Einzelschaden, dieselbe Technik
 
 ## Dateien
 
@@ -26,5 +22,6 @@ python3 -m http.server 8000
 Kapitel08/
 ├── index.html
 ├── style.css
-└── script.js
+├── script.js
+└── assets/tiles.png
 ```

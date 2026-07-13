@@ -6,16 +6,39 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="game">
-    <canvas id="stage" width="480" height="220"></canvas>
+  <h1>Kapitel 16 – HUD &amp; Spielstatus</h1>
 
-    <div id="hud">
-      <span id="hud-life">❤ 10</span>
-      <span id="hud-points">Punkte: 0</span>
-      <span id="hud-time">0:00</span>
+  <section>
+    <h2>Beispiel 1: Die richtige Balkenposition</h2>
+    <canvas id="stage1" width="300" height="200"></canvas>
+    <label>Abstand über dem Fußpunkt: <input type="range" id="offset-slider" min="0" max="100" value="40"></label>
+    <div class="controls">
+      <button data-align="left">Links</button>
+      <button data-align="center" class="btn-active">Mittig</button>
+      <button data-align="right">Rechts</button>
     </div>
-  </div>
-  <p id="hint">Der Lebensbalken über dem Gegner sitzt exakt über dem sichtbaren Sprite - nicht mitten im Kopf. Das DOM-HUD oben aktualisiert sich jeden Frame neu.</p>
+    <p class="hint">Regler bewegt den Balken vertikal; die Buttons verändern die horizontale Ausrichtung relativ zur weißen Referenzlinie (= x-Position der Figur).</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 2: HUD-Text als DOM-Overlay</h2>
+    <div id="hud-demo" class="controls">
+      <span id="hud-points">Punkte: 0</span>
+      <span id="hud-time">Zeit: 120s</span>
+      <button id="btn-add-point">+1 Punkt</button>
+    </div>
+    <p class="hint">Ein einfaches HUD als DOM-Overlay - dieselben Werte wie in Ninja Fights #hud-Leiste.</p>
+  </section>
+
+  <section>
+    <h2>Beispiel 3: Wann aktualisiert sich das HUD?</h2>
+    <div class="controls">
+      <span>Nur bei Levelwechsel: <span id="hud-stale">Shuriken: 3</span></span>
+      <span>Jeden Frame: <span id="hud-live">Shuriken: 3</span></span>
+      <button id="btn-use-shuriken">Shuriken verbrauchen</button>
+    </div>
+    <p class="hint">Links: HUD aktualisiert nur bei Levelwechsel - verpasst die Shuriken-Änderung. Rechts: HUD aktualisiert jeden Frame - immer aktuell.</p>
+  </section>
 
   <script src="script.js"></script>
 </body>

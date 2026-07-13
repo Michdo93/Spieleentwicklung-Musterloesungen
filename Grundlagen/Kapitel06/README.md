@@ -11,12 +11,13 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Der AABB-Kollisionstest (`overlaps()`): zwei Rechtecke ueberlappen
-  sich, wenn sie sich auf beiden Achsen gleichzeitig ueberschneiden
-- `findLanding()`: sucht unter mehreren Plattformen diejenige, auf der
-  die Figur gerade landen wuerde
-- Landen auf mehreren Plattformen unterschiedlicher Hoehe statt nur
-  auf einem einzigen festen Boden
+1. **AABB-Kollision** - `overlaps()`, mit der Maus steuerbar
+2. **Landung auf einer Plattform** - `findLanding()`, identisch zur
+   Pruefung aus `Hero.findLanding()`
+3. **Mehrere Plattformen** - zusaetzlich der Unterschied zwischen
+   sichtbarem Sprite (gross) und tatsaechlicher Trefferbox (klein,
+   gestrichelt) - reale Figuren sind fuer Kollisionszwecke fast immer
+   kleiner als sie gezeichnet werden
 
 ## Dateien
 
