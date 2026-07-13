@@ -64,11 +64,18 @@ const FLOOR_Y = STAGE_H - 21;
 
 // Jede Plattform: { x, y, w } - y ist die Oberkante, an der der
 // Fusspunkt des Helden zum Stehen kommt.
+// Breiten bewusst als Vielfache von 41 (Kachelbreite) gewaehlt: render()
+// zeichnet Boden-Kacheln in 41px-Schritten (siehe unten). Waere die
+// Breite KEIN sauberes Vielfaches, wuerde die letzte gezeichnete
+// Kachel ueber das Ende der Plattform hinausragen - man saehe dann
+// Boden, auf dem man laut findLanding() bereits gar nicht mehr stehen
+// duerfte (genau das ist beim Testen aufgefallen: die Figur "schwebte"
+// sichtbar noch ueber einer Kachel, fiel dort aber schon herunter).
 const platforms = [
-  { x: 0, y: FLOOR_Y, w: 380 },
-  { x: 640, y: FLOOR_Y, w: STAGE_W - 640 },
-  { x: 440, y: FLOOR_Y - 160, w: 200 },
-  { x: 720, y: FLOOR_Y - 280, w: 160 },
+  { x: 0, y: FLOOR_Y, w: 9 * 41 },
+  { x: 640, y: FLOOR_Y, w: 9 * 41 },
+  { x: 440, y: FLOOR_Y - 160, w: 4 * 41 },
+  { x: 720, y: FLOOR_Y - 280, w: 4 * 41 },
 ];
 
 const CHARACTER_STATES = {

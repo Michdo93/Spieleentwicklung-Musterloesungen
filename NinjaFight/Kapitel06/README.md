@@ -40,3 +40,12 @@ fuehlte sich beim Spielen an, als wuerde man an Kanten zu frueh
 herunterfallen, obwohl man optisch noch auf der Plattform stand.
 Nach dem Vermessen der sichtbaren Sprite-Breite (siehe Buch) liegt
 `FOOT_MARGIN` jetzt bei 16 Pixel.
+
+## Weiterer Fix: Plattformbreiten als Vielfache der Kachelbreite
+
+Die Plattformbreiten (`w: 380`, `w: 200`, `w: 160`) waren keine
+sauberen Vielfachen von 41 (Kachelbreite) - die zuletzt gezeichnete
+Kachel ragte dadurch sichtbar ueber die Kollisionsgrenze hinaus. Man
+sah Boden, auf dem `findLanding()` bereits nicht mehr "darueber"
+erkannte, und fiel scheinbar mitten auf sichtbarem Boden herunter.
+Jetzt sind alle Breiten als `N * 41` angegeben (`9 * 41`, `4 * 41`).
