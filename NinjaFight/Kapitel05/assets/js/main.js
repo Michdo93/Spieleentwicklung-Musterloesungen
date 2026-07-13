@@ -40,7 +40,14 @@ const TILE_SHEET = {
 // dieselben Werte wie im fertigen Spiel (dort in render.js)
 const GRAVITY = 1400;     // px/s²
 const JUMP_SPEED = 620;   // px/s (Anfangsgeschwindigkeit nach oben)
-const WALK_SPEED = 160;   // px/s
+const WALK_SPEED = 160;
+// Sicherheitsabstand zum Buehnenrand fuer die Randbegrenzung. Das
+// sichtbare Sprite ist NICHT symmetrisch um hero.x zentriert (der
+// Spiegel-Fusspunkt aus Kapitel 2 sitzt naeher an der linken als der
+// rechten Kante) - ohne diesen Puffer waere beim Anlaufen an den
+// Buehnenrand je nach Blickrichtung ein grosser Teil der Figur nicht
+// mehr zu sehen.
+const EDGE_MARGIN = 60; // Pixel
 
 const FLOOR_Y = STAGE_H - 21;
 
@@ -128,7 +135,7 @@ function moveHorizontal(dt) {
   } else if (hero.state === "Walk") {
     setState("Idle");
   }
-  hero.x = Math.max(0, Math.min(STAGE_W, hero.x));
+  hero.x = Math.max(EDGE_MARGIN, Math.min(STAGE_W - EDGE_MARGIN, hero.x));
 }
 
 let lastTime = 0;

@@ -31,3 +31,9 @@ Kapitel05/
         ├── hero.png
         └── tiles.png
 ```
+
+## Nachtraeglicher Fix
+
+`hero.x` wird jetzt auf `EDGE_MARGIN`/`STAGE_W - EDGE_MARGIN` statt
+auf `0`/`STAGE_W` begrenzt - sonst waere je nach Blickrichtung ein
+grosser Teil des Sprites am Buehnenrand nicht mehr sichtbar gewesen.

@@ -31,3 +31,9 @@ Kapitel06/
         ├── hero.png
         └── tiles.png
 ```
+
+## Nachtraeglicher Fix
+
+`findLanding()` prueft jetzt mit einer kleinen Toleranz
+(`FOOT_MARGIN`) statt eines exakten Punktvergleichs - vermeidet ein
+seltenes, aber reales Durchfallen an Kachel-Nahtstellen.

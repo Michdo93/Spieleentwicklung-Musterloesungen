@@ -37,3 +37,12 @@ Kapitel12/
         ├── green.png
         └── tiles.png
 ```
+
+## Nachtraeglicher Fix
+
+Die Kollisionspruefung beim Einsammeln von Power-Ups
+(`PowerUp.update()`) verglich `c.y` und `this.y` vorher mit einem
+fehlerhaften Versatz (`c.y - 30 - this.y`) - dadurch liessen sich
+Items nur beim Durchspringen von unten einsammeln, nicht beim
+normalen Hineinlaufen. Behoben auf einen direkten Vergleich
+(`c.y - this.y`).

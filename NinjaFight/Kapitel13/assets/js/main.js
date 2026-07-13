@@ -51,6 +51,18 @@ const TILE_SHEET = {
 const GRAVITY = 1400;
 const JUMP_SPEED = 620;
 const WALK_SPEED = 160;
+// Sicherheitsabstand zum Buehnenrand fuer die Randbegrenzung. Das
+// sichtbare Sprite ist NICHT symmetrisch um hero.x zentriert (der
+// Spiegel-Fusspunkt aus Kapitel 2 sitzt naeher an der linken als der
+// rechten Kante) - ohne diesen Puffer waere beim Anlaufen an den
+// Buehnenrand je nach Blickrichtung ein grosser Teil der Figur nicht
+// mehr zu sehen.
+const EDGE_MARGIN = 60;
+// kleine Toleranz um den Fusspunkt beim Landetest - ein Fuss ist keine
+// unendlich duenne Linie. Ohne diese Toleranz kann es (sehr selten,
+// aber beim Testen tatsaechlich aufgetreten) passieren, dass man genau
+// auf der Nahtstelle zwischen zwei Kacheln landet und durchfaellt.
+const FOOT_MARGIN = 6;
 const CLIMB_SPEED = 110;
 
 // Original-Level-Layouts, 1:1 aus levels.js uebernommen. "Bottom" und
@@ -342,7 +354,7 @@ function hasSupportAhead(en, lookAhead) {
 function findEnemyLanding(en, nextY) {
   let best = null;
   level.platforms.forEach((p) => {
-    if (en.x > p.x && en.x < p.x + p.w && en.y <= p.y + 2 && nextY >= p.y) {
+    if (en.x + FOOT_MARGIN > p.x && en.x - FOOT_MARGIN < p.x + p.w && en.y <= p.y + 2 && nextY >= p.y) {
       if (!best || p.y < best.y) best = { y: p.y };
     }
   });
@@ -420,7 +432,7 @@ class PowerUp {
     // JEDER Kandidat wird geprueft - dadurch kann auch ein Gegner das
     // Item vor der Nase des Helden wegschnappen.
     for (const c of candidates) {
-      if (!c.dead && Math.hypot(c.x - this.x, c.y - 30 - this.y) < 30) {
+      if (!c.dead && Math.hypot(c.x - this.x, c.y - this.y) < 30) {
         this.collected = true;
         if (c.collectPowerUp) c.collectPowerUp(this.type);
         break;
@@ -565,13 +577,13 @@ function moveHorizontal(dt) {
   } else if (hero.state === "Walk") {
     setState("Idle");
   }
-  hero.x = Math.max(0, Math.min(STAGE_W, hero.x));
+  hero.x = Math.max(EDGE_MARGIN, Math.min(STAGE_W - EDGE_MARGIN, hero.x));
 }
 
 function findLanding(nextY) {
   let best = null;
   level.platforms.forEach((p) => {
-    if (hero.x > p.x && hero.x < p.x + p.w && hero.y <= p.y + 2 && nextY >= p.y) {
+    if (hero.x + FOOT_MARGIN > p.x && hero.x - FOOT_MARGIN < p.x + p.w && hero.y <= p.y + 2 && nextY >= p.y) {
       if (!best || p.y < best.y) best = { y: p.y };
     }
   });
