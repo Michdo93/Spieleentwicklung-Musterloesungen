@@ -1,9 +1,9 @@
 /**
  * Kapitel 18 - Highscores & Levelfortschritt
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) Highscores mit localStorage, (2) Sieg- oder
- * Niederlage-Bedingungen, (3) kumulative Lebenspunkte ueber mehrere
+ * Niederlage-Bedingungen, (3) kumulative Lebenspunkte über mehrere
  * Level hinweg.
  */
 
@@ -26,7 +26,7 @@ function renderHighscores() {
   const list = loadHighscores();
   const el = document.getElementById("highscore-list");
   el.textContent = list.length === 0
-    ? "Noch keine Eintraege."
+    ? "Noch keine Einträge."
     : list.map((e, i) => `${i + 1}. ${e.name} - ${e.points} Punkte (Level ${e.level})`).join("\n");
 }
 document.getElementById("btn-save-score").addEventListener("click", () => {
@@ -45,13 +45,13 @@ renderHighscores();
 /* ===================================================================
    Beispiel 2: Sieg oder Niederlage? - entspricht winGame() vs.
    endGame() in GameManager. Ein Zeitablauf ist nur DANN eine
-   Niederlage, wenn zusaetzlich noch Gegner uebrig sind.
+   Niederlage, wenn zusätzlich noch Gegner übrig sind.
    =================================================================== */
 function evaluateOutcome(levelNum, maxLevels, heroAlive, enemiesRemaining, timeUp) {
   if (!heroAlive) return { won: false, reason: "Der Held ist gestorben." };
-  if (timeUp && enemiesRemaining > 0) return { won: false, reason: "Zeit abgelaufen, aber noch Gegner uebrig." };
+  if (timeUp && enemiesRemaining > 0) return { won: false, reason: "Zeit abgelaufen, aber noch Gegner übrig." };
   if (levelNum >= maxLevels) return { won: true, reason: "Alle Level ohne Tod abgeschlossen!" };
-  return { won: null, reason: "Spiel laeuft noch weiter." };
+  return { won: null, reason: "Spiel läuft noch weiter." };
 }
 function updateOutcomeDisplay() {
   const levelNum = Number(document.getElementById("sim-level").value);
@@ -60,7 +60,7 @@ function updateOutcomeDisplay() {
   const timeUp = document.getElementById("sim-timeup").checked;
   const result = evaluateOutcome(levelNum, 10, heroAlive, enemiesRemaining, timeUp);
   const el = document.getElementById("outcome-display");
-  el.textContent = result.won === true ? `SIEG - ${result.reason}` : result.won === false ? `NIEDERLAGE - ${result.reason}` : `Spiel laeuft - ${result.reason}`;
+  el.textContent = result.won === true ? `SIEG - ${result.reason}` : result.won === false ? `NIEDERLAGE - ${result.reason}` : `Spiel läuft - ${result.reason}`;
   el.style.color = result.won === true ? "#5fe0c9" : result.won === false ? "#ff6b6b" : "#93a4b3";
 }
 ["sim-level", "sim-alive", "sim-enemies", "sim-timeup"].forEach((id) =>
@@ -69,14 +69,14 @@ function updateOutcomeDisplay() {
 updateOutcomeDisplay();
 
 /* ===================================================================
-   Beispiel 3: kumulative Lebenspunkte ueber Level - entspricht
+   Beispiel 3: kumulative Lebenspunkte über Level - entspricht
    this.lifeEnergy += 10 * levelNum in nextLevel(). += statt = ist
    hier der entscheidende Unterschied.
    =================================================================== */
 let lifeEnergy = 0, levelNum = 0;
 function nextLevel() {
   levelNum++;
-  lifeEnergy += 10 * levelNum; // aufaddieren, NICHT zuruecksetzen
+  lifeEnergy += 10 * levelNum; // aufaddieren, NICHT zurücksetzen
   logLife(`Level ${levelNum}: +${10 * levelNum} -> Lebensenergie insgesamt: ${lifeEnergy}`);
 }
 function takeDamage() {

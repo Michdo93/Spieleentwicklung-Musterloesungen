@@ -1,15 +1,15 @@
 /**
  * Kapitel 17 - Menüs & Spielzustände
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) showScreen() - nur ein Bildschirm ist je aktiv,
- * (2) ein echter CSS-Spezifitaets-Bug aus der Entwicklung von Ninja
+ * (2) ein echter CSS-Spezifitäts-Bug aus der Entwicklung von Ninja
  * Fight, (3) ESC pausiert und setzt fort.
  */
 
 /* ===================================================================
    Beispiel 1: showScreen() - entfernt "active" von ALLEN Bildschirmen,
-   setzt es nur auf den gewuenschten.
+   setzt es nur auf den gewünschten.
    =================================================================== */
 (function example1_showScreen() {
   function showScreen(name) {
@@ -26,8 +26,8 @@
 /* ===================================================================
    Beispiel 2: der echte Bug - eine gemeinsame .screen-Basisklasse
    verdunkelte versehentlich auch den Spielbildschirm selbst, der
-   waehrend des Spiels ueber dem Canvas liegt. Der Fix: ein ID-Selektor
-   (#screen-game) hat hoehere Spezifitaet als die Klassenregel.
+   während des Spiels über dem Canvas liegt. Der Fix: ein ID-Selektor
+   (#screen-game) hat höhere Spezifität als die Klassenregel.
    =================================================================== */
 (function example2_bug() {
   document.getElementById("btn-toggle-bug").addEventListener("click", () => {
@@ -36,13 +36,13 @@
     const buggy = frame.classList.contains("bug-active");
     document.getElementById("bug-status").textContent = buggy
       ? "FEHLERHAFT: #screen-game erbt den dunklen Hintergrund der Basisklasse .screen"
-      : "KORRIGIERT: #screen-game { background: none; } ueberschreibt die Basisklasse gezielt";
+      : "KORRIGIERT: #screen-game { background: none; } überschreibt die Basisklasse gezielt";
   });
 })();
 
 /* ===================================================================
    Beispiel 3: ESC pausiert und setzt fort - echte Tastatursteuerung
-   fuer Zustandswechsel, nicht nur Buttons.
+   für Zustandswechsel, nicht nur Buttons.
    =================================================================== */
 (function example3_esc() {
   let gameRunning = false;
@@ -50,7 +50,7 @@
   function startMockGame() {
     gameRunning = true;
     document.getElementById("mock-frame-3").classList.remove("paused");
-    document.getElementById("esc-status").textContent = "Spiel laeuft - ESC druecken zum Pausieren";
+    document.getElementById("esc-status").textContent = "Spiel läuft - ESC drücken zum Pausieren";
   }
   function toggleEscPause() {
     if (!gameRunning) return;
@@ -59,7 +59,7 @@
     const paused = frame.classList.contains("paused");
     document.getElementById("esc-status").textContent = paused
       ? "Pausiert - ESC oder 'Weiter' zum Fortsetzen"
-      : "Spiel laeuft - ESC druecken zum Pausieren";
+      : "Spiel läuft - ESC drücken zum Pausieren";
   }
 
   document.getElementById("btn-start-game").addEventListener("click", startMockGame);

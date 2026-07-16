@@ -1,13 +1,13 @@
 /**
- * Ninja Fight - Kapitel 7: Level-Daten & Tile-Rendering
- * Musterloesung
+ * Ninja Fight - Kapitel 8: Hindernisse & Gefahren
+ * Musterlösung
  *
  * Baut auf Kapitel 6 auf. Statt weniger Testplattformen bauen wir jetzt
  * die ersten beiden ECHTEN Level aus Ninja Fight nach - Koordinaten 1:1
- * aus levels.js uebernommen. buildLevel() sortiert die Rohdaten nach
+ * aus levels.js übernommen. buildLevel() sortiert die Rohdaten nach
  * Bedeutung; in diesem Kapitel interessieren uns nur Plattformen und
  * Leitern (rein optisch) - Feuer, Messer und Wasser-Kacheln ignorieren
- * wir bewusst noch (kommt in Kapitel 8/9 dazu), man kann also ueberall
+ * wir bewusst noch (kommt in Kapitel 8/9 dazu), man kann also überall
  * problemlos stehen.
  */
 
@@ -31,7 +31,7 @@ const DRAW_W = CELL_W * SPRITE_SCALE;
 const DRAW_H = CELL_H * SPRITE_SCALE;
 
 // entspricht TILE_SHEET in spritedata.js - je Kacheltyp seine eigene,
-// tatsaechliche Groesse (nicht alle Kacheln sind gleich gross!)
+// tatsächliche Größe (nicht alle Kacheln sind gleich groß!)
 const TILE_SHEET = {
   cellW: 42, cellH: 66,
   tiles: {
@@ -48,21 +48,21 @@ const TILE_SHEET = {
 const GRAVITY = 1400;
 const JUMP_SPEED = 620;
 const WALK_SPEED = 160;
-// Sicherheitsabstand zum Buehnenrand, GEMESSEN an den tatsaechlich
-// sichtbaren Pixeln des Sprites (nicht an der vollen, groesstenteils
-// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, fuer die
-// genaue Messung. Ohne diesen Puffer wuerde die Figur am aeussersten
-// Rand knapp ueber den Bildschirmrand hinausragen.
+// Sicherheitsabstand zum Bühnenrand, GEMESSEN an den tatsächlich
+// sichtbaren Pixeln des Sprites (nicht an der vollen, größtenteils
+// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, für die
+// genaue Messung. Ohne diesen Puffer würde die Figur am äußersten
+// Rand knapp über den Bildschirmrand hinausragen.
 const EDGE_MARGIN = 20;
-// Toleranz um den Fusspunkt beim Landetest, GEMESSEN an der
+// Toleranz um den Fußpunkt beim Landetest, GEMESSEN an der
 // sichtbaren Breite des Sprites (siehe Buch, Kapitel 6) - solange ein
-// sichtbarer Teil der Figur noch ueber der Plattform ist, gilt sie als
-// getragen. Mit einem einzelnen exakten Punkt (ohne Toleranz) fuehlt
-// sich das Herunterfallen an Kanten spuerbar zu frueh an, weil man
+// sichtbarer Teil der Figur noch über der Plattform ist, gilt sie als
+// getragen. Mit einem einzelnen exakten Punkt (ohne Toleranz) fühlt
+// sich das Herunterfallen an Kanten spürbar zu früh an, weil man
 // optisch noch auf der Plattform zu stehen scheint.
 const FOOT_MARGIN = 16;
 
-// Original-Level-Layouts, 1:1 aus levels.js uebernommen. "Bottom" und
+// Original-Level-Layouts, 1:1 aus levels.js übernommen. "Bottom" und
 // "WaterTop" sind rein dekorativ (keine eigene Kollision), "Flame" und
 // "Knives" sind Gefahren - beides ignorieren wir in diesem Kapitel noch.
 const LEVELS = {
@@ -186,14 +186,14 @@ const LEVELS = {
 
 const PLATFORM_TYPES = new Set(["Floor", "Bridge", "Small", "WaterGround"]);
 // Schaden und Abklingzeit je Gefahrentyp - entspricht checkHazards() in
-// Hero.as/entities.js (dort fast wortgleich auch fuer Enemy).
+// Hero.as/entities.js (dort fast wortgleich auch für Enemy).
 const HAZARD_TYPES = {
   Flame: { damage: 1, cooldown: 0.6 },
   Knives: { damage: 5, cooldown: 0.6 },
 };
 
 // entspricht buildLevel() in render.js: sortiert die flache Rohdatenliste
-// einmal nach Bedeutung. Ladder wird hier nur fuers Zeichnen erfasst -
+// einmal nach Bedeutung. Ladder wird hier nur fürs Zeichnen erfasst -
 // die eigentliche Kletterlogik kommt erst in Kapitel 9 dazu.
 function buildLevel(levelNum) {
   const raw = LEVELS[levelNum];
@@ -208,8 +208,8 @@ function buildLevel(levelNum) {
     } else if (el.type === "Ladder") {
       ladders.push({ x: el.x, y: el.y });
     } else if (HAZARD_TYPES[el.type]) {
-      // Flame.y ist die BASIS der Flamme (Bodenhoehe) - die Flamme
-      // waechst nach OBEN, nicht umgekehrt (siehe Buch: haeufiger
+      // Flame.y ist die BASIS der Flamme (Bodenhöhe) - die Flamme
+      // wächst nach OBEN, nicht umgekehrt (siehe Buch: häufiger
       // Bugfix-Hinweis in der echten Entwicklung von Ninja Fight).
       const size = TILE_SHEET.tiles[el.type];
       hazards.push({ type: el.type, x: el.x, y: el.y, w: size.w, h: size.h });
@@ -329,7 +329,7 @@ function findLanding(nextY) {
   return best;
 }
 
-// entspricht checkHazards() in Hero.as/entities.js: prueft, ob der Held
+// entspricht checkHazards() in Hero.as/entities.js: prüft, ob der Held
 // gerade in einer Gefahrenzone steht, mit Abklingzeit gegen
 // Mehrfachschaden im selben Frame-Rhythmus.
 function checkHazards(dt) {
@@ -339,7 +339,7 @@ function checkHazards(dt) {
       const footX = hero.x, footY = hero.y;
       let hit;
       if (hz.type === "Flame") {
-        // hz.y ist die Basis (Bodenkontakt) - die Flamme waechst nach oben
+        // hz.y ist die Basis (Bodenkontakt) - die Flamme wächst nach oben
         hit = footX > hz.x - 2 && footX < hz.x + hz.w && footY > hz.y - hz.h && footY <= hz.y + 4;
       } else {
         hit = footX > hz.x && footX < hz.x + hz.w && footY > hz.y && footY < hz.y + hz.h + 6;
@@ -381,7 +381,7 @@ function update(dt) {
     hero.y = nextY;
     hero.onGround = false;
     if (hero.y > STAGE_H + 60) {
-      // aus dem Level gefallen - zurueck an den Start (kein "Sterben" bislang)
+      // aus dem Level gefallen - zurück an den Start (kein "Sterben" bislang)
       hero.x = 60; hero.y = 414.1; hero.vy = 0;
     }
   }

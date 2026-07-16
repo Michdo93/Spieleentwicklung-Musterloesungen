@@ -1,11 +1,11 @@
 /**
  * Kapitel 3 - Sprite-Animation
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) Frames von Hand durchklicken, (2) automatische
- * Wiedergabe mit einstellbarer FPS, (3) mehrere Zustaende mit
+ * Wiedergabe mit einstellbarer FPS, (3) mehrere Zustände mit
  * Loop- vs. Einmalig-Verhalten. Zusammen ergeben sie exakt die Logik,
- * die spaeter drawNinja() in Ninja Fight verwendet.
+ * die später drawNinja() in Ninja Fight verwendet.
  */
 
 const heroSheet = new Image();
@@ -32,7 +32,7 @@ function drawFrame(ctx, state, frame, x, y, scale) {
 }
 
 /* ===================================================================
-   Beispiel 1: Frame fuer Frame von Hand durchklicken
+   Beispiel 1: Frame für Frame von Hand durchklicken
    =================================================================== */
 (function example1_manual() {
   const canvas = document.getElementById("stage1");
@@ -99,7 +99,7 @@ function drawFrame(ctx, state, frame, x, y, scale) {
 })();
 
 /* ===================================================================
-   Beispiel 3: mehrere benannte Zustaende - Loop vs. einmalig
+   Beispiel 3: mehrere benannte Zustände - Loop vs. einmalig
    =================================================================== */
 (function example3_states() {
   const canvas = document.getElementById("stage3");

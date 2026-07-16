@@ -1,9 +1,9 @@
 /**
  * Kapitel 12 - Items & Power-Ups
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) ein fallendes Item (dieselbe Schwerkraft wie
- * eine Figur), (2) drei Effekt-Muster (sofortig/befristet/zaehlbar),
+ * eine Figur), (2) drei Effekt-Muster (sofortig/befristet/zählbar),
  * (3) jeder kann es aufheben, nicht nur der Held.
  */
 
@@ -81,7 +81,7 @@ class PowerUp {
     whenReady(() => drawItemTile(ctx, item.type, item.x - 17, item.y - 30));
     ctx.fillStyle = "#93a4b3";
     ctx.font = "12px monospace";
-    ctx.fillText(item.landed ? "gelandet - wartet aufs Einsammeln" : "faellt ...", 14, 24);
+    ctx.fillText(item.landed ? "gelandet - wartet aufs Einsammeln" : "fällt ...", 14, 24);
 
     requestAnimationFrame(loop);
   }
@@ -89,7 +89,7 @@ class PowerUp {
 })();
 
 /* ===================================================================
-   Beispiel 2: sofortig vs. befristet vs. zaehlbasiert - entspricht
+   Beispiel 2: sofortig vs. befristet vs. zählbasiert - entspricht
    collectPowerUp() in entities.js.
    =================================================================== */
 (function example2_effects() {
@@ -103,7 +103,7 @@ class PowerUp {
   function collect(type) {
     if (type === "Heart") hp = Math.min(10, hp + 2); // sofort
     else if (type === "Sword") { hasSword = true; swordTimer = 30; } // befristet
-    else if (type === "Shuriken") shurikenCount += 3; // zaehlbasiert
+    else if (type === "Shuriken") shurikenCount += 3; // zählbasiert
   }
   document.getElementById("btn-heart").addEventListener("click", () => collect("Heart"));
   document.getElementById("btn-sword").addEventListener("click", () => collect("Sword"));
@@ -123,7 +123,7 @@ class PowerUp {
     }
     ctx.fillStyle = "#0b1a24";
     ctx.fillRect(0, 0, W, H);
-    statusEl.textContent = `HP: ${hp}/10   Schwert: ${hasSword ? swordTimer.toFixed(1) + "s uebrig" : "keins"}   Shuriken: ${shurikenCount}`;
+    statusEl.textContent = `HP: ${hp}/10   Schwert: ${hasSword ? swordTimer.toFixed(1) + "s übrig" : "keins"}   Shuriken: ${shurikenCount}`;
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
@@ -131,7 +131,7 @@ class PowerUp {
 
 /* ===================================================================
    Beispiel 3: jeder kann es aufheben - entspricht PowerUp.update():
-   ALLE lebenden Figuren werden auf Kollision geprueft, nicht nur der
+   ALLE lebenden Figuren werden auf Kollision geprüft, nicht nur der
    Held.
    =================================================================== */
 (function example3_anyone() {
@@ -161,7 +161,7 @@ class PowerUp {
     enemyX += enemyDir * 60 * dt;
     if (enemyX < 20 || enemyX > W - 20) enemyDir *= -1;
 
-    // jede lebende Figur wird geprueft - nicht nur der Held
+    // jede lebende Figur wird geprüft - nicht nur der Held
     if (!item.collected) {
       [heroX, enemyX].forEach((x, i) => {
         if (Math.abs(x - item.x) < 24 && Math.abs(190 - item.y) < 24) {

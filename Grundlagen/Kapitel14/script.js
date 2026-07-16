@@ -1,9 +1,9 @@
 /**
  * Kapitel 14 - Gegner-KI: Kampf & Gegnertypen
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) Aggro-Bereich & Angriffsauswahl nach Abstand,
- * (2) vier Gegnertypen mit eigenen Faehigkeiten, (3) Friendly Fire
+ * (2) vier Gegnertypen mit eigenen Fähigkeiten, (3) Friendly Fire
  * zwischen Gegnern - entspricht dem Entscheidungsbaum in
  * Enemy.update() plus ENEMY_TYPES/HP_BY_TYPE aus entities.js.
  */
@@ -45,7 +45,7 @@ function drawChar(ctx, name, x, y, facing = 1, scale = 1) {
     if (dist < 40) return "Nahkampf (Hit/Kick)";
     if (dist < 260 && enemyType.canShuriken) return "Shuriken werfen";
     if (dist < 60 && enemyType.canSword) return "Schwert";
-    return "ausser Reichweite - nur beobachten";
+    return "außer Reichweite - nur beobachten";
   }
   function draw() {
     const dist = Math.abs(heroX - enemyX);
@@ -79,7 +79,7 @@ function drawChar(ctx, name, x, y, facing = 1, scale = 1) {
 })();
 
 /* ===================================================================
-   Beispiel 2: vier Gegnertypen, vier Faehigkeitsprofile - entspricht
+   Beispiel 2: vier Gegnertypen, vier Fähigkeitsprofile - entspricht
    ENEMY_TYPES + HP_BY_TYPE aus entities.js.
    =================================================================== */
 const ENEMY_TYPES = {
@@ -118,7 +118,7 @@ const ENEMY_TYPES = {
 
 /* ===================================================================
    Beispiel 3: Friendly Fire - entspricht hitNearbyEnemies()/Projectile
-   mit Werfer-Ausschluss: ein Wurf trifft "jeden ausser dem Werfer",
+   mit Werfer-Ausschluss: ein Wurf trifft "jeden außer dem Werfer",
    also auch andere Gegner.
    =================================================================== */
 (function example3_friendlyFire() {
@@ -145,7 +145,7 @@ const ENEMY_TYPES = {
 
     projectiles.forEach((p) => {
       p.x += p.dir * 480 * dt;
-      // trifft JEDEN ausser dem Werfer - hier: den Bystander, der im
+      // trifft JEDEN außer dem Werfer - hier: den Bystander, der im
       // Weg steht, NICHT den Werfer selbst
       if (!p.dead && bystander.hp > 0 && Math.abs(p.x - bystander.x) < 20) {
         bystander.hp = Math.max(0, bystander.hp - 5);

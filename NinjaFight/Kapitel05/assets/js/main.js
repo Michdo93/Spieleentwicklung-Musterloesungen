@@ -1,13 +1,13 @@
 /**
  * Ninja Fight - Kapitel 5: Bewegung & Schwerkraft
- * Musterloesung
+ * Musterlösung
  *
- * Baut auf Kapitel 4 auf. Jetzt bewegt sich der Held tatsaechlich:
+ * Baut auf Kapitel 4 auf. Jetzt bewegt sich der Held tatsächlich:
  * links/rechts per WALK_SPEED, Sprung + Schwerkraft per
  * GRAVITY/JUMP_SPEED - exakt die Werte und Logik aus Hero.update() im
- * fertigen Spiel, jetzt mit der korrekten Groesse und Spiegelachse
+ * fertigen Spiel, jetzt mit der korrekten Größe und Spiegelachse
  * aus Kapitel 2. Gelandet wird vorerst auf einem festen Boden; echte
- * Plattformen mit Luecken dazwischen kommen erst in Kapitel 6.
+ * Plattformen mit Lücken dazwischen kommen erst in Kapitel 6.
  */
 
 const canvas = document.getElementById("stage");
@@ -41,11 +41,11 @@ const TILE_SHEET = {
 const GRAVITY = 1400;     // px/s²
 const JUMP_SPEED = 620;   // px/s (Anfangsgeschwindigkeit nach oben)
 const WALK_SPEED = 160;
-// Sicherheitsabstand zum Buehnenrand, GEMESSEN an den tatsaechlich
-// sichtbaren Pixeln des Sprites (nicht an der vollen, groesstenteils
-// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, fuer die
-// genaue Messung. Ohne diesen Puffer wuerde die Figur am aeussersten
-// Rand knapp ueber den Bildschirmrand hinausragen.
+// Sicherheitsabstand zum Bühnenrand, GEMESSEN an den tatsächlich
+// sichtbaren Pixeln des Sprites (nicht an der vollen, größtenteils
+// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, für die
+// genaue Messung. Ohne diesen Puffer würde die Figur am äußersten
+// Rand knapp über den Bildschirmrand hinausragen.
 const EDGE_MARGIN = 20; // Pixel
 
 const FLOOR_Y = STAGE_H - 21;
@@ -57,7 +57,7 @@ const CHARACTER_STATES = {
 };
 const FPS = 8;
 
-// hero.x/hero.y = Fusspunkt der Figur (siehe Kapitel 2)
+// hero.x/hero.y = Fußpunkt der Figur (siehe Kapitel 2)
 const hero = {
   x: STAGE_W / 2,
   y: FLOOR_Y,

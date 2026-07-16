@@ -1,9 +1,9 @@
 /**
  * Kapitel 7 - Level-Daten & Tile-Rendering
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) hartkodiert vs. Daten, (2) buildLevel() sortiert
- * Rohdaten nach Bedeutung, (3) derselbe Zeichencode fuer einen anderen
+ * Rohdaten nach Bedeutung, (3) derselbe Zeichencode für einen anderen
  * Level - exakt wie levels.js/buildLevel() in Ninja Fight.
  */
 
@@ -114,9 +114,9 @@ function buildLevel(raw) {
 })();
 
 /* ===================================================================
-   Beispiel 3: derselbe Level-Renderer fuer einen ANDEREN Level
+   Beispiel 3: derselbe Level-Renderer für einen ANDEREN Level
    Der Witz an Daten statt Code: buildLevel()/drawTile() bleiben
-   unveraendert, nur die Datenliste wird ausgetauscht.
+   unverändert, nur die Datenliste wird ausgetauscht.
    =================================================================== */
 const LEVEL_B = [
   { type: "Floor", x: 20, y: 220 }, { type: "Floor", x: 61, y: 220 },

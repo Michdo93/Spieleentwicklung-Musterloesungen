@@ -1,10 +1,10 @@
 /**
  * Kapitel 2 - Sprites zeichnen
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) die Grundformen von drawImage(), (2) der
  * Spiegel-Achsen-Fehler und seine Korrektur, (3) Skalierung und
- * Position ueber Regler statt fest im Code.
+ * Position über Regler statt fest im Code.
  */
 
 const heroSheet = new Image();
@@ -29,7 +29,7 @@ function runExample1() {
   ctx.fillStyle = "#0b1a24";
   ctx.fillRect(0, 0, W, H);
 
-  // Form 1: das GANZE Sheet, verkleinert auf eine feste Zielgroesse
+  // Form 1: das GANZE Sheet, verkleinert auf eine feste Zielgröße
   ctx.drawImage(heroSheet, 0, 0, heroSheet.width, heroSheet.height, 10, 10, 160, 150);
   ctx.strokeStyle = "#ffb84d";
   ctx.strokeRect(10, 10, 160, 150);
@@ -61,20 +61,20 @@ function runExample2() {
   const dh = CELL_H * scale;
 
   // FEHLER-URSACHE: Der ausgeschnittene Frame (160x150) ist NICHT
-  // symmetrisch um die Spielfigur herum - links und rechts vom Koerper
+  // symmetrisch um die Spielfigur herum - links und rechts vom Körper
   // ist unterschiedlich viel Platz, damit auch Frames mit ausholenden
-  // Bewegungen (Schwert, Tritt) in dieselbe Zellgroesse passen. Die
+  // Bewegungen (Schwert, Tritt) in dieselbe Zellgröße passen. Die
   // Mitte des ausgeschnittenen Bereichs (CELL_W/2) ist deshalb NICHT
   // dieselbe Stelle wie die Mitte der Figur selbst.
   //
-  // Der echte "Fusspunkt" der Figur innerhalb der Zelle - identisch zu
+  // Der echte "Fußpunkt" der Figur innerhalb der Zelle - identisch zu
   // CHARACTER_SHEET.anchorX/anchorY im fertigen Spiel:
   const ANCHOR_X = 30;
   const ANCHOR_Y = 145;
 
   const groundY = 195;
   const cols = [
-    { cx: 90, label: "unveraendert", mirror: false, wrong: false },
+    { cx: 90, label: "unverändert", mirror: false, wrong: false },
     { cx: 280, label: "falsch gespiegelt", mirror: true, wrong: true },
     { cx: 470, label: "richtig gespiegelt", mirror: true, wrong: false },
   ];
@@ -94,7 +94,7 @@ function runExample2() {
     if (col.mirror) ctx.scale(-1, 1);
 
     if (!col.mirror) {
-      // unveraendert: Achse ist automatisch korrekt, da nicht gespiegelt
+      // unverändert: Achse ist automatisch korrekt, da nicht gespiegelt
       ctx.drawImage(heroSheet, 0, 0, CELL_W, CELL_H,
         -ANCHOR_X * scale, -ANCHOR_Y * scale, dw, dh);
     } else if (col.wrong) {
@@ -102,7 +102,7 @@ function runExample2() {
       ctx.drawImage(heroSheet, 0, 0, CELL_W, CELL_H,
         -dw / 2, -ANCHOR_Y * scale, dw, dh);
     } else {
-      // RICHTIG: Spiegelachse = derselbe Fusspunkt wie im unveraenderten Fall
+      // RICHTIG: Spiegelachse = derselbe Fußpunkt wie im unveränderten Fall
       ctx.drawImage(heroSheet, 0, 0, CELL_W, CELL_H,
         -ANCHOR_X * scale, -ANCHOR_Y * scale, dw, dh);
     }

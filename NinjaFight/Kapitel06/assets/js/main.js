@@ -1,18 +1,18 @@
 /**
  * Ninja Fight - Kapitel 6: Kollision & Plattformen
- * Musterloesung
+ * Musterlösung
  *
  * Baut auf Kapitel 5 auf. Statt eines einzigen festen Bodens gibt es
- * jetzt mehrere Plattformen auf unterschiedlichen Hoehen -
+ * jetzt mehrere Plattformen auf unterschiedlichen Höhen -
  * findLanding() sucht bei jedem Frame die passende darunter.
  *
- * Korrektur gegenueber der ersten Fassung dieses Kapitels: Weil
- * hero.x/hero.y seit Kapitel 2 der tatsaechliche FUSSPUNKT der Figur
- * sind (nicht mehr die linke obere Sprite-Ecke), ist die Landepruefung
+ * Korrektur gegenüber der ersten Fassung dieses Kapitels: Weil
+ * hero.x/hero.y seit Kapitel 2 der tatsächliche FUSSPUNKT der Figur
+ * sind (nicht mehr die linke obere Sprite-Ecke), ist die Landeprüfung
  * jetzt genauso einfach wie im fertigen Spiel: Wir vergleichen einfach
- * hero.y direkt mit der Plattformhoehe, ganz ohne Umrechnung ueber
- * Sprite-Breiten/Hoehen. Vorher fuehrte genau diese Umrechnung dazu,
- * dass der Held ueber Plattformen schwebte oder an der falschen Stelle
+ * hero.y direkt mit der Plattformhöhe, ganz ohne Umrechnung über
+ * Sprite-Breiten/Höhen. Vorher führte genau diese Umrechnung dazu,
+ * dass der Held über Plattformen schwebte oder an der falschen Stelle
  * durchfiel.
  */
 
@@ -46,31 +46,31 @@ const TILE_SHEET = {
 const GRAVITY = 1400;
 const JUMP_SPEED = 620;
 const WALK_SPEED = 160;
-// Sicherheitsabstand zum Buehnenrand, GEMESSEN an den tatsaechlich
-// sichtbaren Pixeln des Sprites (nicht an der vollen, groesstenteils
-// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, fuer die
-// genaue Messung. Ohne diesen Puffer wuerde die Figur am aeussersten
-// Rand knapp ueber den Bildschirmrand hinausragen.
+// Sicherheitsabstand zum Bühnenrand, GEMESSEN an den tatsächlich
+// sichtbaren Pixeln des Sprites (nicht an der vollen, größtenteils
+// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, für die
+// genaue Messung. Ohne diesen Puffer würde die Figur am äußersten
+// Rand knapp über den Bildschirmrand hinausragen.
 const EDGE_MARGIN = 20;
-// Toleranz um den Fusspunkt beim Landetest, GEMESSEN an der
+// Toleranz um den Fußpunkt beim Landetest, GEMESSEN an der
 // sichtbaren Breite des Sprites (siehe Buch, Kapitel 6) - solange ein
-// sichtbarer Teil der Figur noch ueber der Plattform ist, gilt sie als
-// getragen. Mit einem einzelnen exakten Punkt (ohne Toleranz) fuehlt
-// sich das Herunterfallen an Kanten spuerbar zu frueh an, weil man
+// sichtbarer Teil der Figur noch über der Plattform ist, gilt sie als
+// getragen. Mit einem einzelnen exakten Punkt (ohne Toleranz) fühlt
+// sich das Herunterfallen an Kanten spürbar zu früh an, weil man
 // optisch noch auf der Plattform zu stehen scheint.
 const FOOT_MARGIN = 16;
 
 const FLOOR_Y = STAGE_H - 21;
 
 // Jede Plattform: { x, y, w } - y ist die Oberkante, an der der
-// Fusspunkt des Helden zum Stehen kommt.
-// Breiten bewusst als Vielfache von 41 (Kachelbreite) gewaehlt: render()
-// zeichnet Boden-Kacheln in 41px-Schritten (siehe unten). Waere die
-// Breite KEIN sauberes Vielfaches, wuerde die letzte gezeichnete
-// Kachel ueber das Ende der Plattform hinausragen - man saehe dann
+// Fußpunkt des Helden zum Stehen kommt.
+// Breiten bewusst als Vielfache von 41 (Kachelbreite) gewählt: render()
+// zeichnet Boden-Kacheln in 41px-Schritten (siehe unten). Wäre die
+// Breite KEIN sauberes Vielfaches, würde die letzte gezeichnete
+// Kachel über das Ende der Plattform hinausragen - man sähe dann
 // Boden, auf dem man laut findLanding() bereits gar nicht mehr stehen
-// duerfte (genau das ist beim Testen aufgefallen: die Figur "schwebte"
-// sichtbar noch ueber einer Kachel, fiel dort aber schon herunter).
+// dürfte (genau das ist beim Testen aufgefallen: die Figur "schwebte"
+// sichtbar noch über einer Kachel, fiel dort aber schon herunter).
 const platforms = [
   { x: 0, y: FLOOR_Y, w: 9 * 41 },
   { x: 640, y: FLOOR_Y, w: 9 * 41 },
@@ -162,10 +162,10 @@ function moveHorizontal(dt) {
   hero.x = Math.max(EDGE_MARGIN, Math.min(STAGE_W - EDGE_MARGIN, hero.x));
 }
 
-// entspricht Hero.findLanding(): horizontal ueber der Plattform, UND
-// eben noch drueber, UND jetzt (fast) drauf. hero.x/hero.y sind der
-// Fusspunkt - deshalb reicht ein direkter Vergleich, ganz ohne
-// Sprite-Massumrechnung.
+// entspricht Hero.findLanding(): horizontal über der Plattform, UND
+// eben noch drüber, UND jetzt (fast) drauf. hero.x/hero.y sind der
+// Fußpunkt - deshalb reicht ein direkter Vergleich, ganz ohne
+// Sprite-Maßumrechnung.
 function findLanding(nextY) {
   let best = null;
   platforms.forEach((p) => {

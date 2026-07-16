@@ -1,17 +1,17 @@
 /**
  * Kapitel 6 - Kollision & Plattformen
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) der AABB-Test, (2) Landung auf einer Plattform
  * (entspricht findLanding()), (3) mehrere Plattformen mit dem
- * Unterschied zwischen sichtbarem Sprite und tatsaechlicher
+ * Unterschied zwischen sichtbarem Sprite und tatsächlicher
  * Trefferbox.
  */
 
 const GRAVITY = 1400, JUMP_SPEED = 620;
 
 // entspricht overlaps()/rectOf() in render.js - die Grundfunktionen
-// fuer jede Rechteck-Kollision im ganzen Spiel
+// für jede Rechteck-Kollision im ganzen Spiel
 function rectOf(x, y, w, h) { return { left: x, right: x + w, top: y, bottom: y + h }; }
 function overlaps(a, b) { return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
 
@@ -73,7 +73,7 @@ function overlaps(a, b) { return a.left < b.right && a.right > b.left && a.top <
     x = e.clientX - r.left;
   });
 
-  // exakt dieselbe Pruefung wie in Hero.findLanding()/Enemy.findLanding()
+  // exakt dieselbe Prüfung wie in Hero.findLanding()/Enemy.findLanding()
   function findLanding(nextY) {
     if (x > platform.x && x < platform.x + platform.w && y <= platform.y + 2 && nextY >= platform.y) {
       return { y: platform.y };
@@ -179,12 +179,12 @@ function overlaps(a, b) { return a.left < b.right && a.right > b.left && a.top <
     ctx.fillStyle = "#663300";
     platforms.forEach((p) => ctx.fillRect(p.x, p.y, p.w, 10));
 
-    // Sprite: gross und leicht versetzt gezeichnet ...
+    // Sprite: groß und leicht versetzt gezeichnet ...
     ctx.fillStyle = "#5fe0c9";
     ctx.beginPath();
     ctx.arc(x, y - 6, 22, 0, Math.PI * 2);
     ctx.fill();
-    // ... Trefferbox: klein, das ist die tatsaechlich fuer Kollision genutzte Groesse
+    // ... Trefferbox: klein, das ist die tatsächlich für Kollision genutzte Größe
     ctx.strokeStyle = "#ffb84d";
     ctx.lineWidth = 1.5;
     ctx.setLineDash([4, 3]);

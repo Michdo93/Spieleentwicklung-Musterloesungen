@@ -1,11 +1,11 @@
 /**
  * Ninja Fight - Kapitel 1: Canvas-Grundlagen & Game-Loop
- * Musterloesung
+ * Musterlösung
  *
  * Noch kein Sprung, keine Bewegung, keine Eingabe - nur das Fundament,
  * auf dem alle folgenden Kapitel aufbauen: das <canvas>, sein
  * Zeichenkontext und ein zeitbasierter Game-Loop, der den Helden als
- * Standbild auf die Buehne zeichnet.
+ * Standbild auf die Bühne zeichnet.
  */
 
 const canvas = document.getElementById("stage");
@@ -14,7 +14,7 @@ const STAGE_W = canvas.width;
 const STAGE_H = canvas.height;
 
 // Das Spriteheet des Helden. Im fertigen Spiel liegt diese Zuordnung in
-// spritedata.js - hier reicht uns vorerst die reine Bildgroesse:
+// spritedata.js - hier reicht uns vorerst die reine Bildgröße:
 // 8 Spalten x 8 Zeilen, jede Zelle 160x150 Pixel, Zeile 0 = "Idle".
 const heroSheet = new Image();
 heroSheet.src = "assets/img/sprites/hero.png";
@@ -31,7 +31,7 @@ let lastTime = 0;
 
 function update(dt) {
   // in Kapitel 1 bewegt sich noch nichts - update() existiert schon,
-  // damit die Struktur ab jetzt fuer jedes weitere Kapitel gleich bleibt
+  // damit die Struktur ab jetzt für jedes weitere Kapitel gleich bleibt
 }
 
 function render() {

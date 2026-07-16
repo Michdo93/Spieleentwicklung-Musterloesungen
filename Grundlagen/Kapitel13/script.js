@@ -1,12 +1,12 @@
 /**
  * Kapitel 13 - Gegner-KI: Bewegung
- * Musterloesung
+ * Musterlösung
  *
- * Drei Beispiele: (1) naive Patrouille (faellt von der Plattform),
+ * Drei Beispiele: (1) naive Patrouille (fällt von der Plattform),
  * (2) mit Kantenerkennung (hasSupportAhead), (3) plus gelegentliches
- * Springen. Das Original-Ninja-Fight hatte fuer Gegner ueberhaupt
+ * Springen. Das Original-Ninja-Fight hatte für Gegner überhaupt
  * keine KI - diese Patrouillenlogik war eine Nacharbeit, die erst
- * beim tatsaechlichen Testen noetig wurde (Gegner fielen zu oft von
+ * beim tatsächlichen Testen nötig wurde (Gegner fielen zu oft von
  * Plattformen).
  */
 
@@ -27,16 +27,16 @@ function drawEnemy(ctx, x, y, facing) {
 const GRAVITY = 1400, ENEMY_SPEED = 90;
 
 /* ===================================================================
-   Beispiel 1: naive Patrouille - laeuft blind zwischen zwei X-Werten
-   hin und her, ohne zu pruefen, ob unter ihr noch Boden ist.
+   Beispiel 1: naive Patrouille - läuft blind zwischen zwei X-Werten
+   hin und her, ohne zu prüfen, ob unter ihr noch Boden ist.
    =================================================================== */
 (function example1_naive() {
   const canvas = document.getElementById("stage1");
   const ctx = canvas.getContext("2d");
   const W = canvas.width, H = canvas.height;
-  const platform = { x: 60, y: 180, w: 140 }; // kuerzer als der Patrouillenbereich!
+  const platform = { x: 60, y: 180, w: 140 }; // kürzer als der Patrouillenbereich!
   let x = 90, y = platform.y, vy = 0, facing = 1, onGround = true;
-  const patrolLeft = 60, patrolRight = 260; // reicht ueber die Plattform hinaus
+  const patrolLeft = 60, patrolRight = 260; // reicht über die Plattform hinaus
 
   let lastTime = 0;
   function loop(now) {
@@ -118,7 +118,7 @@ const GRAVITY = 1400, ENEMY_SPEED = 90;
 })();
 
 /* ===================================================================
-   Beispiel 3: gelegentliches Springen - fuer ein lebendigeres
+   Beispiel 3: gelegentliches Springen - für ein lebendigeres
    Verhalten, ohne die Kantenerkennung zu verlieren.
    =================================================================== */
 (function example3_jump() {

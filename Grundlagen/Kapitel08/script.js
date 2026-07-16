@@ -1,11 +1,11 @@
 /**
  * Kapitel 8 - Hindernisse & Gefahren
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) Wasser ist begehbar (keine Gefahr), (2) Feuer -
- * Schaden ueber Zeit mit Abklingzeit, (3) Stacheln - hoeherer Schaden,
+ * Schaden über Zeit mit Abklingzeit, (3) Stacheln - höherer Schaden,
  * dieselbe Technik. checkHazards() existiert im fertigen Spiel fast
- * wortgleich fuer Hero UND Enemy, weil beide denselben Gefahren
+ * wortgleich für Hero UND Enemy, weil beide denselben Gefahren
  * ausgesetzt sind.
  */
 
@@ -27,7 +27,7 @@ function drawTile(ctx, name, x, y) {
   ctx.drawImage(tileSheet, sx, sy, def.w, def.h, x, y, def.w, def.h);
 }
 function drawFlame(ctx, x, y, w, h) {
-  // y ist die BASIS (Bodenkontakt) - die Flamme waechst nach OBEN
+  // y ist die BASIS (Bodenkontakt) - die Flamme wächst nach OBEN
   const flick = 0.7 + Math.sin(performance.now() / 90 + x) * 0.3;
   ctx.fillStyle = `rgba(255,${100 + flick * 80},60,0.95)`;
   ctx.beginPath();
@@ -38,7 +38,7 @@ function drawFlame(ctx, x, y, w, h) {
 }
 
 /* ===================================================================
-   Beispiel 1: Wasser ist begehbar - keine Gefahr. WaterGround gehoert
+   Beispiel 1: Wasser ist begehbar - keine Gefahr. WaterGround gehört
    zu den PLATFORM_TYPES, nicht zu den Gefahren.
    =================================================================== */
 (function example1_water() {
@@ -80,7 +80,7 @@ function drawFlame(ctx, x, y, w, h) {
 })();
 
 /* ===================================================================
-   Beispiel 2: Feuer - Schaden ueber Zeit, mit Abklingzeit (invulnTimer)
+   Beispiel 2: Feuer - Schaden über Zeit, mit Abklingzeit (invulnTimer)
    =================================================================== */
 (function example2_flame() {
   const canvas = document.getElementById("stage2");
@@ -131,7 +131,7 @@ function drawFlame(ctx, x, y, w, h) {
 })();
 
 /* ===================================================================
-   Beispiel 3: Stacheln - hoeherer Einzelschaden, dieselbe Abklingzeit
+   Beispiel 3: Stacheln - höherer Einzelschaden, dieselbe Abklingzeit
    =================================================================== */
 (function example3_knives() {
   const canvas = document.getElementById("stage3");

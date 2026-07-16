@@ -1,12 +1,12 @@
 /**
  * Ninja Fight - Kapitel 3: Sprite-Animation
- * Musterloesung
+ * Musterlösung
  *
  * Baut auf Kapitel 2 auf. Neu: drawHero() spielt jetzt die
  * Idle-Animation endlos ab, statt nur den ersten Frame zu zeichnen.
  * Walk und Jump sind in CHARACTER_STATES bereits vorbereitet, auch
- * wenn wir sie erst ab Kapitel 4/5 tatsaechlich ansteuern - so muessen
- * wir dann nur noch die Tasten-Events ergaenzen, statt die
+ * wenn wir sie erst ab Kapitel 4/5 tatsächlich ansteuern - so müssen
+ * wir dann nur noch die Tasten-Events ergänzen, statt die
  * Animationslogik selbst nochmal anzufassen.
  */
 
@@ -39,8 +39,8 @@ const TILE_SHEET = {
 
 const FLOOR_Y = STAGE_H - 21;
 
-// bereits alle drei Zustaende vorbereitet - Walk/Jump werden erst ab
-// Kapitel 4/5 tatsaechlich ausgeloest
+// bereits alle drei Zustände vorbereitet - Walk/Jump werden erst ab
+// Kapitel 4/5 tatsächlich ausgelöst
 const CHARACTER_STATES = {
   Idle: { row: 0, count: 8, loop: true },
   Walk: { row: 1, count: 8, loop: true },
@@ -64,8 +64,8 @@ function drawTile(name, x, y) {
 }
 
 // Zeichnet den Helden in seinem aktuellen Animationszustand, bei
-// (x, y) = Fusspunkt. Der Frame-Index laeuft per Modulo endlos durch
-// (fuer Idle passend, da Idle keinen definierten Anfang/Ende hat).
+// (x, y) = Fußpunkt. Der Frame-Index läuft per Modulo endlos durch
+// (für Idle passend, da Idle keinen definierten Anfang/Ende hat).
 function drawHero(x, y, facing, state, animTime) {
   const def = CHARACTER_STATES[state];
   const rawFrame = Math.floor(animTime * FPS);

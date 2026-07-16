@@ -1,13 +1,13 @@
 /**
- * Ninja Fight - Kapitel 7: Level-Daten & Tile-Rendering
- * Musterloesung
+ * Ninja Fight - Kapitel 11: Fernkampf & Projektile
+ * Musterlösung
  *
  * Baut auf Kapitel 6 auf. Statt weniger Testplattformen bauen wir jetzt
  * die ersten beiden ECHTEN Level aus Ninja Fight nach - Koordinaten 1:1
- * aus levels.js uebernommen. buildLevel() sortiert die Rohdaten nach
+ * aus levels.js übernommen. buildLevel() sortiert die Rohdaten nach
  * Bedeutung; in diesem Kapitel interessieren uns nur Plattformen und
  * Leitern (rein optisch) - Feuer, Messer und Wasser-Kacheln ignorieren
- * wir bewusst noch (kommt in Kapitel 8/9 dazu), man kann also ueberall
+ * wir bewusst noch (kommt in Kapitel 8/9 dazu), man kann also überall
  * problemlos stehen.
  */
 
@@ -31,7 +31,7 @@ const DRAW_W = CELL_W * SPRITE_SCALE;
 const DRAW_H = CELL_H * SPRITE_SCALE;
 
 // entspricht TILE_SHEET in spritedata.js - je Kacheltyp seine eigene,
-// tatsaechliche Groesse (nicht alle Kacheln sind gleich gross!)
+// tatsächliche Größe (nicht alle Kacheln sind gleich groß!)
 const TILE_SHEET = {
   cellW: 42, cellH: 66,
   tiles: {
@@ -49,22 +49,22 @@ const TILE_SHEET = {
 const GRAVITY = 1400;
 const JUMP_SPEED = 620;
 const WALK_SPEED = 160;
-// Sicherheitsabstand zum Buehnenrand, GEMESSEN an den tatsaechlich
-// sichtbaren Pixeln des Sprites (nicht an der vollen, groesstenteils
-// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, fuer die
-// genaue Messung. Ohne diesen Puffer wuerde die Figur am aeussersten
-// Rand knapp ueber den Bildschirmrand hinausragen.
+// Sicherheitsabstand zum Bühnenrand, GEMESSEN an den tatsächlich
+// sichtbaren Pixeln des Sprites (nicht an der vollen, größtenteils
+// transparenten 160x150-Zelle!) - siehe Buch, Kapitel 5, für die
+// genaue Messung. Ohne diesen Puffer würde die Figur am äußersten
+// Rand knapp über den Bildschirmrand hinausragen.
 const EDGE_MARGIN = 20;
-// Toleranz um den Fusspunkt beim Landetest, GEMESSEN an der
+// Toleranz um den Fußpunkt beim Landetest, GEMESSEN an der
 // sichtbaren Breite des Sprites (siehe Buch, Kapitel 6) - solange ein
-// sichtbarer Teil der Figur noch ueber der Plattform ist, gilt sie als
-// getragen. Mit einem einzelnen exakten Punkt (ohne Toleranz) fuehlt
-// sich das Herunterfallen an Kanten spuerbar zu frueh an, weil man
+// sichtbarer Teil der Figur noch über der Plattform ist, gilt sie als
+// getragen. Mit einem einzelnen exakten Punkt (ohne Toleranz) fühlt
+// sich das Herunterfallen an Kanten spürbar zu früh an, weil man
 // optisch noch auf der Plattform zu stehen scheint.
 const FOOT_MARGIN = 16;
 const CLIMB_SPEED = 110;
 
-// Original-Level-Layouts, 1:1 aus levels.js uebernommen. "Bottom" und
+// Original-Level-Layouts, 1:1 aus levels.js übernommen. "Bottom" und
 // "WaterTop" sind rein dekorativ (keine eigene Kollision), "Flame" und
 // "Knives" sind Gefahren - beides ignorieren wir in diesem Kapitel noch.
 const LEVELS = {
@@ -188,23 +188,23 @@ const LEVELS = {
 
 const PLATFORM_TYPES = new Set(["Floor", "Bridge", "Small", "WaterGround"]);
 // Schaden und Abklingzeit je Gefahrentyp - entspricht checkHazards() in
-// Hero.as/entities.js (dort fast wortgleich auch fuer Enemy).
+// Hero.as/entities.js (dort fast wortgleich auch für Enemy).
 const HAZARD_TYPES = {
   Flame: { damage: 1, cooldown: 0.6 },
   Knives: { damage: 5, cooldown: 0.6 },
 };
 
 // entspricht buildLevel() in render.js: sortiert die flache Rohdatenliste
-// einmal nach Bedeutung. Ladder wird hier nur fuers Zeichnen erfasst -
+// einmal nach Bedeutung. Ladder wird hier nur fürs Zeichnen erfasst -
 // die eigentliche Kletterlogik kommt erst in Kapitel 9 dazu.
 const LADDER_W = 25;
 const LADDER_TILE_H = 24;
 
 // entspricht mergeLadderColumns() in render.js: fasst einzelne
-// Leiter-Kacheln in derselben Spalte zu EINER zusammenhaengenden
-// Kletterzone zusammen. "bottom" reicht genau eine Kachelhoehe ueber
-// die letzte Sprosse hinaus - siehe Buch fuer die echte Bugfix-Story
-// dazu (vorher wurde hier faelschlich eine Kachelhoehe zu viel
+// Leiter-Kacheln in derselben Spalte zu EINER zusammenhängenden
+// Kletterzone zusammen. "bottom" reicht genau eine Kachelhöhe über
+// die letzte Sprosse hinaus - siehe Buch für die echte Bugfix-Story
+// dazu (vorher wurde hier fälschlich eine Kachelhöhe zu viel
 // addiert, wodurch Held und Gegner am Leiterende ins Leere fielen).
 function mergeLadderColumns(tiles) {
   const groups = [];
@@ -229,8 +229,8 @@ function buildLevel(levelNum) {
     } else if (el.type === "Ladder") {
       ladderTiles.push({ x: el.x, y: el.y });
     } else if (HAZARD_TYPES[el.type]) {
-      // Flame.y ist die BASIS der Flamme (Bodenhoehe) - die Flamme
-      // waechst nach OBEN, nicht umgekehrt (siehe Buch: haeufiger
+      // Flame.y ist die BASIS der Flamme (Bodenhöhe) - die Flamme
+      // wächst nach OBEN, nicht umgekehrt (siehe Buch: häufiger
       // Bugfix-Hinweis in der echten Entwicklung von Ninja Fight).
       const size = TILE_SHEET.tiles[el.type];
       hazards.push({ type: el.type, x: el.x, y: el.y, w: size.w, h: size.h });
@@ -286,7 +286,7 @@ const hero = {
   maxLifeEnergy: 10,
   invulnTimer: 0,
   onLadder: false,
-  hasSword: true, // von Anfang an unbegrenzt verfuegbar (Kapitel 10)
+  hasSword: true, // von Anfang an unbegrenzt verfügbar (Kapitel 10)
   hasShuriken: true,
   shurikenCount: 100, // von Anfang an dabei (Kapitel 11)
   attackTimer: 0,
@@ -296,7 +296,7 @@ const hero = {
 // entspricht dem Enemy-Spawn in gamemanager.js: Level 1 = Blue, Level 2
 // = Green, hier vereinfacht auf je 3 Gegner ohne Bewegung/KI (kommt
 // erst in Kapitel 13/14). Positionen bewusst abseits der Flamme bei
-// x=433 im Hauptboden gewaehlt.
+// x=433 im Hauptboden gewählt.
 const ENEMY_SHEETS = {
   Blue: (() => { const i = new Image(); i.src = "assets/img/sprites/blue.png"; return i; })(),
   Green: (() => { const i = new Image(); i.src = "assets/img/sprites/green.png"; return i; })(),
@@ -336,7 +336,7 @@ function startAttack(type) {
 }
 
 // entspricht der Projectile-Klasse in entities.js: eigene Position,
-// eigene Geschwindigkeit, eigenes update() - unabhaengig vom Werfer.
+// eigene Geschwindigkeit, eigenes update() - unabhängig vom Werfer.
 class Projectile {
   constructor(x, y, dir, owner) {
     this.x = x; this.y = y; this.dir = dir; this.owner = owner;
@@ -459,7 +459,7 @@ function findLanding(nextY) {
   return best;
 }
 
-// entspricht checkHazards() in Hero.as/entities.js: prueft, ob der Held
+// entspricht checkHazards() in Hero.as/entities.js: prüft, ob der Held
 // gerade in einer Gefahrenzone steht, mit Abklingzeit gegen
 // Mehrfachschaden im selben Frame-Rhythmus.
 // entspricht overlaps()/rectOf() in render.js
@@ -473,7 +473,7 @@ function checkHazards(dt) {
       const footX = hero.x, footY = hero.y;
       let hit;
       if (hz.type === "Flame") {
-        // hz.y ist die Basis (Bodenkontakt) - die Flamme waechst nach oben
+        // hz.y ist die Basis (Bodenkontakt) - die Flamme wächst nach oben
         hit = footX > hz.x - 2 && footX < hz.x + hz.w && footY > hz.y - hz.h && footY <= hz.y + 4;
       } else {
         hit = footX > hz.x && footX < hz.x + hz.w && footY > hz.y && footY < hz.y + hz.h + 6;
@@ -487,8 +487,8 @@ function checkHazards(dt) {
   if (hero.invulnTimer > 0) hero.invulnTimer -= dt;
 }
 
-// entspricht hitNearbyEnemies() in Hero.update(): waehrend eines
-// laufenden Angriffs EINMAL pruefen, ob die Hitbox einen Gegner trifft.
+// entspricht hitNearbyEnemies() in Hero.update(): während eines
+// laufenden Angriffs EINMAL prüfen, ob die Hitbox einen Gegner trifft.
 function checkMeleeHit() {
   if (hero.attackTimer <= 0 || hero.attackHitDone) return;
   if (!["Hit", "Kick", "SwordHit"].includes(hero.state)) return;
@@ -529,8 +529,8 @@ function update(dt) {
   projectiles = projectiles.filter((p) => !p.dead);
 
   // Leiter-Erkennung: in der Zone UND nicht gleichzeitig links/rechts
-  // gedrueckt -> Klettermodus. Jeden Frame neu berechnet, kein
-  // Gedaechtnis ueber mehrere Frames noetig. Verlassen wird die Leiter
+  // gedrückt -> Klettermodus. Jeden Frame neu berechnet, kein
+  // Gedächtnis über mehrere Frames nötig. Verlassen wird die Leiter
   // durch seitliche Bewegung, dann greift sofort wieder die normale
   // Physik.
   const ladderZone = level.ladders.find(
@@ -568,7 +568,7 @@ function update(dt) {
       hero.y = nextY;
       hero.onGround = false;
       if (hero.y > STAGE_H + 60) {
-        // aus dem Level gefallen - zurueck an den Start (kein "Sterben" bislang)
+        // aus dem Level gefallen - zurück an den Start (kein "Sterben" bislang)
         hero.x = 60; hero.y = 414.1; hero.vy = 0;
       }
     }

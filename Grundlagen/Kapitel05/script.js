@@ -1,9 +1,9 @@
 /**
  * Kapitel 5 - Bewegung & Schwerkraft
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) Position vs. Geschwindigkeit, (2) Schwerkraft,
- * (3) der vollstaendige Sprung - exakt der Weg, den auch
+ * (3) der vollständige Sprung - exakt der Weg, den auch
  * Hero.update() in Ninja Fight geht.
  */
 
@@ -13,9 +13,9 @@ const JUMP_SPEED = 620; // px/s - Anfangsgeschwindigkeit nach oben
 
 /* ===================================================================
    Beispiel 1: Position vs. Geschwindigkeit
-   Direkt die Position zu veraendern (wie in Kapitel 4) funktioniert
-   fuer gleichfoermige Bewegung - aber Beschleunigung braucht einen
-   eigenen Geschwindigkeitswert, der sich selbst veraendert.
+   Direkt die Position zu verändern (wie in Kapitel 4) funktioniert
+   für gleichförmige Bewegung - aber Beschleunigung braucht einen
+   eigenen Geschwindigkeitswert, der sich selbst verändert.
    =================================================================== */
 (function example1_velocity() {
   const canvas = document.getElementById("stage1");
@@ -31,7 +31,7 @@ const JUMP_SPEED = 620; // px/s - Anfangsgeschwindigkeit nach oben
     lastTime = now;
 
     xConst += 90 * dt; // konstante Geschwindigkeit
-    vxAccel += 60 * dt; // die Geschwindigkeit selbst waechst
+    vxAccel += 60 * dt; // die Geschwindigkeit selbst wächst
     xAccel += vxAccel * dt;
     if (xConst > W - 30) xConst = 40;
     if (xAccel > W - 30) { xAccel = 40; vxAccel = 0; }
@@ -53,7 +53,7 @@ const JUMP_SPEED = 620; // px/s - Anfangsgeschwindigkeit nach oben
 })();
 
 /* ===================================================================
-   Beispiel 2: Schwerkraft - die Geschwindigkeit waechst jeden Frame
+   Beispiel 2: Schwerkraft - die Geschwindigkeit wächst jeden Frame
    =================================================================== */
 (function example2_gravity() {
   const canvas = document.getElementById("stage2");
@@ -91,9 +91,9 @@ const JUMP_SPEED = 620; // px/s - Anfangsgeschwindigkeit nach oben
 })();
 
 /* ===================================================================
-   Beispiel 3: der vollstaendige Sprung - exakt Hero.update() aus
+   Beispiel 3: der vollständige Sprung - exakt Hero.update() aus
    Ninja Fight: Space setzt vy auf einen negativen Anfangswert (nach
-   oben), danach uebernimmt dieselbe Schwerkraft wie in Beispiel 2.
+   oben), danach übernimmt dieselbe Schwerkraft wie in Beispiel 2.
    =================================================================== */
 (function example3_jump() {
   const canvas = document.getElementById("stage3");

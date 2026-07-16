@@ -1,16 +1,16 @@
 /**
  * Ninja Fight - Kapitel 2: Sprites zeichnen
- * Musterloesung (korrigiert)
+ * Musterlösung (korrigiert)
  *
- * WICHTIGE KORREKTUR gegenueber der ersten Fassung dieses Kapitels:
- * Der Held wurde bislang in voller Zellgroesse (160x150) gezeichnet und
+ * WICHTIGE KORREKTUR gegenüber der ersten Fassung dieses Kapitels:
+ * Der Held wurde bislang in voller Zellgröße (160x150) gezeichnet und
  * beim Spiegeln um die Mitte des AUSGESCHNITTENEN Bereichs gedreht
  * (-CELL_W/2). Das ist falsch - die Figur selbst sitzt nicht zentriert
- * in ihrer Zelle (Platz fuer ausholende Frames wie Schwerthiebe). Die
- * Spiegelachse muss der tatsaechliche "Fusspunkt" der Figur sein -
- * exakt CHARACTER_SHEET.anchorX/anchorY im fertigen Spiel. Ausserdem
- * wird die Figur mit SPRITE_SCALE (0.45) auf ihre echte Anzeigegroesse
- * heruntergerechnet, statt die volle Zellgroesse zu verwenden.
+ * in ihrer Zelle (Platz für ausholende Frames wie Schwerthiebe). Die
+ * Spiegelachse muss der tatsächliche "Fußpunkt" der Figur sein -
+ * exakt CHARACTER_SHEET.anchorX/anchorY im fertigen Spiel. Außerdem
+ * wird die Figur mit SPRITE_SCALE (0.45) auf ihre echte Anzeigegröße
+ * heruntergerechnet, statt die volle Zellgröße zu verwenden.
  */
 
 const canvas = document.getElementById("stage");
@@ -28,8 +28,8 @@ const CELL_W = 160;
 const CELL_H = 150;
 
 // entspricht CHARACTER_SHEET.anchorX/anchorY + SPRITE_SCALE in render.js:
-// der "Fusspunkt" der Figur innerhalb ihrer Zelle, und die
-// Anzeige-Skalierung gegenueber der nativen Sprite-Aufloesung.
+// der "Fußpunkt" der Figur innerhalb ihrer Zelle, und die
+// Anzeige-Skalierung gegenüber der nativen Sprite-Auflösung.
 const ANCHOR_X = 30;
 const ANCHOR_Y = 145;
 const SPRITE_SCALE = 0.45;
@@ -46,7 +46,7 @@ const TILE_SHEET = {
 
 const FLOOR_Y = STAGE_H - 21;
 
-// hero.x/hero.y sind ab jetzt der FUSSPUNKT der Figur auf der Buehne -
+// hero.x/hero.y sind ab jetzt der FUSSPUNKT der Figur auf der Bühne -
 // nicht mehr die linke obere Ecke der Sprite-Zelle. Das entspricht
 // genau der Bedeutung von Hero.x/Hero.y im fertigen Spiel.
 const hero = {
@@ -62,9 +62,9 @@ function drawTile(name, x, y) {
   ctx.drawImage(tileSheet, sx, sy, def.w, def.h, x, y, def.w, def.h);
 }
 
-// Zeichnet den ersten Idle-Frame des Helden bei (x, y) = Fusspunkt.
-// Die Spiegelachse (translate VOR scale) ist derselbe Fusspunkt, den
-// wir auch im unveraenderten Fall verwenden - dadurch bleibt die Figur
+// Zeichnet den ersten Idle-Frame des Helden bei (x, y) = Fußpunkt.
+// Die Spiegelachse (translate VOR scale) ist derselbe Fußpunkt, den
+// wir auch im unveränderten Fall verwenden - dadurch bleibt die Figur
 // beim Spiegeln exakt an derselben Stelle stehen, statt seitlich zu
 // "springen".
 function drawHero(x, y, facing) {
@@ -98,7 +98,7 @@ function render() {
 
   // Zwei Helden nebeneinander: einmal normal, einmal gespiegelt - so
   // sieht man beide Blickrichtungen mit demselben Bildmaterial, jetzt
-  // in der korrekten Groesse und ohne Versatz beim Spiegeln.
+  // in der korrekten Größe und ohne Versatz beim Spiegeln.
   drawHero(hero.x - 90, hero.y, 1);
   drawHero(hero.x + 90, hero.y, -1);
 }

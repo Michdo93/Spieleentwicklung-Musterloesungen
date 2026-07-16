@@ -215,7 +215,7 @@ class Enemy {
     this.shurikenCount = this.def.canShuriken ? 99 : 0;
     this.dead = false;
     this.width = 24; this.height = 48;
-    // deutlich groesserer Streifraum, damit die Gegner sich wirklich ueber
+    // deutlich größerer Streifraum, damit die Gegner sich wirklich über
     // die Plattform bewegen statt nur auf der Stelle zu treten
     this.patrolLeft = Math.max(20, x - 220);
     this.patrolRight = Math.min(STAGE_W - 20, x + 220);
@@ -240,7 +240,7 @@ class Enemy {
 
     // entspricht der (im Original nie implementierten) Feind-KI: Patrouille,
     // gelegentliches Klettern und Springen — deutlich lebendiger als reines
-    // Stehenbleiben (Fix fuer KnownBugs #12)
+    // Stehenbleiben (Fix für KnownBugs #12)
     const ladder = this.findNearbyLadder();
     if (this.attackTimer <= 0) {
       if (this.onLadder) {

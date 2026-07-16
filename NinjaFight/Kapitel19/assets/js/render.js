@@ -2,8 +2,8 @@
  * Ninja Fight — Grundlagen: Konstanten, Level-Aufbau, Kollisions-Helfer,
  * Sound, und das Zeichnen von Figuren/Kacheln über echte Sprite-Sheets.
  * Entspricht in Summe mehreren kleinen AS3-Klassen (Floor/Bridge/Ladder/
- * WaterGround/Flame/Knives fuer den Level-Aufbau, SoundController.as fuer
- * den Sound) plus der Zeichenlogik, die im Original ueber Bibliotheks-
+ * WaterGround/Flame/Knives für den Level-Aufbau, SoundController.as für
+ * den Sound) plus der Zeichenlogik, die im Original über Bibliotheks-
  * symbole lief.
  */
 
@@ -19,7 +19,7 @@ const CLIMB_SPEED = 110;       // px/s
 const TILE_W = 40, TILE_H = 20;
 const LADDER_W = 25;
 const HAZARD_SIZE = 18;
-const GROUND_LEVEL_Y = 414;    // ungefaehre Bodenhoehe, aus den Level-Daten
+const GROUND_LEVEL_Y = 414;    // ungefähre Bodenhöhe, aus den Level-Daten
 
 const PLATFORM_TYPES = new Set(["Floor", "Bridge", "Small", "WaterGround"]);
 const SKIP_TYPES = new Set(["Bottom", "WaterTop"]); // rein dekorativ, keine eigene Kollision
@@ -27,8 +27,8 @@ const SKIP_TYPES = new Set(["Bottom", "WaterTop"]); // rein dekorativ, keine eig
 /* ==================================================================== */
 /* Level aufbauen — entspricht Floor/Bridge/Ladder/.../registerLevelElement() */
 /* Die x/y-Koordinaten stammen 1:1 aus den Original-FLA-Leveldaten        */
-/* (siehe assets/js/levels.js), Breite/Hoehe pro Kacheltyp entsprechen     */
-/* jetzt den tatsaechlichen Sprite-Massen (siehe spritedata.js).          */
+/* (siehe assets/js/levels.js), Breite/Höhe pro Kacheltyp entsprechen     */
+/* jetzt den tatsächlichen Sprite-Maßen (siehe spritedata.js).          */
 /* ==================================================================== */
 function buildLevel(levelNum) {
   const raw = LEVELS[levelNum] || generateLevel(levelNum);
@@ -118,7 +118,7 @@ class SoundController {
 /* Frames (siehe spritedata.js) statt einer prozedural gezeichneten      */
 /* Strichfigur.                                                          */
 /* ==================================================================== */
-const SPRITE_SCALE = 0.45; // Anzeige-Skalierung ggue. der nativen SWF-Aufloesung
+const SPRITE_SCALE = 0.45; // Anzeige-Skalierung ggü. der nativen SWF-Auflösung
 
 const characterImages = {};
 ["hero", "blue", "green", "red", "white"].forEach(name => {
@@ -134,12 +134,12 @@ function imageForType(type) {
   return characterImages[(type || "Hero").toLowerCase()] || characterImages.hero;
 }
 
-// entspricht doAction()/gotoAndPlay(label) im Original: waehlt anhand des
+// entspricht doAction()/gotoAndPlay(label) im Original: wählt anhand des
 // Animationszustands und der verstrichenen Zeit den passenden Frame aus
 // der jeweiligen Zeile des Sprite-Sheets.
 // "Climb" existiert im Original NICHT als eigene Animation (das Klettern
 // war laut KnownBugs nie fertig implementiert) — hier ersatzweise die
-// Jump-Frames in Dauerschleife, das liegt optisch am naechsten an einer
+// Jump-Frames in Dauerschleife, das liegt optisch am nächsten an einer
 // Kletterbewegung (siehe README).
 function drawNinja(ctx, x, y, facing, type, state, t, hasSword) {
   const img = imageForType(type);

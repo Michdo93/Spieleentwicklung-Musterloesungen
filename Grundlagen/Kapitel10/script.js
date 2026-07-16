@@ -1,6 +1,6 @@
 /**
  * Kapitel 10 - Nahkampf & Hitboxen
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) Trefferzone vor der Figur, (2) attackHitDone
  * verhindert Mehrfachtreffer, (3) unterschiedlicher Schaden/Reichweite
@@ -35,7 +35,7 @@ function overlaps(a, b) { return a.left < b.right && a.right > b.left && a.top <
 function rectOf(x, y, w, h) { return { left: x, right: x + w, top: y, bottom: y + h }; }
 
 /* ===================================================================
-   Beispiel 1: Trefferzone vor der Figur, abhaengig von der Blickrichtung
+   Beispiel 1: Trefferzone vor der Figur, abhängig von der Blickrichtung
    =================================================================== */
 (function example1_hitbox() {
   const canvas = document.getElementById("stage1");
@@ -68,8 +68,8 @@ function rectOf(x, y, w, h) { return { left: x, right: x + w, top: y, bottom: y 
 
 /* ===================================================================
    Beispiel 2: attackHitDone - genau ein Treffer pro Angriff. Ohne
-   diese Sperre wuerde jeder einzelne Frame, in dem die Zone
-   ueberlappt, erneut Schaden anrichten.
+   diese Sperre würde jeder einzelne Frame, in dem die Zone
+   überlappt, erneut Schaden anrichten.
    =================================================================== */
 (function example2_oneHit() {
   const canvas = document.getElementById("stage2");
@@ -111,7 +111,7 @@ function rectOf(x, y, w, h) { return { left: x, right: x + w, top: y, bottom: y 
     ctx.fillStyle = "#5fe0c9";
     ctx.fillRect(20, 125, Math.min(300, hitsWithGuard * 6), 16);
     ctx.fillStyle = attacking ? "#ffb84d" : "#93a4b3";
-    ctx.fillText(attacking ? "Angriff laeuft ..." : "Bereit - auf 'Angreifen' klicken", 20, 170);
+    ctx.fillText(attacking ? "Angriff läuft ..." : "Bereit - auf 'Angreifen' klicken", 20, 170);
 
     requestAnimationFrame(loop);
   }

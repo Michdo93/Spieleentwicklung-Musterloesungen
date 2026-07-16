@@ -1,8 +1,8 @@
 /**
  * Kapitel 16 - HUD & Spielstatus
- * Musterloesung
+ * Musterlösung
  *
- * Drei Beispiele: (1) die richtige Balkenposition ueber dem Fusspunkt
+ * Drei Beispiele: (1) die richtige Balkenposition über dem Fußpunkt
  * (echte Lektion aus der Praxis), (2) HUD-Text als DOM-Overlay,
  * (3) wann aktualisiert sich das HUD - jeden Frame statt nur bei
  * Ereignissen.
@@ -44,8 +44,8 @@ function drawHealthBar(ctx, x, y, hp, maxHp, align = "center") {
 }
 
 /* ===================================================================
-   Beispiel 1: die richtige Balkenposition. Die Sprite-Hoehe ist groesser
-   als man vermuten wuerde - ein zu kleiner Abstand legt den Balken
+   Beispiel 1: die richtige Balkenposition. Die Sprite-Höhe ist größer
+   als man vermuten würde - ein zu kleiner Abstand legt den Balken
    mitten in den Kopf.
    =================================================================== */
 (function example1_position() {

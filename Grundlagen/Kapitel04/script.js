@@ -1,9 +1,9 @@
 /**
  * Kapitel 4 - Tastatur- & Maus-Eingabe
- * Musterloesung
+ * Musterlösung
  *
  * Vier Beispiele: (1) rohe Events beobachten, (2) das Key-State-Objekt
- * fuer fluessige Bewegung, (3) Maus-Klick-Trefftest, (4) beides
+ * für flüssige Bewegung, (3) Maus-Klick-Trefftest, (4) beides
  * kombiniert - genau der Weg, den auch GameManager.keys in Ninja
  * Fight gegangen ist.
  */
@@ -36,7 +36,7 @@
 
 /* ===================================================================
    Beispiel 2: Key-State-Objekt - exakt GameManager.keys in Ninja
-   Fight. keydown setzt ein Flag auf true, keyup wieder auf false; der
+   Fight. keydown setzt ein Flag auf trü, keyup wieder auf false; der
    Game-Loop fragt die Flags jeden Frame ab, statt auf Events zu
    reagieren.
    =================================================================== */
@@ -75,7 +75,7 @@
     const dt = Math.min((now - lastTime) / 1000, 0.05);
     lastTime = now;
 
-    // der Loop fragt nur die Flags ab - er weiss nichts von Events
+    // der Loop fragt nur die Flags ab - er weiß nichts von Events
     if (keys.left) x -= SPEED * dt;
     if (keys.right) x += SPEED * dt;
     if (keys.up) y -= SPEED * dt;
@@ -104,8 +104,8 @@
 
 /* ===================================================================
    Beispiel 3: Maus-Klicks erkennen - derselbe Rechteck-Trefftest wie
-   spaeter bei der Charakter-Auswahl per Klick oder bei jedem
-   Menue-Button.
+   später bei der Charakter-Auswahl per Klick oder bei jedem
+   Menü-Button.
    =================================================================== */
 (function example3_click() {
   const canvas = document.getElementById("stage3");

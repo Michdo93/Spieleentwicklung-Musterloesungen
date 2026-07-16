@@ -1,9 +1,9 @@
 /**
  * Kapitel 9 - Leitern & Klettern
- * Musterloesung
+ * Musterlösung
  *
- * Drei Beispiele: (1) der echte Bug (Leiterzone zu gross berechnet),
- * (2) die Korrektur, (3) vollstaendige Integration mit Laufen und
+ * Drei Beispiele: (1) der echte Bug (Leiterzone zu groß berechnet),
+ * (2) die Korrektur, (3) vollständige Integration mit Laufen und
  * Springen - genau der Weg, den auch mergeLadderColumns()/Hero.update()
  * in Ninja Fight gehen.
  */
@@ -42,9 +42,9 @@ function drawLadderScene(ctx, W, H, platformY, ladder, x, y, climbing) {
 }
 
 /* ===================================================================
-   Beispiel 1: die zu gross berechnete Leiter-Zone - der echte Bug.
-   In einer frueheren Version wurde beim Zusammenfassen der Leiter-
-   Sprossen zu einer Zone versehentlich ZWEIMAL eine Kachelhoehe
+   Beispiel 1: die zu groß berechnete Leiter-Zone - der echte Bug.
+   In einer früheren Version wurde beim Zusammenfassen der Leiter-
+   Sprossen zu einer Zone versehentlich ZWEIMAL eine Kachelhöhe
    addiert - die Zone reichte dadurch weit unter den Boden.
    =================================================================== */
 (function example1_bug() {
@@ -54,8 +54,8 @@ function drawLadderScene(ctx, W, H, platformY, ladder, x, y, climbing) {
 
   const platformY = 200;
   const rungTop = 80, rungBottom = 160;
-  // FALSCH: hier wird die Kachelhoehe (24) UND zusaetzlich noch einmal
-  // eine ganze Kachelhoehe drauf addiert
+  // FALSCH: hier wird die Kachelhöhe (24) UND zusätzlich noch einmal
+  // eine ganze Kachelhöhe drauf addiert
   const ladder = { left: 80, right: 105, top: rungTop, bottom: rungBottom + 24 + 24 };
 
   let x = 92, y = rungTop, vy = 0, onLadder = false;
@@ -76,7 +76,7 @@ function drawLadderScene(ctx, W, H, platformY, ladder, x, y, climbing) {
       vy = 0;
       if (keys["ArrowUp"]) y -= CLIMB_SPEED * dt;
       else if (keys["ArrowDown"]) y += CLIMB_SPEED * dt;
-      y = Math.max(ladder.top, Math.min(ladder.bottom, y)); // die FALSCHE (zu grosse) Zone
+      y = Math.max(ladder.top, Math.min(ladder.bottom, y)); // die FALSCHE (zu große) Zone
     } else {
       if (keys["ArrowLeft"]) x -= 100 * dt;
       if (keys["ArrowRight"]) x += 100 * dt;
@@ -98,7 +98,7 @@ function drawLadderScene(ctx, W, H, platformY, ladder, x, y, climbing) {
 
 /* ===================================================================
    Beispiel 2: die korrigierte Zone - bottom endet exakt auf
-   Plattformhoehe.
+   Plattformhöhe.
    =================================================================== */
 (function example2_fixed() {
   const canvas = document.getElementById("stage2");
@@ -108,7 +108,7 @@ function drawLadderScene(ctx, W, H, platformY, ladder, x, y, climbing) {
   const platformY = 200;
   const rungTop = 80, rungBottom = 160;
   // RICHTIG: die Zone endet genau eine Sprossen-Distanz unter der
-  // letzten Sprosse - exakt auf Plattformhoehe
+  // letzten Sprosse - exakt auf Plattformhöhe
   const ladder = { left: 80, right: 105, top: rungTop, bottom: rungBottom + 24 };
 
   let x = 92, y = rungTop, vy = 0, onLadder = false;
@@ -150,7 +150,7 @@ function drawLadderScene(ctx, W, H, platformY, ladder, x, y, climbing) {
 })();
 
 /* ===================================================================
-   Beispiel 3: vollstaendige Integration - Leiter verbindet zwei
+   Beispiel 3: vollständige Integration - Leiter verbindet zwei
    Plattformen, freies Laufen/Springen/Klettern kombiniert.
    =================================================================== */
 (function example3_full() {

@@ -1,6 +1,6 @@
 /**
  * Kapitel 11 - Fernkampf & Projektile
- * Musterloesung
+ * Musterlösung
  *
  * Drei Beispiele: (1) nur die Wurfanimation - der Original-Bug aus
  * Ninja Fight (KnownBugs #1: kein Shuriken existierte als eigenes
@@ -33,7 +33,7 @@ function drawShuriken(ctx, x, y, spin) {
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(spin);
-  // helle Kreisflaeche als Kontrast hinter dem dunklen Original-Sprite
+  // helle Kreisfläche als Kontrast hinter dem dunklen Original-Sprite
   ctx.fillStyle = "rgba(230,236,240,0.9)";
   ctx.beginPath();
   ctx.arc(0, 0, 11, 0, Math.PI * 2);
@@ -133,7 +133,7 @@ class Projectile {
 })();
 
 /* ===================================================================
-   Beispiel 3: Kollision + Werfer ausschliessen - entspricht
+   Beispiel 3: Kollision + Werfer ausschließen - entspricht
    Projectile.update() in Ninja Fight.
    =================================================================== */
 (function example3_collision() {

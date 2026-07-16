@@ -1,11 +1,11 @@
 /**
  * Kapitel 1 - Canvas-Grundlagen & Game-Loop
- * Musterloesung
+ * Musterlösung
  *
- * Drei Beispiele, die parallel und unabhaengig voneinander laufen -
+ * Drei Beispiele, die parallel und unabhängig voneinander laufen -
  * jedes auf seinem eigenen <canvas>. Zusammen zeigen sie den Weg vom
  * Standbild zum zeitbasierten Game-Loop, wie er in Ninja Fight
- * (GameManager.loop()) tatsaechlich verwendet wird.
+ * (GameManager.loop()) tatsächlich verwendet wird.
  */
 
 /* ===================================================================
@@ -26,13 +26,13 @@
   ctx.strokeRect(80, 70, 60, 60);
 
   // Das war's - es gibt keinen weiteren Aufruf, also bleibt das Bild
-  // fuer immer genau so stehen, wie es hier einmal gezeichnet wurde.
+  // für immer genau so stehen, wie es hier einmal gezeichnet wurde.
 })();
 
 /* ===================================================================
    Beispiel 2: Naiver Loop - ein fester Pixel-Schritt pro Frame.
-   Das Problem: Die Geschwindigkeit haengt von der Bildrate ab. Auf
-   einem 30-Hz-Bildschirm waere das Quadrat nur halb so schnell wie
+   Das Problem: Die Geschwindigkeit hängt von der Bildrate ab. Auf
+   einem 30-Hz-Bildschirm wäre das Quadrat nur halb so schnell wie
    bei 60 Hz.
    =================================================================== */
 (function example2_naive() {
@@ -40,12 +40,12 @@
   const ctx = canvas.getContext("2d");
   const W = canvas.width, H = canvas.height;
   const hint = document.getElementById("hint-naive");
-  hint.textContent = "square.x += 2 pro Frame - bei 60fps doppelt so schnell wie bei 30fps. Genau das Problem, das Beispiel 3 loest.";
+  hint.textContent = "square.x += 2 pro Frame - bei 60fps doppelt so schnell wie bei 30fps. Genau das Problem, das Beispiel 3 löst.";
 
   let x = 40;
 
   function frame() {
-    x += 2; // fester Schritt, unabhaengig von der tatsaechlich vergangenen Zeit
+    x += 2; // fester Schritt, unabhängig von der tatsächlich vergangenen Zeit
     if (x > W - 60) x = 40;
 
     ctx.fillStyle = "#0b1a24";
@@ -65,14 +65,14 @@
    Beispiel 3: Zeitbasierter Loop - dieselbe Struktur wie in Ninja
    Fight (GameManager.loop): Zeitdifferenz seit dem letzten Frame
    berechnen, Bewegung mit dieser Differenz (dt) statt mit einem
-   festen Wert skalieren. Laeuft auf jedem Bildschirm gleich schnell.
+   festen Wert skalieren. Läuft auf jedem Bildschirm gleich schnell.
    =================================================================== */
 (function example3_timed() {
   const canvas = document.getElementById("stage-timed");
   const ctx = canvas.getContext("2d");
   const W = canvas.width, H = canvas.height;
   const hint = document.getElementById("hint-timed");
-  hint.textContent = "square.x += SPEED * dt - dieselbe Struktur wie GameManager.loop() in Ninja Fight. Laeuft bei jeder Bildrate gleich schnell.";
+  hint.textContent = "square.x += SPEED * dt - dieselbe Struktur wie GameManager.loop() in Ninja Fight. Läuft bei jeder Bildrate gleich schnell.";
 
   const SPEED = 140; // Pixel pro Sekunde, nicht pro Frame
   let x = 40;

@@ -1,10 +1,10 @@
 /**
  * Kapitel 15 - Sound & Musik
- * Musterloesung
+ * Musterlösung
  *
- * SoundController buendelt Musik und Soundeffekte an einem Ort: sich
- * gegenseitig ausschliessende Musikstuecke, wiederholt ausloesbare
- * Soundeffekte, und eine gemeinsame Lautstaerke fuer alles zusammen.
+ * SoundController bündelt Musik und Soundeffekte an einem Ort: sich
+ * gegenseitig ausschließende Musikstücke, wiederholt auslösbare
+ * Soundeffekte, und eine gemeinsame Lautstärke für alles zusammen.
  */
 
 class SoundController {
@@ -29,8 +29,8 @@ class SoundController {
     this.applyVolume();
   }
 
-  // WICHTIG: die jeweils andere Musik zuerst stoppen - sonst wuerden
-  // Menue- und Spielmusik gleichzeitig uebereinander laufen
+  // WICHTIG: die jeweils andere Musik zuerst stoppen - sonst würden
+  // Menü- und Spielmusik gleichzeitig übereinander laufen
   playMenuMusic() {
     this.gameMusic.pause();
     this.menuMusic.currentTime = 0;
@@ -47,8 +47,8 @@ class SoundController {
   }
 
   // currentTime = 0 vor jedem Abspielen erlaubt schnelles
-  // Nacheinander-Ausloesen, ohne auf das Ende des vorigen Sounds warten
-  // zu muessen
+  // Nacheinander-Auslösen, ohne auf das Ende des vorigen Sounds warten
+  // zu müssen
   playSword() {
     this.swordSfx.currentTime = 0;
     this.swordSfx.play().catch(() => {});
@@ -62,15 +62,15 @@ class SoundController {
 const sound = new SoundController();
 
 /* ===================================================================
-   Beispiel 1: Musik abspielen und zwischen Menue/Spiel wechseln
+   Beispiel 1: Musik abspielen und zwischen Menü/Spiel wechseln
    =================================================================== */
 document.getElementById("btn-menu-music").addEventListener("click", () => {
   sound.playMenuMusic();
-  document.getElementById("music-status").textContent = "Menue-Musik laeuft";
+  document.getElementById("music-status").textContent = "Menü-Musik läuft";
 });
 document.getElementById("btn-game-music").addEventListener("click", () => {
   sound.playGameMusic();
-  document.getElementById("music-status").textContent = "Spiel-Musik laeuft";
+  document.getElementById("music-status").textContent = "Spiel-Musik läuft";
 });
 document.getElementById("btn-stop-music").addEventListener("click", () => {
   sound.stopAll();
@@ -78,12 +78,12 @@ document.getElementById("btn-stop-music").addEventListener("click", () => {
 });
 
 /* ===================================================================
-   Beispiel 2: Soundeffekte - mehrfach schnell hintereinander ausloesbar
+   Beispiel 2: Soundeffekte - mehrfach schnell hintereinander auslösbar
    =================================================================== */
 let swordCount = 0, coinsCount = 0;
 function updateSfxDisplay() {
   document.getElementById("sfx-count").textContent =
-    `Schwert: ${swordCount}x   Muenzen: ${coinsCount}x (beide unabhaengig zaehlbar, auch mehrfach schnell hintereinander)`;
+    `Schwert: ${swordCount}x   Münzen: ${coinsCount}x (beide unabhängig zählbar, auch mehrfach schnell hintereinander)`;
 }
 document.getElementById("btn-sword-sfx").addEventListener("click", () => {
   sound.playSword();
@@ -98,7 +98,7 @@ document.getElementById("btn-coins-sfx").addEventListener("click", () => {
 updateSfxDisplay();
 
 /* ===================================================================
-   Beispiel 3: gemeinsame Lautstaerke fuer alles
+   Beispiel 3: gemeinsame Lautstärke für alles
    =================================================================== */
 document.getElementById("volume-slider").addEventListener("input", (e) => {
   sound.changeVolume(Number(e.target.value) / 100);
