@@ -1,9 +1,9 @@
 # Kapitel 8 - Hindernisse & Gefahren
 
-Musterloesung zu Kapitel 8 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 8 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
@@ -11,10 +11,10 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-1. **Wasser ist begehbar** - `WaterGround` gehoert zu den
+1. **Wasser ist begehbar** - `WaterGround` gehört zu den
    `PLATFORM_TYPES`, keine Gefahr
-2. **Feuer** - Schaden ueber Zeit mit Abklingzeit (`invulnTimer`)
-3. **Stacheln** - hoeherer Einzelschaden, dieselbe Technik
+2. **Feuer** - Schaden über Zeit mit Abklingzeit (`invulnTimer`)
+3. **Stacheln** - höherer Einzelschaden, dieselbe Technik
 
 ## Dateien
 

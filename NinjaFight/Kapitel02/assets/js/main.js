@@ -46,7 +46,7 @@ const TILE_SHEET = {
 
 const FLOOR_Y = STAGE_H - 21;
 
-// hero.x/hero.y sind ab jetzt der FUSSPUNKT der Figur auf der Bühne -
+// hero.x/hero.y sind ab jetzt der Fußpunkt der Figur auf der Bühne -
 // nicht mehr die linke obere Ecke der Sprite-Zelle. Das entspricht
 // genau der Bedeutung von Hero.x/Hero.y im fertigen Spiel.
 const hero = {

@@ -1,22 +1,22 @@
 # Ninja Fight - Kapitel 7: Level-Daten & Tile-Rendering
 
-Musterloesung zu Kapitel 7 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 7 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 6 auf (Kopie + Erweiterung).
 
 ## Was hier neu dazugekommen ist
 
 - **Die ersten beiden echten Level aus Ninja Fight**, Koordinaten 1:1
-  aus `levels.js` uebernommen
+  aus `levels.js` übernommen
 - `buildLevel()` sortiert die Rohdaten nach Bedeutung
   (`platforms`/`ladders`) - Feuer, Messer und dekorative Elemente
   ignorieren wir hier bewusst noch (Kapitel 8/9)
 - Zwei Buttons wechseln zwischen Level 1 und Level 2
 - Jeder Plattformtyp (Floor/Bridge/Small/WaterGround) hat seine
-  tatsaechliche Groesse aus `TILE_SHEET`
+  tatsächliche Größe aus `TILE_SHEET`
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000

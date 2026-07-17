@@ -1,23 +1,23 @@
 # Ninja Fight - Kapitel 12: Items & Power-Ups
 
-Musterloesung zu Kapitel 12 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 12 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 11 auf (Kopie + Erweiterung).
 
 ## Was hier neu dazugekommen ist
 
-- `PowerUp`-Klasse: faellt mit derselben Schwerkraft wie eine Figur,
+- `PowerUp`-Klasse: fällt mit derselben Schwerkraft wie eine Figur,
   landet auf `level.platforms`
-- `setupPowerUpSchedule()`: 3-10 zufaellige Items (70% Herz, 20%
-  Shuriken, 10% Schwert), die in zeitlichen Abstaenden ins Level
+- `setupPowerUpSchedule()`: 3-10 zufällige Items (70% Herz, 20%
+  Shuriken, 10% Schwert), die in zeitlichen Abständen ins Level
   fallen (vereinfacht auf einen festen Zeitabstand, da unser Buch das
-  Level-Zeitlimit erst in Kapitel 18 einfuehrt)
+  Level-Zeitlimit erst in Kapitel 18 einführt)
 - `hero.collectPowerUp()`: die drei Effekt-Muster
-  (sofortig/befristet/zaehlbasiert)
+  (sofortig/befristet/zählbasiert)
 - Jeder Kandidat (Held UND Gegner) kann ein Item aufheben
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
@@ -38,11 +38,11 @@ Kapitel12/
         └── tiles.png
 ```
 
-## Nachtraeglicher Fix
+## Nachträglicher Fix
 
-Die Kollisionspruefung beim Einsammeln von Power-Ups
+Die Kollisionsprüfung beim Einsammeln von Power-Ups
 (`PowerUp.update()`) verglich `c.y` und `this.y` vorher mit einem
-fehlerhaften Versatz (`c.y - 30 - this.y`) - dadurch liessen sich
+fehlerhaften Versatz (`c.y - 30 - this.y`) - dadurch ließen sich
 Items nur beim Durchspringen von unten einsammeln, nicht beim
 normalen Hineinlaufen. Behoben auf einen direkten Vergleich
 (`c.y - this.y`).

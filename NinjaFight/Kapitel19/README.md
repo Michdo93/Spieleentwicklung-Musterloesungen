@@ -1,31 +1,31 @@
-# Ninja Fight - Kapitel 19: Das vollstaendige Original
+# Ninja Fight - Kapitel 19: Das vollständige Original
 
 Dies ist der Endpunkt des Buchs
 **"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**:
-das vollstaendige, fertige Ninja-Fight-Spiel - identisch zu
+das vollständige, fertige Ninja-Fight-Spiel - identisch zu
 <https://github.com/Michdo93/NinjaFight> und
 <https://michdo93.github.io/NinjaFight/>.
 
 Anders als bei den Kapiteln 1-18 ist dies **keine weitere Kopie mit
 kleiner Erweiterung** - es ist das fertige Spiel selbst, mit allen
-Anpassungen, die in Kapitel 19 des Buchs erklaert werden. Eine
+Anpassungen, die in Kapitel 19 des Buchs erklärt werden. Eine
 Kurzfassung der wichtigsten Unterschiede:
 
 - 10 Level statt 2 (Level 5-10 neu entworfen, gemischte Gegnertypen)
 - Schwert zeitlich begrenzt (30s) statt permanent, ausser bei Gegnern
-  mit angeborener Schwertfaehigkeit (Red/White)
+  mit angeborener Schwertfähigkeit (Red/White)
 - Shuriken als aufsammelbare Ressource statt fixer Startmenge
 - Gegner nehmen ebenfalls Schaden durch Feuer/Stacheln
   (`Enemy.checkHazards()`)
 - Friendly Fire auch im Nahkampf (`hitNearbyEnemies()`), nicht nur bei
   Projektilen
 - Sieg-Bildschirm nach Level 10 statt Game Over
-- Kumulative Lebensenergie ueber alle Level (`+= 10 * levelNum`)
-- Waffenstatus wird korrekt zwischen Leveln uebertragen
-- Echtes Zeitlimit pro Level: Zeit abgelaufen + Gegner uebrig = Niederlage
-- Vollstaendiges Menuesystem (Start, Pause, Einstellungen, Sieg, Game Over)
+- Kumulative Lebensenergie über alle Level (`+= 10 * levelNum`)
+- Waffenstatus wird korrekt zwischen Leveln übertragen
+- Echtes Zeitlimit pro Level: Zeit abgelaufen + Gegner übrig = Niederlage
+- Vollständiges Menüsystem (Start, Pause, Einstellungen, Sieg, Game Over)
 
-Die vollstaendige Liste aller Unterschiede steht im Buch, Kapitel 19,
+Die vollständige Liste aller Unterschiede steht im Buch, Kapitel 19,
 sowie unten in diesem README (Original-Dokumentation des Spiels
 selbst, inklusive der Fehlerbeschreibungen aus
 "Ninja Fight_KnownBugs.pdf").

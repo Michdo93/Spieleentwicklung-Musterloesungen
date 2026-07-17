@@ -1,9 +1,9 @@
 # Kapitel 7 - Level-Daten & Tile-Rendering
 
-Musterloesung zu Kapitel 7 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 7 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000

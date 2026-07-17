@@ -1,9 +1,9 @@
 # Kapitel 14 - Gegner-KI: Kampf & Gegnertypen
 
-Musterloesung zu Kapitel 14 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 14 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
@@ -13,7 +13,7 @@ python3 -m http.server 8000
 
 1. **Aggro-Bereich & Angriffsauswahl** - Entscheidungsbaum nach Abstand
 2. **Vier Gegnertypen** - Blue/Green/Red/White mit eigenen HP und
-   Faehigkeiten
+   Fähigkeiten
 3. **Friendly Fire** - ein Wurf trifft auch andere Gegner, nicht nur
    den Helden
 

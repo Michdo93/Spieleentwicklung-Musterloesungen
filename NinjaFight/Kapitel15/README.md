@@ -1,11 +1,11 @@
 # Ninja Fight - Kapitel 15: Sound & Musik
 
-Musterloesung zu Kapitel 15 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 15 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 14 auf (Kopie + Erweiterung).
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
@@ -16,9 +16,9 @@ Nutzerinteraktion, bevor Audio abgespielt werden darf).
 
 ## Was hier neu dazugekommen ist
 
-- Die `SoundController`-Klasse (Musik + SFX + gemeinsame Lautstaerke)
+- Die `SoundController`-Klasse (Musik + SFX + gemeinsame Lautstärke)
 - Schwerthieb spielt einen Sound (`sound.playSword()`)
-- Eingesammelte Power-Ups spielen einen Muenz-Sound
+- Eingesammelte Power-Ups spielen einen Münz-Sound
   (`sound.playCoins()`)
 
 ## Dateien

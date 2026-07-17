@@ -1,19 +1,19 @@
 # Ninja Fight - Kapitel 17: Menüs & Spielzustände
 
-Musterloesung zu Kapitel 17 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 17 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 16 auf (Kopie + Erweiterung).
 
 ## Was hier neu dazugekommen ist
 
 - Start-, Spiel- und Pause-Bildschirm als sich gegenseitig
-  ausschliessende Zustaende (`showScreen()`)
-- Der Game-Loop laeuft nur noch im Zustand `"game"` - im Pause- oder
+  ausschließende Zustände (`showScreen()`)
+- Der Game-Loop läuft nur noch im Zustand `"game"` - im Pause- oder
   Start-Zustand plant er sich selbst nicht erneut ein
-- ESC-Taste und Buttons loesen denselben Zustandswechsel aus
+- ESC-Taste und Buttons lösen denselben Zustandswechsel aus
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000

@@ -1,9 +1,9 @@
 # Kapitel 15 - Sound & Musik
 
-Musterloesung zu Kapitel 15 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 15 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
@@ -11,11 +11,11 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-1. **Musik abspielen und wechseln** - Menue-/Spielmusik schliessen
+1. **Musik abspielen und wechseln** - Menue-/Spielmusik schließen
    sich gegenseitig aus
-2. **Soundeffekte mehrfach ausloesen** - `currentTime = 0` vor jedem
+2. **Soundeffekte mehrfach auslösen** - `currentTime = 0` vor jedem
    `play()`
-3. **Gemeinsame Lautstaerke** - ein Regler fuer Musik UND Soundeffekte
+3. **Gemeinsame Lautstärke** - ein Regler für Musik UND Soundeffekte
 
 ## Dateien
 

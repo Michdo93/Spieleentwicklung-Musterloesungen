@@ -1,18 +1,18 @@
 # Ninja Fight - Kapitel 16: HUD & Spielstatus
 
-Musterloesung zu Kapitel 16 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 16 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 15 auf (Kopie + Erweiterung).
 
 ## Was hier neu dazugekommen ist
 
-- `drawHealthBar()`: Lebensbalken ueber jedem Gegnerkopf
-- Ein DOM-Overlay (`#hud`) fuer Leben, Waffen, Punkte und Level
+- `drawHealthBar()`: Lebensbalken über jedem Gegnerkopf
+- Ein DOM-Overlay (`#hud`) für Leben, Waffen, Punkte und Level
 - `updateHud()` wird JEDEN Frame aufgerufen (aus `update()`)
 - Besiegte Gegner geben Punkte
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000

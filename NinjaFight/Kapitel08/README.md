@@ -1,7 +1,7 @@
 # Ninja Fight - Kapitel 8: Hindernisse & Gefahren
 
-Musterloesung zu Kapitel 8 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 8 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 7 auf (Kopie + Erweiterung).
 
@@ -9,18 +9,18 @@ Baut auf Kapitel 7 auf (Kopie + Erweiterung).
 
 - `HAZARD_TYPES` (Flame: 1 Schaden, Knives: 5 Schaden, je 0,6s
   Abklingzeit)
-- `buildLevel()` sortiert Flame/Knives jetzt zusaetzlich in
+- `buildLevel()` sortiert Flame/Knives jetzt zusätzlich in
   `level.hazards`
-- `checkHazards()` prueft jeden Frame, ob der Held in einer
+- `checkHazards()` prüft jeden Frame, ob der Held in einer
   Gefahrenzone steht
-- Der Held blinkt kurz waehrend der Unverwundbarkeit
+- Der Held blinkt kurz während der Unverwundbarkeit
 - HUD-Zeile zeigt die verbleibende Lebensenergie
 
 **Wichtig:** Sterben und Game Over gibt es in diesem Kapitel noch
 nicht - der Held verliert nur Lebenspunkte, auch bei 0 passiert noch
 nichts weiter.
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000

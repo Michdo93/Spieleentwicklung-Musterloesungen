@@ -1,9 +1,9 @@
 # Kapitel 13 - Gegner-KI: Bewegung
 
-Musterloesung zu Kapitel 13 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 13 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
@@ -11,7 +11,7 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-1. **Naive Patrouille** - laeuft blind ueber die Kante einer zu kurzen
+1. **Naive Patrouille** - läuft blind über die Kante einer zu kurzen
    Plattform
 2. **Mit Kantenerkennung** - `hasSupportAhead()` verhindert das
 3. **Gelegentliches Springen** - nur wenn auch danach noch Boden

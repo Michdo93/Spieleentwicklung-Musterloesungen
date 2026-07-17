@@ -1,9 +1,9 @@
 # Kapitel 2 - Sprites zeichnen
 
-Musterloesung zu Kapitel 2 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 2 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
@@ -13,12 +13,12 @@ python3 -m http.server 8000
 
 1. **drawImage()-Grundformen** - ganzes Sheet vs. ein ausgeschnittener Frame
 2. **Spiegeln - falsch vs. richtig**: die Spiegelachse muss der
-   tatsaechliche "Fusspunkt" der Figur sein, nicht die Mitte des
+   tatsächliche "Fußpunkt" der Figur sein, nicht die Mitte des
    ausgeschnittenen Zellbereichs. Falsch gespiegelt "springt" die
    Figur seitlich; richtig gespiegelt bleibt sie exakt an derselben
    Stelle
 3. **Skalierung und Position per Regler** - dieselbe Zeichenlogik,
-   aber Groesse/Position kommen aus Reglern statt fest im Code zu
+   aber Größe/Position kommen aus Reglern statt fest im Code zu
    stehen
 
 ## Dateien

@@ -1,14 +1,14 @@
 # Ninja Fight - Kapitel 1: Canvas-Grundlagen & Game-Loop
 
-Musterloesung zu Kapitel 1 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 1 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Dies ist der allererste Baustein des Ninja-Fight-Spiels, das ab diesem
-Kapitel ueber alle 18 Kapitel hinweg Schritt fuer Schritt entsteht.
+Kapitel über alle 18 Kapitel hinweg Schritt für Schritt entsteht.
 Jedes weitere Kapitel ist eine Kopie dieses Ordners mit den jeweils neu
-hinzugekommenen Aenderungen.
+hinzugekommenen Änderungen.
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
@@ -17,10 +17,10 @@ python3 -m http.server 8000
 
 ## Was hier passiert
 
-- Canvas in der finalen Spielaufloesung (1024x576)
+- Canvas in der finalen Spielauflösung (1024x576)
 - Derselbe zeitbasierte Game-Loop wie im Grundlagen-Projekt dieses Kapitels
 - Der Held wird als Standbild (erster Idle-Frame des Sprite-Sheets)
-  in die Mitte der Buehne gezeichnet
+  in die Mitte der Bühne gezeichnet
 
 ## Dateien
 
@@ -39,5 +39,5 @@ Kapitel01/
 
 `hero.png` und `tiles.png` stammen aus dem finalen
 [Ninja-Fight-Projekt](https://github.com/Michdo93/NinjaFight). Alle
-Sprites und Sounds fuer alle Kapitel liegen gesammelt im Ordner
+Sprites und Sounds für alle Kapitel liegen gesammelt im Ordner
 [`/Materialien`](../../Materialien) dieses Repos.

@@ -1,19 +1,19 @@
 # Ninja Fight - Kapitel 13: Gegner-KI: Bewegung
 
-Musterloesung zu Kapitel 13 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 13 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 12 auf (Kopie + Erweiterung).
 
 ## Was hier neu dazugekommen ist
 
-- Die 3 Gegner patrouillieren jetzt selbststaendig
-- `hasSupportAhead()`: Kantenerkennung, bevor der Gegner ueber eine
-  Plattform hinauslaeuft
-- Gelegentliches, zufaelliges Springen (nur wenn sicher)
+- Die 3 Gegner patrouillieren jetzt selbstständig
+- `hasSupportAhead()`: Kantenerkennung, bevor der Gegner über eine
+  Plattform hinausläuft
+- Gelegentliches, zufälliges Springen (nur wenn sicher)
 - Eigene Patrouillengrenzen pro Gegner
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000

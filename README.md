@@ -1,21 +1,21 @@
-# Musterloesungen - HTML5 + Vanilla JS Spieleentwicklung
+# Musterlösungen - HTML5 + Vanilla JS Spieleentwicklung
 
 Begleitrepo zum Buch **"HTML5 + Vanilla JS Spieleentwicklung -
-2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
-Dieses Repo enthaelt zu **jedem Kapitel des Buchs zwei fertige,
-lauffaehige Musterloesungen**:
+Dieses Repo enthält zu **jedem Kapitel des Buchs zwei fertige,
+lauffähige Musterlösungen**:
 
 - **`Grundlagen/`** - das kleine Testprojekt, an dem jedes Kapitel
-  zunaechst eine neue Technik isoliert und ohne Ablenkung durch das
-  grosse Spielprojekt einfuehrt.
+  zunächst eine neue Technik isoliert und ohne Ablenkung durch das
+  große Spielprojekt einführt.
 - **`NinjaFight/`** - dasselbe Kapitel, diesmal eingebaut in das
-  tatsaechliche Spielprojekt. Jedes Kapitel ist eine Kopie des
+  tatsächliche Spielprojekt. Jedes Kapitel ist eine Kopie des
   vorherigen Kapitel-Ordners plus den in diesem Kapitel neu
-  hinzugekommenen Aenderungen - so laesst sich jeder Zwischenstand des
-  Spiels einzeln oeffnen und ausprobieren.
+  hinzugekommenen änderungen - so läßt sich jeder Zwischenstand des
+  Spiels einzeln öffnen und ausprobieren.
 
-Das fertige Spiel am Ende von Kapitel 18 entspricht dem oeffentlichen
+Das fertige Spiel am Ende von Kapitel 18 entspricht dem öffentlichen
 [Ninja-Fight-Projekt](https://github.com/Michdo93/NinjaFight).
 
 ## Aufbau
@@ -56,10 +56,10 @@ Das fertige Spiel am Ende von Kapitel 18 entspricht dem oeffentlichen
 | 14 | Gegner-KI: Kampf & Gegnertypen |
 | 15 | Sound & Musik |
 | 16 | HUD & Spielstatus |
-| 17 | Menues & Spielzustaende |
+| 17 | Menues & Spielzustände |
 | 18 | Highscores & Levelfortschritt |
 
-## Jedes Kapitel lokal ausfuehren
+## Jedes Kapitel lokal ausführen
 
 Kein Build-Schritt, reines HTML/CSS/JS:
 
@@ -71,12 +71,12 @@ python3 -m http.server 8000
 
 ## Status
 
-Alle 19 Kapitel sind vollstaendig. Kapitel 1-18 fuer beide Tracks
-(Grundlagen und NinjaFight); Kapitel 19 ist das vollstaendige,
+Alle 19 Kapitel sind vollständig. Kapitel 1-18 für beide Tracks
+(Grundlagen und NinjaFight); Kapitel 19 ist das vollständige,
 fertige Original-Spiel (siehe `NinjaFight/Kapitel19/`).
 
-## Zugehoeriges Buch
+## Zugehöriges Buch
 
 Dieses Repo wird im Buch an den passenden Stellen verlinkt, damit man
-sich jederzeit die fertige Loesung eines Kapitels herunterladen kann,
-statt alles abtippen zu muessen.
+sich jederzeit die fertige Lösung eines Kapitels herunterladen kann,
+statt alles abtippen zu müssen.

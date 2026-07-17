@@ -1,7 +1,7 @@
 # Ninja Fight - Kapitel 4: Tastatur- & Maus-Eingabe
 
-Musterloesung zu Kapitel 4 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 4 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 3 auf (Kopie + Erweiterung).
 
@@ -15,9 +15,9 @@ kommt erst in Kapitel 5.
 
 - **A/D oder Pfeiltasten links/rechts halten**: Blickrichtung dreht
   sich um, Walk-Animation spielt ab (Position bleibt gleich!)
-- **Leertaste**: Sprung-Animation (einmalig, dann zurueck zu Idle/Walk)
+- **Leertaste**: Sprung-Animation (einmalig, dann zurück zu Idle/Walk)
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000

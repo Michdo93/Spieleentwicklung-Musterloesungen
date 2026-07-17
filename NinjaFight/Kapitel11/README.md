@@ -1,7 +1,7 @@
 # Ninja Fight - Kapitel 11: Fernkampf & Projektile
 
-Musterloesung zu Kapitel 11 des Buchs
-**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-fuer-Schritt"**.
+Musterlösung zu Kapitel 11 des Buchs
+**"HTML5 + Vanilla JS Spieleentwicklung - 2D-Plattform-Kampfspiel Schritt-für-Schritt"**.
 
 Baut auf Kapitel 10 auf (Kopie + Erweiterung).
 
@@ -16,11 +16,11 @@ Baut auf Kapitel 10 auf (Kopie + Erweiterung).
 - `Projectile`-Klasse: eigene Position, eigene Geschwindigkeit,
   eigenes `update()`, kennt seinen Werfer
 - `throwShuriken()` verbraucht ein Shuriken und erzeugt ein echtes
-  Projektil (nicht nur die Wurfanimation - siehe Buch fuer die echte
+  Projektil (nicht nur die Wurfanimation - siehe Buch für die echte
   Bug-Geschichte dazu)
 - `Throw` als neuer Animationszustand
 
-## Ausfuehren
+## Ausführen
 
 ```bash
 python3 -m http.server 8000
